@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+:root { --my-value: red;
+  --color-red:red;
+  --color-materialUI-primary: #07c;
+--color-darkgrey: rgba(0, 0, 0, 0.87);
+--color-verylightgrey: rgba(0, 0, 0, 0.54); }

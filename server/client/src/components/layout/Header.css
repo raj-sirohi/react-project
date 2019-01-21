@@ -1,0 +1,11 @@
+.Tabs{
+    display: flex;
+    justify-content: space-between;
+
+
+}
+
+.Home{
+
+    flex:1
+}

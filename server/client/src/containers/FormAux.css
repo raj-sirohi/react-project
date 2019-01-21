@@ -1,0 +1,45 @@
+
+
+
+
+
+.formBody{
+/*//background-color: white ;*/
+    background-color:rgb( 233, 240, 250) ;
+padding: 20px;
+    margin:20px  40px 0 40px;
+    box-sizing: border-box;
+}
+
+
+.formButtons{
+    margin:20px  40px 20px 40px;
+/*// padding:10px;
+// width:100%;*/
+    box-sizing: border-box;
+/*//background-color:rgb( 233, 240, 250) ;// #1da1f2;
+// border-bottom: 1px solid  darkgray;
+//box-shadow: 0 0 1px 0;
+// height : 50px;*/
+    display:flex;
+    align-items:center;
+    justify-content: flex-end;
+
+}
+
+.elementToFadeInAndOut {
+   /* width:200px;
+    height: 200px;*/
+
+    -webkit-animation: fadeinout 2s linear forwards;
+    animation: fadeinout 2s linear forwards;
+    opacity: 0;
+}
+
+@-webkit-keyframes fadeinout {
+    50% { opacity: 1; }
+}
+
+@keyframes fadeinout {
+    50% { opacity: 1; }
+}
