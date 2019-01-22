@@ -111,4 +111,7 @@ so all instances of the class share the same method. Method defined with this, e
     In order to access its properties you need to user JSON.parse(A), this will convert into
     object , eg : {name:"rajesh"}, now you can access if as A.name
 
+### GIT
+- removed specific folder which has been added or committed:-
+git rm -r --cached server/node_modules
 
