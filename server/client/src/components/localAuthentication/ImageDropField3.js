@@ -56,8 +56,8 @@ const thumb = {
     border: '1px solid #eaeaea',
     marginBottom: 8,
     marginRight: 8,
-    width:'100px',
-    height: '100px' ,
+    width: '100px',
+    height: '100px',
     padding: 4,
     boxSizing: 'border-box'
 };
@@ -82,27 +82,28 @@ const thumbInner = {
 
 const img = {
     display: 'block',
-    width: 'auto' , //'auto',
-    height: '100%' //'100%'
+    width: '100px', //'auto',
+    height: '100px' //'100%'
 };
 
 class ImgDropAndCrop extends Component {
     constructor() {
         super()
-      //  this.imagePreviewCanvasRef = React.createRef()
+        this.imagePreviewCanvasRef = React.createRef()
         this.fileInputRef = React.createRef()
         this.state = {
             files: [],
-            savedFiles:[],
+            droppedFile:'',
+            savedFiles: [],
             imgSrc: null,
             imgSrcExt: null,
             crop: {
-                aspect: 1/1
+                aspect: 1 / 1
             }
         };
     }
 
-  
+
 
     onDrop(files) {
         this.setState({
@@ -112,52 +113,53 @@ class ImgDropAndCrop extends Component {
         });
 
         const currentFile = files[0]
-        logger.log('onDrop currentFile',currentFile);
-                 const myFileItemReader = new FileReader()
-                 myFileItemReader.addEventListener("load", ()=>{
-                     // console.log(myFileItemReader.result)
-                     const myResult = myFileItemReader.result;
-                   //  const canvasRef = this.imagePreviewCanvasRef.current;
-                   //  image64toCanvasRef(canvasRef, myResult)
-                     this.setState({
-                         imgSrc: myResult,
-                         imgSrcExt: extractImageFileExtensionFromBase64(myResult)
-                     })
-                 }, false)
+        logger.log('onDrop currentFile', currentFile);
+        const myFileItemReader = new FileReader()
+        myFileItemReader.addEventListener("load", () => {
+            // console.log(myFileItemReader.result)
+            const myResult = myFileItemReader.result;
+            const canvasRef = this.imagePreviewCanvasRef.current;
+            image64toCanvasRef(canvasRef, myResult)
+            this.setState({
+                imgSrc: myResult,
+                droppedFile:currentFile,
+                imgSrcExt: extractImageFileExtensionFromBase64(myResult)
+            })
+        }, false)
 
-                 myFileItemReader.readAsDataURL(currentFile)
+        myFileItemReader.readAsDataURL(currentFile)
     }
 
-    handleFileSave=(event)=>{
-        const { input,classes, width,fullWidth,theme, options,loadOptions,placeholder, meta: { touched, error } } = this.props;
+    handleFileSave = (event) => {
+        const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
         event.preventDefault()
-        const {imgSrc,files}  = this.state
-       // logger.log('handleFileSave fileName',files[0].name);
+        const { imgSrc, files } = this.state
+        // logger.log('handleFileSave fileName',files[0].name);
         if (imgSrc) {
-           // const canvasRef = this.imagePreviewCanvasRef.current
-        
-            const {imgSrcExt} =  this.state
-           // const imageData64 = canvasRef.toDataURL('image/' + imgSrcExt)
+            const canvasRef = this.imagePreviewCanvasRef.current
 
-      
+            const { imgSrcExt } = this.state
+            const imageData64 = canvasRef.toDataURL('image/' + imgSrcExt)
+
+
             const myFilename = files[0].name;
 
             // file to be uploaded
-            const myNewCroppedFile = base64StringtoFile(imgSrc, myFilename)
+            const myNewCroppedFile = base64StringtoFile(imageData64, myFilename)
             const sFile = this.state.savedFiles;
-            Object.assign(myNewCroppedFile,{
+            Object.assign(myNewCroppedFile, {
                 preview: URL.createObjectURL(myNewCroppedFile)
             })
             input.onChange(this.state.savedFiles);
-           // input.onChange(myNewCroppedFile);
+            // input.onChange(myNewCroppedFile);
             sFile.push(myNewCroppedFile)
-           this.setState({savedFiles:sFile})
-
-         
+            this.setState({ savedFiles: sFile })
 
 
-           logger.log('handleFileSave savedFiles',this.state.savedFiles);
-           // this.handleClearToDefault()
+
+
+            logger.log('handleFileSave savedFiles', this.state.savedFiles);
+            this.handleClearToDefault()
         }
     }
 
@@ -165,28 +167,15 @@ class ImgDropAndCrop extends Component {
         //console.log(image)
     }
     handleOnCropChange = (crop) => {
-        this.setState({crop:crop})
+        this.setState({ crop: crop })
     }
-    handleOnCropComplete = (crop, pixelCrop) =>{
+    handleOnCropComplete = (crop, pixelCrop) => {
         logger.log('pixelCrop', pixelCrop)
-        logger.log('pixelCrop.width', pixelCrop.width===0)
+        logger.log('pixelCrop.width', pixelCrop.width === 0)
 
-        //const canvasRef = this.imagePreviewCanvasRef.current
-        const {imgSrc}  = this.state
-        //image64CroppedtoCanvasRef(canvasRef, imgSrc, pixelCrop)
-    }
-
-    componentDidMount(){
-        const{savedFiles}= this.props;
-        if (!!savedFiles && savedFiles.lenght>0){
-            const sFile = this.state.savedFiles;
-            // Object.assign(myNewCroppedFile,{
-            //     preview: URL.createObjectURL(myNewCroppedFile)
-            // })
-            
-            sFile.push(savedFiles)
-           this.setState({savedFiles:sFile})
-        }
+        const canvasRef = this.imagePreviewCanvasRef.current
+        const { imgSrc } = this.state
+        image64CroppedtoCanvasRef(canvasRef, imgSrc, pixelCrop)
     }
 
     componentWillUnmount() {
@@ -194,9 +183,30 @@ class ImgDropAndCrop extends Component {
         this.state.files.forEach(file => URL.revokeObjectURL(file.preview))
     }
 
-   
+    handleDownloadClick = (event) => {
+        event.preventDefault()
+        const { imgSrc } = this.state
+        if (imgSrc) {
+            const canvasRef = this.imagePreviewCanvasRef.current
 
-    handleClearToDefault = event =>{
+            const { imgSrcExt } = this.state
+            const imageData64 = canvasRef.toDataURL('image/' + imgSrcExt)
+
+
+            const myFilename = "previewFile." + imgSrcExt
+
+            // file to be uploaded
+            const myNewCroppedFile = base64StringtoFile(imageData64, myFilename)
+            console.log(myNewCroppedFile)
+            // download file
+            downloadBase64File(imageData64, myFilename)
+            this.handleClearToDefault()
+        }
+
+
+    }
+
+    handleClearToDefault = event => {
         if (event) event.preventDefault()
         const canvas = this.imagePreviewCanvasRef.current
         const ctx = canvas.getContext('2d');
@@ -206,100 +216,112 @@ class ImgDropAndCrop extends Component {
             imgSrc: null,
             imgSrcExt: null,
             crop: {
-                aspect: 1/1
+                aspect: 1 / 1
             }
 
         })
-       
+
     }
 
     render() {
         const { imgSrc } = this.state
-        const {files,savedFiles} = this.state;
-       logger.log ('render',savedFiles);
+        const { files, savedFiles } = this.state;
+        logger.log('render', savedFiles);
 
-       const { input,classes, width,fullWidth,theme, options,loadOptions,placeholder, meta: { touched, error } } = this.props;
+        const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
 
-     
+        const thumbs1 = files.map(file => (
+            <div style={thumb} key={file.name}>
+                <div style={thumbInner}>
+                    <img
+                        src={file.preview}
+                        style={img}
+                    />
+                </div>
+            </div>
+        ));
 
         const thumbs = savedFiles.map(file => (
-            <div  style={thumb} key={file.name}>
-              <div style={thumbInner}>
-                <img
-                  src={file.preview}
-                  style={img}
-                />
-              </div>
-            </div>
-          ));
-    
-
-        const dropImageSection =   <Dropzone  onDrop={this.onDrop.bind(this)}>
-        {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject, acceptedFiles, rejectedFiles }) => {
-            let styles = { ...baseStyle }
-            styles = isDragActive ? { ...styles, ...activeStyle } : styles
-            styles = isDragReject ? { ...styles, ...rejectStyle } : styles
-
-            return (
-                <div
-                    {...getRootProps()}
-                    style={styles}
-                >
-                    <input {...getInputProps()} />
-                    <div>
-                        {isDragAccept ? 'Drop' : 'Drag'} files here...
-                    </div>
-                    {isDragReject && <div>Unsupported file type...</div>}
+            <div style={thumb} key={file.name}>
+                <div style={thumbInner}>
+                    <img
+                        src={file.preview}
+                        style={img}
+                    />
                 </div>
-            )
-        }}
-    </Dropzone>
+            </div>
+        ));
 
-     const cropImageSection=   imgSrc !== null ? 
-               <div 
-              // style={{border: 'solid red 2px',width:'400px',height:'auto',overflowX:'hidden',overflowY:'scroll'}}
-               >
-                 <ReactCrop 
-                     src={imgSrc} 
-                    imageStyle={{border: 'solid blue 2px',margin:'auto auto',display: 'block'}}
-                    style={{ backgroundColor:'white',  border: 'solid red 4px',width:'200px',height:'200px',display: 'flex'}}
-                   
+
+        const dropImageSection = <Dropzone onDrop={this.onDrop.bind(this)}>
+            {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject, acceptedFiles, rejectedFiles }) => {
+                let styles = { ...baseStyle }
+                styles = isDragActive ? { ...styles, ...activeStyle } : styles
+                styles = isDragReject ? { ...styles, ...rejectStyle } : styles
+
+                return (
+                    <div
+                        {...getRootProps()}
+                        style={styles}
+                    >
+                        <input {...getInputProps()} />
+                        <div>
+                            {isDragAccept ? 'Drop' : 'Drag'} files here...
+                    </div>
+                        {isDragReject && <div>Unsupported file type...</div>}
+                    </div>
+                )
+            }}
+        </Dropzone>
+
+        const cropImageSection = imgSrc !== null ?
+            <div
+             style={{border: 'solid red 2px',width:'400px',height:'200px', display:'flex',  justifyContent:'center'}}
+            >
+            
+                <ReactCrop
+                    src={imgSrc}
+                    imageStyle={{ border: 'solid blue 2px',  display: 'block',width: 'auto', height: '100px' }}
+                   style={{ backgroundColor: 'white', border: 'solid red 4px',margin:'auto' }}
+
                     //style={{border: 'solid red 4px',width:'400px',height:'auto'}}
-                     crop={this.state.crop} 
-                     onImageLoaded={this.handleImageLoaded}
-                     onComplete = {this.handleOnCropComplete}
+                    crop={this.state.crop}
+                    onImageLoaded={this.handleImageLoaded}
+                    onComplete={this.handleOnCropComplete}
                     // onChange={imgSrc => {input.onChange(imgSrc);console.log('aaaaaaa',imgSrc)}}
-                     onChange={this.handleOnCropChange}
-                     />
-                      <br/>
-                      <button onClick={this.handleFileSave}>Save</button>
-   <button onClick={this.handleClearToDefault}>Clear</button>
-                  {/* <p>Preview Canvas Crop </p>
+                    onChange={this.handleOnCropChange}
+                />
+                <br />
+                {this.state.droppedFile.name}
+               
+                {/* <p>Preview Canvas Crop </p>
                   <canvas style ={{width:'100px',height:'100px'}} ref={this.imagePreviewCanvasRef}></canvas>
                   <button onClick={this.handleDownloadClick}>Download</button>
                   <button onClick={this.handleClearToDefault}>Clear</button> */}
-                     </div>
-                    
-                     :'';
-//   const cropPreviewSection = <div><p>Preview Canvas Crop </p>
-//   <canvas style ={{width:'100px',height:'100px'}} ref={this.imagePreviewCanvasRef}></canvas>
-//   <button onClick={this.handleFileSave}>Save</button>
-//   <button onClick={this.handleClearToDefault}>Clear</button></div>;
-  
+            </div>
+
+            : '';
+        const cropPreviewSection = <div><p>Preview Canvas Crop </p>
+            <canvas style={{ width: 'auto', height: 'auto' }} ref={this.imagePreviewCanvasRef}></canvas>
+            <button onClick={this.handleFileSave}>Save</button>
+            <button onClick={this.handleClearToDefault}>Clear</button></div>;
+
         return (
             <div>
-             {imgSrc !== null?cropImageSection:dropImageSection}
-           
-             <aside style={thumbsContainer}>
+                {/* {imgSrc !== null ? cropImageSection : dropImageSection} */}
+                {dropImageSection}
+                {cropImageSection}
+                {cropPreviewSection}
+                <aside style={thumbsContainer}>
                     {thumbs}
                 </aside>
-            
-           </div>
+
+            </div>
         );
     }
 
 
-  
+
 }
 
 export default ImgDropAndCrop

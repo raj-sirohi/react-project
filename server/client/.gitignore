@@ -5,6 +5,9 @@
 
 /config
 
+# image uploads
+/uploads
+
 # testing
 /coverage
 
