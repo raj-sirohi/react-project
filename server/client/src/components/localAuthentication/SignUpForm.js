@@ -7,7 +7,7 @@ import { compose } from 'redux';
 
 import FormInput from '../ui/form/FormInput'
 
-import { createUser, getUserById ,uploadFile} from '../../store/actions/authActions' // '../../actions/index';
+import { createUser, getUserById ,uploadFile,getImage} from '../../store/actions/authActions' // '../../actions/index';
 import * as actions from '../../store/actions/authActions'
 import * as Actions from '../../store/actions/countryActions'
 
@@ -54,6 +54,7 @@ import PhoneField from '../ui/input/PhoneField'
 
 import axios from '../../config/axios/axiosBlog';
 import Dropzone from 'react-dropzone'
+import * as fs from 'fs';
 import Logger from '../../loggingUtil/logger';
 
 const styles = theme => ({
@@ -139,10 +140,36 @@ class SignUpForm extends Component {
     logger = Logger('SignUpForm');
 
     state = {
-        age: ''
+        age: '',
+        imageData:''
     };
 
-   
+   componentDidMount(){
+    this.getImageData('/images/a.jpeg');
+      
+   }
+
+   getImageData=async (imageUrl)=>{
+    const imageData = await this.props.getImage('/images/a.jpeg');
+   // this.setState({imageData:'data:image/jpeg;base64,'+imageData.data})
+    this.setState({imageData:imageData.data})
+    this.logger.log('getImageData imageData.data', imageData.data);
+   // this.saveImage('ttt',imageData.data)
+   }
+
+   saveImage=(filename, data)=>{
+    var myBuffer = new Buffer(data.length);
+    for (var i = 0; i < data.length; i++) {
+        myBuffer[i] = data[i];
+    }
+    fs.writeFile('/test.jpeg', 'aaaa', function(err) {
+        if(err) {
+            this.logger.log(err);
+        } else {
+            this.logger.log("The file was saved!");
+        }
+    });
+  }
 
     renderContent() {
         const { classes } = this.props;
@@ -214,7 +241,7 @@ class SignUpForm extends Component {
 
                         placeholder="your first name" />
                 </Grid>
-                <img  src="/api/images/a.jpeg" alt="Image preview..." />
+                <img  src={this.state.imageData} alt="Image preview..." />
                 <img  src="/api/images/b.jpeg" alt="Image preview..." />
 
 
@@ -301,7 +328,8 @@ const mapDispatchToProps = dispatch => {
         //  createUser: (user, history) => dispatch(createUser(user, history)),
         //  createUser: (dispatch) => createUser(dispatch),
         getUserById: (userId) => dispatch(getUserById(userId)),
-        getCountryListByName: (inputVal) => dispatch(Actions.getCountryListByName(inputVal))
+        getCountryListByName: (inputVal) => dispatch(Actions.getCountryListByName(inputVal)),
+        getImage:(imageUrl)=>dispatch(getImage(imageUrl))
 
     }
 }
@@ -319,6 +347,7 @@ const mapStateToProps = state => {
             lastName: 'rajesh',
             formatMask:'123477777',
             asyncountry:{label:'Canada',value:'can'},
+            ImageDropField2:'/api/images/a.jpeg'
           //   dob: '2012-07-11'
         }
 
@@ -392,4 +421,9 @@ export default compose(
 
     })
 )(withStyles(styles)(SignUpForm));
+
+
+
+
+
 

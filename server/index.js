@@ -28,13 +28,7 @@ app.use(passport.initialize());
 //app.use(passport.session());
 
 
-app.get("/api/images/:imageName", (req, res) => {
-    console.log('***********aaaaaaaaaaaaaaaaaa');
-    const imageName = req.params.imageName;
-    res.sendFile(path.join(__dirname, "uploads/"+imageName));
-    //res.send();
-   // next()
-  });
+
 
   //app.use("/api/images", express.static(path.join(__dirname, "uploads")));
 

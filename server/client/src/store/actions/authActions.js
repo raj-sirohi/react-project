@@ -91,13 +91,21 @@ export const uploadFile =(data)=> async dispatch =>{
        logger.log('formData',formData)
         const res = await axios.post('/fileUpload', formData);
 
-        const res1 = await axios.get('/images');
+        const res1 = await axios.get('/images/a.jpeg');
         logger.log('res1',res1)
 
     }catch(error){
         logger.error('uploadFile error:',error);
     }
 
+}
+
+export const  getImage=(imageUrl)=>async dispatch=>{
+
+    logger.log('getImage')
+    const res = await axios.get(imageUrl);
+    logger.log('getImage res',res);
+    return res;
 }
 
 const delay = ms => new Promise(_ => setTimeout(_, ms));

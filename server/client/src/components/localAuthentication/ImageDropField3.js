@@ -102,7 +102,14 @@ class ImgDropAndCrop extends Component {
             }
         };
     }
+    componentWillUnmount() {
+        // Make sure to revoke the data uris to avoid memory leaks
+        this.state.files.forEach(file => URL.revokeObjectURL(file.preview))
+    }
 
+    componentDidMount(){
+        logger.log('component did mount this.props', this.props)
+    }
 
 
     onDrop(files) {
@@ -178,10 +185,7 @@ class ImgDropAndCrop extends Component {
         image64CroppedtoCanvasRef(canvasRef, imgSrc, pixelCrop)
     }
 
-    componentWillUnmount() {
-        // Make sure to revoke the data uris to avoid memory leaks
-        this.state.files.forEach(file => URL.revokeObjectURL(file.preview))
-    }
+    
 
     handleDownloadClick = (event) => {
         event.preventDefault()
@@ -276,13 +280,13 @@ class ImgDropAndCrop extends Component {
 
         const cropImageSection = imgSrc !== null ?
             <div
-             style={{border: 'solid red 2px',width:'400px',height:'200px', display:'flex',  justifyContent:'center'}}
+             style={{border: 'solid red 2px',width:'200px',height:'200px', display:'flex',flexDirection:'column', alignItems:'center', justifyContent:'center'}}
             >
             
                 <ReactCrop
                     src={imgSrc}
-                    imageStyle={{ border: 'solid blue 2px',  display: 'block',width: 'auto', height: '100px' }}
-                   style={{ backgroundColor: 'white', border: 'solid red 4px',margin:'auto' }}
+                    imageStyle={{ border: 'solid blue 2px',  width: 'auto', height: '120px' }}
+                   style={{ backgroundColor: 'white', border: 'solid red 2px',height:'120px'}}
 
                     //style={{border: 'solid red 4px',width:'400px',height:'auto'}}
                     crop={this.state.crop}
@@ -291,26 +295,24 @@ class ImgDropAndCrop extends Component {
                     // onChange={imgSrc => {input.onChange(imgSrc);console.log('aaaaaaa',imgSrc)}}
                     onChange={this.handleOnCropChange}
                 />
-                <br />
-                {this.state.droppedFile.name}
-               
-                {/* <p>Preview Canvas Crop </p>
-                  <canvas style ={{width:'100px',height:'100px'}} ref={this.imagePreviewCanvasRef}></canvas>
-                  <button onClick={this.handleDownloadClick}>Download</button>
-                  <button onClick={this.handleClearToDefault}>Clear</button> */}
+               <div style={{border:'solid green 2px', marginTop:'10px'}}>
+                 {this.state.droppedFile.name}
+               </div>
+                
+              
             </div>
 
             : '';
-        const cropPreviewSection = <div><p>Preview Canvas Crop </p>
-            <canvas style={{ width: 'auto', height: 'auto' }} ref={this.imagePreviewCanvasRef}></canvas>
+        const cropPreviewSection = <div >
+            <canvas style={{ display:'none', width: 'auto', height: 'auto' }} ref={this.imagePreviewCanvasRef}></canvas>
             <button onClick={this.handleFileSave}>Save</button>
-            <button onClick={this.handleClearToDefault}>Clear</button></div>;
+            <button onClick={this.handleClearToDefault}>Cancel</button></div>;
 
         return (
             <div>
-                {/* {imgSrc !== null ? cropImageSection : dropImageSection} */}
-                {dropImageSection}
-                {cropImageSection}
+                {imgSrc !== null ? cropImageSection : dropImageSection}
+                {/* {dropImageSection}
+                {cropImageSection} */}
                 {cropPreviewSection}
                 <aside style={thumbsContainer}>
                     {thumbs}

@@ -1,6 +1,7 @@
 const multer = require('multer');
     const uuidv4 = require('uuid/v4');
     const path = require('path');
+    const fs =require('fs')
 
      // configure storage
      const storage = multer.diskStorage({
@@ -47,13 +48,73 @@ module.exports = app=>{
         */
         res.send();
       });
+    
+    // for displaying image as <img  src='data:image/jpeg;base64, LzlqLzRBQ...<!-- base64 data -->' />
+    // with aync await
+      app.get("/api/images/:imageName", async (req, res)=>{
+        const imageName = req.params.imageName;
+        const imageFullName= path.join(__dirname, '..',"uploads/"+imageName);
+        const imageData = await getImageBase64Data(imageFullName);
+        let extensionName = path.extname(imageFullName);
+        let imgSrcString = `data:image/${extensionName.split('.').pop()};base64,${imageData}`;
+            res.writeHead(200, {
+              'Content-Type': 'image/png',
+              'Content-Length': imgSrcString.length
+            });
+            res.end(imgSrcString); 
+    });
 
-      app.get("/api/images222", (req, res) => {
-        console.log('***********aaaaaaaaaaaaaaaaaa');
-       // res.sendFile(path.join(__dirname, "./uploads/a.jpeg"));
-        res.send();
-      });
+    // converting readFile to return promise to asycn await can be used
+    getImageBase64Data= (imageFullName)=>(
+      new Promise((resolve,reject)=>{
+        fs.readFile(imageFullName, (err, data)=>{
+            //error handle
+            if(err) reject(error)
+            //get image file extension name
+            let extensionName = path.extname(imageFullName);
+            //convert image file to base64-encoded string
+            let base64Image = new Buffer(data, 'binary').toString('base64');
+            resolve(base64Image);
+        });
+      })
+    )
+    
 
+    // for displaying image as <img  src='data:image/jpeg;base64, LzlqLzRBQ...<!-- base64 data -->' />
+    // without aync await
+    app.get("/api22/images/:imageName", async (req, res)=>{
+      const imageName = req.params.imageName;
+      const imageFullName= path.join(__dirname, '..',"uploads/"+imageName);
      
+      //read image file
+      fs.readFile(imageFullName, (err, data)=>{
+          
+          //error handle
+          if(err) res.status(500).send(err);
+          
+          //get image file extension name
+          let extensionName = path.extname(imageFullName);
+          
+          //convert image file to base64-encoded string
+          let base64Image = new Buffer(data, 'binary').toString('base64');
+          
+          //combine all strings
+          let imgSrcString = `data:image/${extensionName.split('.').pop()};base64,${base64Image}`;
+          
+          res.writeHead(200, {
+            'Content-Type': 'image/png',
+            'Content-Length': imgSrcString.length
+          });
+          res.end(imgSrcString); 
+      })
+  });
 
+  //for displaying image as <img  src="/api/images/b.jpeg"
+  app.get("/api22/images/:imageName", (req, res) => {
+    const imageName = req.params.imageName;
+    const imageFullName= path.join(__dirname, '..',"uploads/"+imageName);
+    res.sendFile(path.join(__dirname, '..',"uploads/"+imageName));
+  });
+
+   
 }
