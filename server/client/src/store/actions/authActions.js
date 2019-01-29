@@ -80,19 +80,17 @@ export const uploadFile =(data)=> async dispatch =>{
 
     try{
         let formData = new FormData();
-       logger.log('data.ImageDropField2',data.ImageDropField2)
+       logger.log('data.ImageDropField3',data.ImageDropField3)
         formData.append('lastName', data.lastName);
 
-        for (let i = 0; i < data.ImageDropField2.length; i += 1) {
-            formData.append('ImageDropField2', data.ImageDropField2[i]);
-            logger.log('loop data.ImageDropField2[i]',data.ImageDropField2[i])
+        for (let i = 0; i < data.ImageDropField3.length; i += 1) {
+            formData.append('ImageDropField2', data.ImageDropField3[i]);
+            logger.log('loop data.ImageDropField2[i]',data.ImageDropField3[i])
           }
        // formData.append('ImageDropField2', data.ImageDropField2);
        logger.log('formData',formData)
         const res = await axios.post('/fileUpload', formData);
 
-        const res1 = await axios.get('/images/a.jpeg');
-        logger.log('res1',res1)
 
     }catch(error){
         logger.error('uploadFile error:',error);
@@ -102,7 +100,7 @@ export const uploadFile =(data)=> async dispatch =>{
 
 export const  getImage=(imageUrl)=>async dispatch=>{
 
-    logger.log('getImage')
+    logger.log('getImage imageUrl',imageUrl)
     const res = await axios.get(imageUrl);
     logger.log('getImage res',res);
     return res;

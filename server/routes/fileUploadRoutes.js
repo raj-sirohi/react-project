@@ -2,6 +2,7 @@ const multer = require('multer');
     const uuidv4 = require('uuid/v4');
     const path = require('path');
     const fs =require('fs')
+    const URL = require('url').URL;
 
      // configure storage
      const storage = multer.diskStorage({
@@ -57,8 +58,9 @@ module.exports = app=>{
         const imageData = await getImageBase64Data(imageFullName);
         let extensionName = path.extname(imageFullName);
         let imgSrcString = `data:image/${extensionName.split('.').pop()};base64,${imageData}`;
+        //let imgSrcString =imageData;
             res.writeHead(200, {
-              'Content-Type': 'image/png',
+              'Content-Type': 'image/jpeg',
               'Content-Length': imgSrcString.length
             });
             res.end(imgSrcString); 
@@ -73,6 +75,11 @@ module.exports = app=>{
             //get image file extension name
             let extensionName = path.extname(imageFullName);
             //convert image file to base64-encoded string
+
+           // var blob = new Blob([data], {type: 'image/bmp'});
+           // const a =URL.createObjectURL(data);
+           // logger.log('****objectURL',a);
+
             let base64Image = new Buffer(data, 'binary').toString('base64');
             resolve(base64Image);
         });
@@ -110,7 +117,7 @@ module.exports = app=>{
   });
 
   //for displaying image as <img  src="/api/images/b.jpeg"
-  app.get("/api22/images/:imageName", (req, res) => {
+  app.get("/api222/images/:imageName", (req, res) => {
     const imageName = req.params.imageName;
     const imageFullName= path.join(__dirname, '..',"uploads/"+imageName);
     res.sendFile(path.join(__dirname, '..',"uploads/"+imageName));

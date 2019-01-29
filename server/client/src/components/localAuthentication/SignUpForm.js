@@ -57,6 +57,14 @@ import Dropzone from 'react-dropzone'
 import * as fs from 'fs';
 import Logger from '../../loggingUtil/logger';
 
+import {
+    base64StringtoFile,
+    downloadBase64File,
+    extractImageFileExtensionFromBase64,
+    image64toCanvasRef,
+    image64CroppedtoCanvasRef
+} from './ResuableUtils';
+
 const styles = theme => ({
     formControl: {
         margin: theme.spacing.unit,
@@ -149,13 +157,81 @@ class SignUpForm extends Component {
       
    }
 
-   getImageData=async (imageUrl)=>{
+   // working 
+   getImageData11=async (imageUrl)=>{
     const imageData = await this.props.getImage('/images/a.jpeg');
    // this.setState({imageData:'data:image/jpeg;base64,'+imageData.data})
+   //const preview = URL.createObjectURL(imageData.data)
     this.setState({imageData:imageData.data})
-    this.logger.log('getImageData imageData.data', imageData.data);
+   // this.logger.log('getImageData imageData.data', imageData.data);
    // this.saveImage('ttt',imageData.data)
    }
+
+  b64toBlob=(dataURI)=> {
+
+    var byteString = atob(dataURI.split(',')[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: 'image/jpeg' });
+}
+
+   getImageData=async (imageUrl)=>{
+   
+    const imageData = await this.props.getImage('/images/a.jpeg');
+   // const imageData = "data:image/jpg;base64,"+imageData1;
+    //logger.log('imageData',imageData);
+    const a = imageData.data;
+   // logger.log('datauri split',a.split(',')[0].indexOf('base64'));
+   const  byteString = atob(a.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
+   const blob = this.dataURItoBlob(a)
+   const preview = URL.createObjectURL(blob)
+    this.setState({imageData:preview})
+   // this.logger.log('getImageData imageData.data', imageData.data);
+   // this.saveImage('ttt',imageData.data)
+   }
+
+   dataURItoBlob=(dataURI) =>{
+    // convert base64/URLEncoded data component to raw binary data held in a string
+    var byteString;
+    if (dataURI.split(',')[0].indexOf('base64') >= 0)
+        byteString = atob(dataURI.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
+       // atob(dataURI.split(',')[1]);
+    else
+        byteString = unescape(dataURI.split(',')[1]);
+    // separate out the mime component
+    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    // write the bytes of the string to a typed array
+    var ia = new Uint8Array(byteString.length);
+    for (var i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ia], {type:mimeString});
+}
+
+  b64toBlobA = (b64Data, contentType='', sliceSize=512) => {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+ 
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+ 
+        const byteNumbers = new Array(slice.length);
+        for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+ 
+        const byteArray = new Uint8Array(byteNumbers);
+ 
+        byteArrays.push(byteArray);
+    }
+ 
+    const blob = new Blob(byteArrays, {type: 'image/jpeg' });
+    return blob;
+}
 
    saveImage=(filename, data)=>{
     var myBuffer = new Buffer(data.length);
@@ -236,8 +312,8 @@ class SignUpForm extends Component {
                         required
                         savedFiles
                         component={ImageDropField3}
-                        label='ImageDropField2'
-                        name='ImageDropField2'
+                        label='ImageDropField3'
+                        name='ImageDropField3'
 
                         placeholder="your first name" />
                 </Grid>
@@ -347,7 +423,7 @@ const mapStateToProps = state => {
             lastName: 'rajesh',
             formatMask:'123477777',
             asyncountry:{label:'Canada',value:'can'},
-            ImageDropField2:'/api/images/a.jpeg'
+            ImageDropField3:['/images/a.jpeg','/images/b.jpeg']
           //   dob: '2012-07-11'
         }
 

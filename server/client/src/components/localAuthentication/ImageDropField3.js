@@ -1,13 +1,13 @@
 import React, { Component, Fragment } from "react";
 import { render } from "react-dom";
-
+import { createUser, getUserById ,uploadFile,getImage} from '../../store/actions/authActions'
 import classNames from 'classnames'
 import Dropzone from 'react-dropzone'
 //import request from "superagent";
 import ReactCrop from 'react-image-crop'
 //import './custom-image-crop.css';
 import 'react-image-crop/dist/ReactCrop.css';
-
+import {connect} from "react-redux";
 import {
     base64StringtoFile,
     downloadBase64File,
@@ -18,7 +18,7 @@ import {
 
 import Logger from '../../loggingUtil/logger';
 
-const logger = Logger('ImageDropField2');
+const logger = Logger('ImageDropField3');
 
 const imageMaxSize = 1000000000 // bytes
 const acceptedFileTypes = 'image/x-png, image/png, image/jpg, image/jpeg, image/gif'
@@ -108,8 +108,72 @@ class ImgDropAndCrop extends Component {
     }
 
     componentDidMount(){
-        logger.log('component did mount this.props', this.props)
+     //   this.setObjectURL();
+     this.setSavedFile();
     }
+
+    setSavedFile= async()=>{
+        let savedFiles =[];
+        const {input}= this.props
+       
+        if (!!input.value){
+            const savedImages=input.value;
+            for (const image of savedImages ){
+                const imageData64 = await this.props.getImage(image);
+                const fileName = image.split('/').pop()
+                const savedFile = base64StringtoFile(imageData64.data, fileName)
+                Object.assign(savedFile, {
+                    preview: URL.createObjectURL(savedFile)
+                })
+          
+            savedFiles.push(savedFile);
+            }
+     
+        }
+
+        this.setState({savedFiles:savedFiles})
+        input.onChange(this.state.savedFiles);
+    }
+
+    setObjectURL= async ()=>{
+        let savedFiles =[];
+        const {input}= this.props
+       
+        if (!!input.value){
+            const savedImages=input.value;
+            for (const image of savedImages ){
+                const objectUrl =await this.getObjectURL(image)
+          
+            savedFiles.push(objectUrl);
+            }
+     
+        }
+
+        this.setState({savedFiles:savedFiles})
+        input.onChange(this.state.savedFiles);
+    }
+
+    getObjectURL=async (imageUrl)=>{
+         const imageData = await this.props.getImage(imageUrl);
+         const a = imageData.data;
+        const blob = this.dataURItoBlob(a)
+        const preview = URL.createObjectURL(blob)
+        return preview;
+        }
+     
+        dataURItoBlob=(dataURI) =>{
+         var byteString;
+         if (dataURI.split(',')[0].indexOf('base64') >= 0)
+             byteString = atob(dataURI.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
+         else
+             byteString = unescape(dataURI.split(',')[1]);
+         var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+         var ia = new Uint8Array(byteString.length);
+         for (var i = 0; i < byteString.length; i++) {
+             ia[i] = byteString.charCodeAt(i);
+         }
+         return new Blob([ia], {type:mimeString});
+     }
 
 
     onDrop(files) {
@@ -157,6 +221,7 @@ class ImgDropAndCrop extends Component {
             Object.assign(myNewCroppedFile, {
                 preview: URL.createObjectURL(myNewCroppedFile)
             })
+            
             input.onChange(this.state.savedFiles);
             // input.onChange(myNewCroppedFile);
             sFile.push(myNewCroppedFile)
@@ -234,11 +299,11 @@ class ImgDropAndCrop extends Component {
 
         const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
 
-        const thumbs1 = files.map(file => (
+        const thumbs1 = savedFiles.map(file => (
             <div style={thumb} key={file.name}>
                 <div style={thumbInner}>
                     <img
-                        src={file.preview}
+                        src={file}
                         style={img}
                     />
                 </div>
@@ -322,8 +387,16 @@ class ImgDropAndCrop extends Component {
         );
     }
 
-
-
 }
 
-export default ImgDropAndCrop
+const mapDispatchToProps = dispatch => {
+    return {
+       
+        getImage:(imageUrl)=>dispatch(getImage(imageUrl))
+
+    }
+}
+
+//export default ImgDropAndCrop
+
+export default connect(null,mapDispatchToProps)(ImgDropAndCrop);
