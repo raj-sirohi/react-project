@@ -89,7 +89,8 @@ export const uploadFile =(data)=> async dispatch =>{
           }
        // formData.append('ImageDropField2', data.ImageDropField2);
        logger.log('formData',formData)
-        const res = await axios.post('/fileUpload', formData);
+       // const res = await axios.post('/fileUpload', formData);
+        const res = await axios.post('/video', formData);
 
 
     }catch(error){

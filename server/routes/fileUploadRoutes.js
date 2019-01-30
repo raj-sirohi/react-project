@@ -3,6 +3,10 @@ const multer = require('multer');
     const path = require('path');
     const fs =require('fs')
     const URL = require('url').URL;
+    const busboy = require('connect-busboy');
+
+    const uploadPath = path.join(__dirname, '..',"uploads/");; // Register the upload path
+   // fs.ensureDir(uploadPath); 
 
      // configure storage
      const storage = multer.diskStorage({
@@ -33,6 +37,9 @@ const multer = require('multer');
       const upload = multer({ storage });
 
 module.exports = app=>{
+  app.use(busboy({
+    highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
+})); 
   //upload.single('ImageDropField2')
    // console.log('fileUpload ************')
     app.post('/api/fileUpload', upload.array('ImageDropField2',12) , (req, res) => {
@@ -71,7 +78,7 @@ module.exports = app=>{
       new Promise((resolve,reject)=>{
         fs.readFile(imageFullName, (err, data)=>{
             //error handle
-            if(err) reject(error)
+            if(err) reject(err)
             //get image file extension name
             let extensionName = path.extname(imageFullName);
             //convert image file to base64-encoded string
@@ -85,7 +92,70 @@ module.exports = app=>{
         });
       })
     )
-    
+
+    app.get("/api/videos/:videoName", function(req, res) {
+      const videoName = req.params.videoName;
+      const path1= path.join(__dirname, '..',"uploads/"+videoName);
+     // const path = 'assets/sample.mp4'
+      const stat = fs.statSync(path1)
+      const fileSize = stat.size
+      const range = req.headers.range
+      if (range) {
+        const parts = range.replace(/bytes=/, "").split("-")
+        const start = parseInt(parts[0], 10)
+        const end = parts[1] 
+          ? parseInt(parts[1], 10)
+          : fileSize-1
+        const chunksize = (end-start)+1
+        const file = fs.createReadStream(path1, {start, end})
+        const head = {
+          'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+          'Accept-Ranges': 'bytes',
+          'Content-Length': chunksize,
+          'Content-Type': 'video/mp4',
+        }
+        res.writeHead(206, head);
+        file.pipe(res);
+      } else {
+        const head = {
+          'Content-Length': fileSize,
+          'Content-Type': 'video/mp4',
+        }
+        res.writeHead(200, head)
+        fs.createReadStream(path).pipe(res)
+      }
+    });
+
+
+    app.post('/api/video',(req, res, next) => {
+ 
+      req.pipe(req.busboy); // Pipe it trough busboy
+      req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {
+        console.log(`field name,value '${key}', '${value}' started`);
+      });
+
+      req.busboy.on('file', (fieldname, file, filename) => {
+          console.log(`Upload of '${filename}' started`);
+   
+          // Create a write stream of the new file
+          const fstream = fs.createWriteStream(path.join(uploadPath, filename));
+          // Pipe it trough
+          file.pipe(fstream);
+   
+          // On finish of the upload
+          fstream.on('close', () => {
+              console.log(`Upload of '${filename}' finished`);
+              res.status(200).send({upload:'success'});
+          });
+      });
+  });
+
+    //for displaying image as <img  src="/api/images/b.jpeg"
+  app.get("/api22/videos/:videoName", (req, res) => {
+    const videoName = req.params.videoName;
+    const imageFullName= path.join(__dirname, '..',"uploads/"+videoName);
+    res.sendFile(path.join(__dirname, '..',"uploads/"+videoName));
+  });
 
     // for displaying image as <img  src='data:image/jpeg;base64, LzlqLzRBQ...<!-- base64 data -->' />
     // without aync await

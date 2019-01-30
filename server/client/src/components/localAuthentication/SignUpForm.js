@@ -56,6 +56,8 @@ import axios from '../../config/axios/axiosBlog';
 import Dropzone from 'react-dropzone'
 import * as fs from 'fs';
 import Logger from '../../loggingUtil/logger';
+import ReactPlayer from 'react-player'
+import VideoThumbnail from 'react-video-thumbnail';
 
 import {
     base64StringtoFile,
@@ -320,6 +322,16 @@ class SignUpForm extends Component {
                 <img  src={this.state.imageData} alt="Image preview..." />
                 <img  src="/api/images/b.jpeg" alt="Image preview..." />
 
+                 <Grid item xs={12}>
+                 <ReactPlayer 
+                 url="/api/videos/SampleVideo.mp4" controls light={this.state.imageData} />
+                </Grid>
+                <VideoThumbnail
+    videoUrl={this.state.imageData}
+    thumbnailHandler={(thumbnail) => console.log(thumbnail)}
+    width={120}
+    height={80}
+    />
 
             </Grid>
 
