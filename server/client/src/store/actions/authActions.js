@@ -76,6 +76,26 @@ export const createUser = (user, history) => async dispatch => {
     }
 };
 
+export const uploadMedia =(data)=> async dispatch =>{
+
+    try{
+        let formData = new FormData();
+       
+        formData.append('lastName', data.lastName);
+        formData.append('ImageDropField2', data);
+       
+       // formData.append('ImageDropField2', data.ImageDropField2);
+       logger.log('formData',formData)
+       // const res = await axios.post('/fileUpload', formData);
+        const res = await axios.post('/video', formData);
+
+
+    }catch(error){
+        logger.error('uploadFile error:',error);
+    }
+
+}
+
 export const uploadFile =(data)=> async dispatch =>{
 
     try{

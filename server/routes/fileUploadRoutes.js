@@ -4,9 +4,20 @@ const multer = require('multer');
     const fs =require('fs')
     const URL = require('url').URL;
     const busboy = require('connect-busboy');
+    const ffmpeg = require('fluent-ffmpeg');
+    var thumb = require('node-thumbnail').thumb;
+   
 
     const uploadPath = path.join(__dirname, '..',"uploads/");; // Register the upload path
    // fs.ensureDir(uploadPath); 
+   const tumbnailPath = path.join(__dirname, '..',"uploads/thumbnail/");
+  //  const proc = new ffmpeg(fullPathTofileName)
+  // .takeScreenshots({
+  //     count: 1,
+  //     timemarks: [ '600' ] // number of seconds
+  //   }, tumbnailPath, function(err) {
+  //   console.log('screenshots were saved')
+  // });
 
      // configure storage
      const storage = multer.diskStorage({
@@ -61,6 +72,7 @@ module.exports = app=>{
     // with aync await
       app.get("/api/images/:imageName", async (req, res)=>{
         const imageName = req.params.imageName;
+        console.log('/api/images/:imageName aaaa:',imageName);
         const imageFullName= path.join(__dirname, '..',"uploads/"+imageName);
         const imageData = await getImageBase64Data(imageFullName);
         let extensionName = path.extname(imageFullName);
@@ -145,10 +157,17 @@ module.exports = app=>{
           // On finish of the upload
           fstream.on('close', () => {
               console.log(`Upload of '${filename}' finished`);
-              res.status(200).send({upload:'success'});
+              const fullFileName=path.join(uploadPath, filename);
+
+              console.log(`fullFileName: '${fullFileName}' finished`);
+             // proc(fullFileName);
+          
+res.send();
+            //  res.status(200).send({upload:'success'});
           });
       });
   });
+
 
     //for displaying image as <img  src="/api/images/b.jpeg"
   app.get("/api22/videos/:videoName", (req, res) => {

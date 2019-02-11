@@ -7,7 +7,7 @@ import { compose } from 'redux';
 
 import FormInput from '../ui/form/FormInput'
 
-import { createUser, getUserById ,uploadFile,getImage} from '../../store/actions/authActions' // '../../actions/index';
+import { createUser, getUserById, uploadFile, getImage } from '../../store/actions/authActions' // '../../actions/index';
 import * as actions from '../../store/actions/authActions'
 import * as Actions from '../../store/actions/countryActions'
 
@@ -145,109 +145,109 @@ const styles = theme => ({
 class SignUpForm extends Component {
     constructor(props) {
         super(props);
-       
-      }
+
+    }
     logger = Logger('SignUpForm');
 
     state = {
         age: '',
-        imageData:''
+        imageData: ''
     };
 
-   componentDidMount(){
-    this.getImageData('/images/a.jpeg');
-      
-   }
+    componentDidMount() {
+        this.getImageData('/images/a.jpeg');
 
-   // working 
-   getImageData11=async (imageUrl)=>{
-    const imageData = await this.props.getImage('/images/a.jpeg');
-   // this.setState({imageData:'data:image/jpeg;base64,'+imageData.data})
-   //const preview = URL.createObjectURL(imageData.data)
-    this.setState({imageData:imageData.data})
-   // this.logger.log('getImageData imageData.data', imageData.data);
-   // this.saveImage('ttt',imageData.data)
-   }
-
-  b64toBlob=(dataURI)=> {
-
-    var byteString = atob(dataURI.split(',')[1]);
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
     }
-    return new Blob([ab], { type: 'image/jpeg' });
-}
 
-   getImageData=async (imageUrl)=>{
-   
-    const imageData = await this.props.getImage('/images/a.jpeg');
-   // const imageData = "data:image/jpg;base64,"+imageData1;
-    //logger.log('imageData',imageData);
-    const a = imageData.data;
-   // logger.log('datauri split',a.split(',')[0].indexOf('base64'));
-   const  byteString = atob(a.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
-   const blob = this.dataURItoBlob(a)
-   const preview = URL.createObjectURL(blob)
-    this.setState({imageData:preview})
-   // this.logger.log('getImageData imageData.data', imageData.data);
-   // this.saveImage('ttt',imageData.data)
-   }
-
-   dataURItoBlob=(dataURI) =>{
-    // convert base64/URLEncoded data component to raw binary data held in a string
-    var byteString;
-    if (dataURI.split(',')[0].indexOf('base64') >= 0)
-        byteString = atob(dataURI.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
-       // atob(dataURI.split(',')[1]);
-    else
-        byteString = unescape(dataURI.split(',')[1]);
-    // separate out the mime component
-    var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-    // write the bytes of the string to a typed array
-    var ia = new Uint8Array(byteString.length);
-    for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
+    // working 
+    getImageData11 = async (imageUrl) => {
+        const imageData = await this.props.getImage('/images/a.jpeg');
+        // this.setState({imageData:'data:image/jpeg;base64,'+imageData.data})
+        //const preview = URL.createObjectURL(imageData.data)
+        this.setState({ imageData: imageData.data })
+        // this.logger.log('getImageData imageData.data', imageData.data);
+        // this.saveImage('ttt',imageData.data)
     }
-    return new Blob([ia], {type:mimeString});
-}
 
-  b64toBlobA = (b64Data, contentType='', sliceSize=512) => {
-    const byteCharacters = atob(b64Data);
-    const byteArrays = [];
- 
-    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        const slice = byteCharacters.slice(offset, offset + sliceSize);
- 
-        const byteNumbers = new Array(slice.length);
-        for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
+    b64toBlob = (dataURI) => {
+
+        var byteString = atob(dataURI.split(',')[1]);
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
         }
- 
-        const byteArray = new Uint8Array(byteNumbers);
- 
-        byteArrays.push(byteArray);
+        return new Blob([ab], { type: 'image/jpeg' });
     }
- 
-    const blob = new Blob(byteArrays, {type: 'image/jpeg' });
-    return blob;
-}
 
-   saveImage=(filename, data)=>{
-    var myBuffer = new Buffer(data.length);
-    for (var i = 0; i < data.length; i++) {
-        myBuffer[i] = data[i];
+    getImageData = async (imageUrl) => {
+
+        const imageData = await this.props.getImage('/images/a.jpeg');
+        // const imageData = "data:image/jpg;base64,"+imageData1;
+        //logger.log('imageData',imageData);
+        const a = imageData.data;
+        // logger.log('datauri split',a.split(',')[0].indexOf('base64'));
+        const byteString = atob(a.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
+        const blob = this.dataURItoBlob(a)
+        const preview = URL.createObjectURL(blob)
+        this.setState({ imageData: preview })
+        // this.logger.log('getImageData imageData.data', imageData.data);
+        // this.saveImage('ttt',imageData.data)
     }
-    fs.writeFile('/test.jpeg', 'aaaa', function(err) {
-        if(err) {
-            this.logger.log(err);
-        } else {
-            this.logger.log("The file was saved!");
+
+    dataURItoBlob = (dataURI) => {
+        // convert base64/URLEncoded data component to raw binary data held in a string
+        var byteString;
+        if (dataURI.split(',')[0].indexOf('base64') >= 0)
+            byteString = atob(dataURI.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
+        // atob(dataURI.split(',')[1]);
+        else
+            byteString = unescape(dataURI.split(',')[1]);
+        // separate out the mime component
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        // write the bytes of the string to a typed array
+        var ia = new Uint8Array(byteString.length);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
         }
-    });
-  }
+        return new Blob([ia], { type: mimeString });
+    }
+
+    b64toBlobA = (b64Data, contentType = '', sliceSize = 512) => {
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+        return blob;
+    }
+
+    saveImage = (filename, data) => {
+        var myBuffer = new Buffer(data.length);
+        for (var i = 0; i < data.length; i++) {
+            myBuffer[i] = data[i];
+        }
+        fs.writeFile('/test.jpeg', 'aaaa', function (err) {
+            if (err) {
+                this.logger.log(err);
+            } else {
+                this.logger.log("The file was saved!");
+            }
+        });
+    }
 
     renderContent() {
         const { classes } = this.props;
@@ -304,11 +304,11 @@ class SignUpForm extends Component {
 
                 <Grid item xs={12} />
 
-               
-                <Grid item xs={12} />
-            
 
-                 <Grid item xs={12}>
+                <Grid item xs={12} />
+
+
+                <Grid item xs={12}>
                     <Field
                         width='100%'
                         required
@@ -319,19 +319,19 @@ class SignUpForm extends Component {
 
                         placeholder="your first name" />
                 </Grid>
-                <img  src={this.state.imageData} alt="Image preview..." />
-                <img  src="/api/images/b.jpeg" alt="Image preview..." />
+                <img src={this.state.imageData} alt="Image preview..." />
+                <img src="/api/images/b.jpeg" alt="Image preview..." />
 
-                 <Grid item xs={12}>
-                 <ReactPlayer 
-                 url="/api/videos/SampleVideo.mp4" controls light={this.state.imageData} />
+                <Grid item xs={12}>
+                    <ReactPlayer
+                        url="/api/videos/SampleVideo_1280x720_20mb.mp4" controls light={this.state.imageData} />
                 </Grid>
                 <VideoThumbnail
-    videoUrl={this.state.imageData}
-    thumbnailHandler={(thumbnail) => console.log(thumbnail)}
-    width={120}
-    height={80}
-    />
+                    videoUrl="/api/videos/SampleVideo_1280x720_20mb.mp4"
+                    thumbnailHandler={(thumbnail) => this.logger.log('videoThumbnail data')}
+                    width={120}
+                    height={80}
+                />
 
             </Grid>
 
@@ -352,8 +352,8 @@ class SignUpForm extends Component {
         }
     }
 
-   
-   
+
+
     render() {
         const { handleSubmit, userId, classes } = this.props;
         // this.props contains lot of values which are injected by redux form, such as submitFailed
@@ -417,7 +417,7 @@ const mapDispatchToProps = dispatch => {
         //  createUser: (dispatch) => createUser(dispatch),
         getUserById: (userId) => dispatch(getUserById(userId)),
         getCountryListByName: (inputVal) => dispatch(Actions.getCountryListByName(inputVal)),
-        getImage:(imageUrl)=>dispatch(getImage(imageUrl))
+        getImage: (imageUrl) => dispatch(getImage(imageUrl))
 
     }
 }
@@ -433,10 +433,10 @@ const mapStateToProps = state => {
         // initialValues: state.auth.user 
         initialValues: {
             lastName: 'rajesh',
-            formatMask:'123477777',
-            asyncountry:{label:'Canada',value:'can'},
-            ImageDropField3:['/images/a.jpeg','/images/b.jpeg']
-          //   dob: '2012-07-11'
+            formatMask: '123477777',
+            asyncountry: { label: 'Canada', value: 'can' },
+            ImageDropField3: ['/images/a.jpeg', '/images/b.jpeg']
+            //   dob: '2012-07-11'
         }
 
 
@@ -466,7 +466,7 @@ const validate = (values) => {
         errors.favoriteColor = 'Required'
     }
 
-    
+
     if (values.gender == undefined) {
         errors.gender = "gender is required"
     }
@@ -484,9 +484,9 @@ const validate = (values) => {
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = 'Invalid email address'
     }
-    logger.log('values.asyncountry,',!(!!values.asyncountry));
-    if (!(!!values.asyncountry)){
-        errors.asyncountry='country is required!'
+    logger.log('values.asyncountry,', !(!!values.asyncountry));
+    if (!(!!values.asyncountry)) {
+        errors.asyncountry = 'country is required!'
     }
     return errors;
 }
