@@ -49,7 +49,7 @@ ffmpeg(sourcePath)
   })
   .screenshots({
     // Will take screenshots at 20%, 40%, 60% and 80% of the video
-   filename:'a.jpg',
-    timestamps: ['10'],
+   filename:'awwwww.jpg',
+    timestamps: ['2'],
     folder: outputDir
   });

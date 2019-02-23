@@ -97,6 +97,23 @@ export const uploadMedia =(data)=> async dispatch =>{
 }
 
 export const uploadFile =(data)=> async dispatch =>{
+logger.log('uploadFile data',data);
+    try{
+        let formData = new FormData();
+        formData.append('file', data);
+        const res = await axios.post('/video', formData);
+        logger.log('uploadFile res',res);
+        return res;
+
+
+    }catch(error){
+        logger.error('uploadFile error:',error);
+    }
+
+}
+
+// can be used to upload file along with form data 
+export const uploadFileWithFormData =(data)=> async dispatch =>{
 
     try{
         let formData = new FormData();
@@ -124,6 +141,14 @@ export const  getImage=(imageUrl)=>async dispatch=>{
     logger.log('getImage imageUrl',imageUrl)
     const res = await axios.get(imageUrl);
     logger.log('getImage res',res);
+    return res;
+}
+
+export const  getVideo=(videoName)=>async dispatch=>{
+
+    logger.log('getVideo videoName',videoName)
+    const res = await axios.get('/videos/'+videoName);
+    logger.log('getVideo res',res);
     return res;
 }
 

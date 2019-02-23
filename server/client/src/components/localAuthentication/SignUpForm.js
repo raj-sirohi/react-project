@@ -7,7 +7,7 @@ import { compose } from 'redux';
 
 import FormInput from '../ui/form/FormInput'
 
-import { createUser, getUserById, uploadFile, getImage } from '../../store/actions/authActions' // '../../actions/index';
+import { createUser, getUserById, uploadFile, getImage,getVideo } from '../../store/actions/authActions' // '../../actions/index';
 import * as actions from '../../store/actions/authActions'
 import * as Actions from '../../store/actions/countryActions'
 
@@ -24,7 +24,7 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import InputField from '../ui/input/InputField';
 import ImageDropField from './ImageDropField';
-import ImageDropField3 from './ImageDropField3';
+import MediaField from './MediaField';
 import DateField from '../ui/input/DateField';
 import CheckBoxField from '../ui/input/CheckBoxField';
 import RadioGroupField from '../ui/input/RadioGroupField';
@@ -156,6 +156,7 @@ class SignUpForm extends Component {
 
     componentDidMount() {
         this.getImageData('/images/a.jpeg');
+       // this.props.getVideo('file_example_MP4_480_1_5MG.mp4');
 
     }
 
@@ -313,25 +314,21 @@ class SignUpForm extends Component {
                         width='100%'
                         required
                         savedFiles
-                        component={ImageDropField3}
-                        label='ImageDropField3'
-                        name='ImageDropField3'
+                        component={MediaField}
+                        label='MediaField'
+                        name='MediaField'
 
                         placeholder="your first name" />
                 </Grid>
                 <img src={this.state.imageData} alt="Image preview..." />
-                <img src="/api/images/b.jpeg" alt="Image preview..." />
+                <img src="/api222/images/b.jpeg" alt="Image preview..." />
 
                 <Grid item xs={12}>
-                    <ReactPlayer
-                        url="/api/videos/SampleVideo_1280x720_20mb.mp4" controls light={this.state.imageData} />
+                    <ReactPlayer style={{height:'150px',width:'150px'}}
+                   
+                        url="/api/videos/file_example_MP4_480_1_5MG.mp4" controls light={this.state.imageData} />
                 </Grid>
-                <VideoThumbnail
-                    videoUrl="/api/videos/SampleVideo_1280x720_20mb.mp4"
-                    thumbnailHandler={(thumbnail) => this.logger.log('videoThumbnail data')}
-                    width={120}
-                    height={80}
-                />
+                
 
             </Grid>
 
@@ -417,7 +414,8 @@ const mapDispatchToProps = dispatch => {
         //  createUser: (dispatch) => createUser(dispatch),
         getUserById: (userId) => dispatch(getUserById(userId)),
         getCountryListByName: (inputVal) => dispatch(Actions.getCountryListByName(inputVal)),
-        getImage: (imageUrl) => dispatch(getImage(imageUrl))
+        getImage: (imageUrl) => dispatch(getImage(imageUrl)),
+        getVideo:(videoName)=>dispatch(getVideo(videoName))
 
     }
 }
@@ -435,7 +433,7 @@ const mapStateToProps = state => {
             lastName: 'rajesh',
             formatMask: '123477777',
             asyncountry: { label: 'Canada', value: 'can' },
-            ImageDropField3: ['/images/a.jpeg', '/images/b.jpeg']
+            MediaField: ['/images/a.jpeg', '/images/b.jpeg']
             //   dob: '2012-07-11'
         }
 

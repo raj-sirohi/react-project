@@ -21,6 +21,13 @@ import ReactCrop from 'react-image-crop'
 import InputField from '../ui/input/InputField';
 import 'react-image-crop/dist/ReactCrop.css';
 import Icon from '@material-ui/core/Icon';
+
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import { connect } from "react-redux";
 import {
     base64StringtoFile,
@@ -30,7 +37,11 @@ import {
     image64CroppedtoCanvasRef
 } from './ResuableUtils'
 import VideoThumbnail from 'react-video-thumbnail';
+import playIcon from './button_play_blue.png';
+import ReactPlayer from 'react-player'
 import Logger from '../../loggingUtil/logger';
+import zIndex from "../../../node_modules/@material-ui/core/styles/zIndex";
+import MediaViewField from './MediaViewField';
 
 const logger = Logger('ImageDropField3');
 
@@ -62,6 +73,7 @@ const thumbsContainer = {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 16
+
 };
 
 const thumb = {
@@ -73,20 +85,11 @@ const thumb = {
     width: '100px',
     height: '100px',
     padding: 4,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
+
 };
 
-const thumbWorking = {
-    display: 'inline-flex',
-    borderRadius: 2,
-    border: '1px solid #eaeaea',
-    marginBottom: 8,
-    marginRight: 8,
-    width: 100,
-    height: 100,
-    padding: 4,
-    boxSizing: 'border-box'
-};
+
 
 const thumbInner = {
     display: 'flex',
@@ -99,6 +102,14 @@ const img = {
     width: '100px', //'auto',
     height: '100px' //'100%'
 };
+
+const playIconImg={
+    position: 'absolute',
+     zIndex: '100',
+      top: '20%',
+      left: '20%',
+   margin: 'auto'
+}
 
 const styles = {
     card: {
@@ -116,11 +127,13 @@ class ImgDropAndCrop extends Component {
         this.imagePreviewCanvasRef = React.createRef()
         this.fileInputRef = React.createRef()
         this.state = {
+            open: false,
             fileType: null,
             files: [],
             droppedFile: '',
             droppedFileType: '',
             savedFiles: [],
+            mediaFiles: [],
             imgSrc: null,
             imgSrcExt: null,
             videoFile: [],
@@ -203,138 +216,47 @@ class ImgDropAndCrop extends Component {
         return new Blob([ia], { type: mimeString });
     }
 
-    onDrop(files) {
+    //setSavedFile = async () => {
+    onDrop = async (files) => {
         //image/jpeg
         //video/mp4
         const currentFile = files[0]
         const type = currentFile.type.split('/')[0]
-        // logger.log('type', type)
-        // logger.log('onDrop currentFile', currentFile)
-        this.props.uploadFile(currentFile);
-        Object.assign(currentFile, {
-            preview: URL.createObjectURL(currentFile)
+
+        const imageData64 = await this.props.uploadFile(currentFile);
+        logger.log('onDrop imageData64', imageData64.data)
+
+        const fileName = imageData64.data.fileName;
+        const savedFile = base64StringtoFile(imageData64.data.image, fileName)
+        Object.assign(savedFile, {
+            preview: URL.createObjectURL(savedFile)
         })
-        this.setState({ droppedFileType: type, droppedFile: currentFile });
+        const savedFiles = this.state.savedFiles;
+
+        savedFiles.push(savedFile);
+        const mediaFile = { file: savedFile, type: type }
+        this.setState({ savedFiles: savedFiles, mediaFiles: this.state.mediaFiles.concat(mediaFile) });
+
 
     }
 
-    onDrop1(files) {
-        this.setState({
-            files: files.map(file => Object.assign(file, {
-                preview: URL.createObjectURL(file)
-            }))
-        });
+    handleClickOpen = () => {
+        this.setState({ open: true });
+    };
 
-        const currentFile = files[0]
-        logger.log('onDrop currentFile', currentFile);
-        const myFileItemReader = new FileReader()
-        myFileItemReader.addEventListener("load", () => {
-            // console.log(myFileItemReader.result)
-            const myResult = myFileItemReader.result;
-            const canvasRef = this.imagePreviewCanvasRef.current;
-            image64toCanvasRef(canvasRef, myResult)
-            this.setState({
-                imgSrc: myResult,
-                droppedFile: currentFile,
-                imgSrcExt: extractImageFileExtensionFromBase64(myResult)
-            })
-        }, false)
-
-        myFileItemReader.readAsDataURL(currentFile)
-    }
-
-    handleFileSave = (event) => {
-        const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
-        event.preventDefault()
-        const { imgSrc, files } = this.state
-        // logger.log('handleFileSave fileName',files[0].name);
-        if (imgSrc) {
-            const canvasRef = this.imagePreviewCanvasRef.current
-
-            const { imgSrcExt } = this.state
-            const imageData64 = canvasRef.toDataURL('image/' + imgSrcExt)
-
-
-            const myFilename = files[0].name;
-
-            // file to be uploaded
-            const myNewCroppedFile = base64StringtoFile(imageData64, myFilename)
-            const sFile = this.state.savedFiles;
-            Object.assign(myNewCroppedFile, {
-                preview: URL.createObjectURL(myNewCroppedFile)
-            })
-
-            input.onChange(this.state.savedFiles);
-            // input.onChange(myNewCroppedFile);
-            sFile.push(myNewCroppedFile)
-            this.setState({ savedFiles: sFile })
-
-
-
-
-            logger.log('handleFileSave savedFiles', this.state.savedFiles);
-            this.handleCancel()
-        }
-    }
-
-    handleCancel = event => {
-        this.setState({
-            fileType: null,
-            imgSrc: null,
-            imgSrcExt: null,
-            videoCurrent: null,
-            droppedFile: null,
-            droppedFileType: null,
-            crop: {
-                aspect: 1 / 1
-            }
-        })
-    }
-
-    videoPreviewSection = () => {
-        const {droppedFile,droppedFileType}=this.state;
-        const {classes}= this.props;
-
-        const videoPreview = !!droppedFileType?droppedFileType==='video'?true:false:false;
-
-        return (
-            videoPreview && <div>
-                <Icon color="disabled" style={{ fontSize: 60 }}>
-                    play_circle_filled_white
-                                 </Icon>
-                <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    {droppedFile.name}
-                </Typography>
-            </div>
-        );
-    }
-
-    imagePreviewSection = () => {
-        const {droppedFile,droppedFileType}=this.state;
-        const {classes}= this.props;
-        const imagePreview = !!droppedFileType?droppedFileType==='image'?true:false:false;
-
-        return (
-            imagePreview && <div>
-            <img
-                src={droppedFile.preview}
-                style={img} />
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-                {droppedFile.name}
-            </Typography>
-        </div>
-        );
-    }
+    handleClose = () => {
+        this.setState({ open: false });
+    };
 
     render() {
         const { imgSrc } = this.state
-        const { files, droppedFile, savedFiles, videoFile } = this.state;
+        const { mediaFiles, files, droppedFile, savedFiles, videoFile } = this.state;
 
         const singleFile = savedFiles[0];
 
 
         const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
-
+       logger.log('render this.state.open', this.state.open);
 
         const thumbs = savedFiles.map(file => (
             <div style={thumb} key={file.name}>
@@ -346,6 +268,127 @@ class ImgDropAndCrop extends Component {
                 </div>
             </div>
         ));
+
+        const imageThumbs = mediaFiles.map(mediaFile => {
+            const type = mediaFile.type
+            if (type === 'image') {
+                return (
+                    <div style={thumb} key={mediaFile.file.name}>
+                        <div style={thumbInner}>
+                            <img
+                                src={mediaFile.file.preview}
+                                style={img}
+                            />
+                        </div>
+                    </div>
+                )
+            }
+
+        });
+
+        const videoThumbs = mediaFiles.map(mediaFile => {
+            const type = mediaFile.type
+            if (type === 'video') {
+                return (
+                    <div style={thumb} key={mediaFile.file.name}>
+                        <div style={thumbInner}>
+                            <div style={{ position: 'relative', float: 'left' }}
+                            onClick={() => this.setState({ open: true })} >
+                                <img
+                                    src={mediaFile.file.preview}
+                                    style={img}
+                                />
+                                {/* <div style={{
+                                    position: 'absolute', zIndex: '100', top: '20%',
+                                    margin: 'auto', left: '20%'
+                                }} > */}
+
+                                    <img style={playIconImg} src={playIcon} />
+
+                                {/* </div> */}
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+
+        });
+
+        const videoThumbs1 = mediaFiles.map(mediaFile => {
+            const type = mediaFile.type
+            if (type === 'video') {
+                return (
+                    <div style={thumb} key={mediaFile.file.name}>
+                        <div style={{ position: 'relative', float: 'left' }}>
+
+
+                            <img
+                                src={mediaFile.file.preview}
+
+                                onClick={() => this.setState({ open: true })}
+                            />
+                            <div style={{
+                                position: 'absolute', zIndex: '100', top: '20%',
+                                width: '100px', height: '100px', margin: '0 auto', left: '0px', right: '0px'
+                            }} >
+                                {/* <h1 style={{color:'white'}}> this is icon</h1> */}
+                                <img src={playIcon} />
+                                <Icon color="disabled" style={{ fontSize: 60 }}>
+                                    play_circle_filled_white
+                                 </Icon>
+                            </div>
+
+                        </div>
+                    </div>
+                )
+            }
+
+        });
+
+      
+
+
+        const dialog = <div>
+            <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                Open form dialog
+        </Button>
+            <Dialog
+                open={this.state.open}
+                onClose={this.handleClose}
+                aria-labelledby="form-dialog-title"
+            >
+                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        To subscribe to this website, please enter your email address here. We will send
+                        updates occasionally.
+            </DialogContentText>
+                    <ReactPlayer height='100%'
+                        width='100%'
+                        url="/api/videos/file_example_MP4_480_1_5MG.mp4"
+
+                        controls />
+                         <aside style={thumbsContainer}>
+                    {imageThumbs}
+                </aside>
+                
+
+                    <aside style={thumbsContainer}>
+                        {videoThumbs}
+                    </aside>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                        Cancel
+            </Button>
+                    <Button onClick={this.handleClose} color="primary">
+                        Subscribe
+            </Button>
+                </DialogActions>
+            </Dialog>
+        </div>;
+
+
 
 
         const dropImageSection = <Dropzone onDrop={this.onDrop.bind(this)}>
@@ -365,42 +408,31 @@ class ImgDropAndCrop extends Component {
                     </div>
                         {isDragReject && <div>Unsupported file type...</div>}
                         <Typography className={classes.title} color="textSecondary" gutterBottom>
-                           uploadProgress
+                            uploadProgress
                       </Typography>
                     </div>
                 )
             }}
         </Dropzone>
 
-
-
-
-        const mediaPreview = this.state.droppedFileType === 'video' ? 'video' : 'image'
-
-        const uploadSection = <Card className={classes.card}>
-            <CardActionArea>
-                <CardContent>
-                    {mediaPreview === 'image' ? this.imagePreviewSection() : this.videoPreviewSection()}
-                </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <Button size="small" color="primary">
-                    upload
-                                </Button>
-                <Button onClick={this.handleCancel} size="small" color="primary">
-                    cancel
-                                </Button>
-            </CardActions>
-        </Card>
-
         return (
             <div>
-
-                {!!this.state.droppedFile ? uploadSection : dropImageSection}
-              
+                {/* {dialog} */}
+                <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+                Open form dialog
+                </Button>
+                <MediaViewField handleClose ={()=>this.setState({open:false})} open={this.state.open} mediaFiles={this.state.mediaFiles}/>
+                {dropImageSection}
                 <aside style={thumbsContainer}>
-                    {thumbs}
+                    {imageThumbs}
                 </aside>
+                <div >
+
+                    <aside style={thumbsContainer}>
+                        {videoThumbs}
+                    </aside>
+                </div>
+
 
             </div>
         );

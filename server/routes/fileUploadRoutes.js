@@ -6,18 +6,12 @@ const multer = require('multer');
     const busboy = require('connect-busboy');
     const ffmpeg = require('fluent-ffmpeg');
     var thumb = require('node-thumbnail').thumb;
-   
+    const readChunk = require('read-chunk');
+   const fileType = require('file-type');
 
     const uploadPath = path.join(__dirname, '..',"uploads/");; // Register the upload path
    // fs.ensureDir(uploadPath); 
    const tumbnailPath = path.join(__dirname, '..',"uploads/thumbnail/");
-  //  const proc = new ffmpeg(fullPathTofileName)
-  // .takeScreenshots({
-  //     count: 1,
-  //     timemarks: [ '600' ] // number of seconds
-  //   }, tumbnailPath, function(err) {
-  //   console.log('screenshots were saved')
-  // });
 
      // configure storage
      const storage = multer.diskStorage({
@@ -51,8 +45,7 @@ module.exports = app=>{
   app.use(busboy({
     highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
 })); 
-  //upload.single('ImageDropField2')
-   // console.log('fileUpload ************')
+  
     app.post('/api/fileUpload', upload.array('ImageDropField2',12) , (req, res) => {
 
         console.log('fileUpload req.test api/fileUpload ************',req.test)
@@ -69,7 +62,9 @@ module.exports = app=>{
       });
     
     // for displaying image as <img  src='data:image/jpeg;base64, LzlqLzRBQ...<!-- base64 data -->' />
-    // with aync await
+    // with aync await.
+    // returning base64data allows to use object url and other features easily.
+    // check imageDropField3_original className=
       app.get("/api/images/:imageName", async (req, res)=>{
         const imageName = req.params.imageName;
         console.log('/api/images/:imageName aaaa:',imageName);
@@ -79,7 +74,7 @@ module.exports = app=>{
         let imgSrcString = `data:image/${extensionName.split('.').pop()};base64,${imageData}`;
         //let imgSrcString =imageData;
             res.writeHead(200, {
-              'Content-Type': 'image/jpeg',
+              'Content-Type': 'image/jpg',
               'Content-Length': imgSrcString.length
             });
             res.end(imgSrcString); 
@@ -92,13 +87,6 @@ module.exports = app=>{
             //error handle
             if(err) reject(err)
             //get image file extension name
-            let extensionName = path.extname(imageFullName);
-            //convert image file to base64-encoded string
-
-           // var blob = new Blob([data], {type: 'image/bmp'});
-           // const a =URL.createObjectURL(data);
-           // logger.log('****objectURL',a);
-
             let base64Image = new Buffer(data, 'binary').toString('base64');
             resolve(base64Image);
         });
@@ -107,6 +95,7 @@ module.exports = app=>{
 
     app.get("/api/videos/:videoName", function(req, res) {
       const videoName = req.params.videoName;
+      console.log('******* get /api/videos/:videoName ',videoName);
       const path1= path.join(__dirname, '..',"uploads/"+videoName);
      // const path = 'assets/sample.mp4'
       const stat = fs.statSync(path1)
@@ -120,6 +109,7 @@ module.exports = app=>{
           : fileSize-1
         const chunksize = (end-start)+1
         const file = fs.createReadStream(path1, {start, end})
+        console.log('******* AAAAAA get /api/videos/:videoName ');
         const head = {
           'Content-Range': `bytes ${start}-${end}/${fileSize}`,
           'Accept-Ranges': 'bytes',
@@ -143,28 +133,73 @@ module.exports = app=>{
  
       req.pipe(req.busboy); // Pipe it trough busboy
       req.busboy.on('field', function(key, value, keyTruncated, valueTruncated) {
-        console.log(`field name,value '${key}', '${value}' started`);
+        console.log(` /api/video (event field) -field name,value '${key}', '${value}' started`);
       });
 
       req.busboy.on('file', (fieldname, file, filename) => {
-          console.log(`Upload of '${filename}' started`);
-   
+          console.log(`/api/video (event-file) -Upload of '${filename}' started`);
+
           // Create a write stream of the new file
           const fstream = fs.createWriteStream(path.join(uploadPath, filename));
           // Pipe it trough
           file.pipe(fstream);
-   
           // On finish of the upload
-          fstream.on('close', () => {
-              console.log(`Upload of '${filename}' finished`);
-              const fullFileName=path.join(uploadPath, filename);
+          fstream.on('close', async () => {
+              console.log(`/api/video (event-close) -Upload of '${filename}' finished`);
+              
+             const sourcePath=path.join(__dirname, '..',"uploads/",filename);
 
-              console.log(`fullFileName: '${fullFileName}' finished`);
-             // proc(fullFileName);
-          
-res.send();
-            //  res.status(200).send({upload:'success'});
+              const outputDir =path.join(__dirname, '..',"uploads/");    
+
+              const buffer = readChunk.sync(sourcePath, 0, fileType.minimumBytes);
+ 
+              console.log('fileType:',fileType(buffer).mime);
+              const mimeType = fileType(buffer).mime.split('/')[0];
+              console.log('mimeType',mimeType);
+              
+              if (mimeType==='video'){
+                ffmpeg(sourcePath)
+                .on('end', async()=> {
+                  console.log('Screenshots taken sending thumbnail in response',filename);
+                 
+                  const imageFullName= path.join(__dirname, '..',"uploads/",filename+'_thumb.jpg');
+                  const imageData = await getImageBase64Data(imageFullName);
+                  let extensionName = path.extname(imageFullName);
+                  let imgSrcString = `data:image/${extensionName.split('.').pop()};base64,${imageData}`;
+                 
+                      // can also send response as follows, but cannot send addtional values
+                      // with red.end. Other option is set the header with file name
+                       /* res.writeHead(200, {
+                        'Content-Type': 'image/jpg',
+                        'Content-Length': imgSrcString.length
+                      }); 
+                      res.end(imgSrcString); */
+
+                      res.setHeader('content-type', 'image/jpg');
+                      res.setHeader('Content-Length', imgSrcString.length);
+                      res.send({'image':imgSrcString,'fileName':filename+'_thumb.jpg'});
+                })
+                .on('error', function(err) {
+                  console.error('ffmped error:',err);
+                })
+                .screenshots({
+                 filename:filename+'_thumb.jpg',
+                  timestamps: ['2'],
+                  folder: outputDir
+                });
+              }else{
+                const imageFullName= path.join(__dirname, '..',"uploads/",filename);
+                  const imageData = await getImageBase64Data(imageFullName);
+                  let extensionName = path.extname(imageFullName);
+                  let imgSrcString = `data:image/${extensionName.split('.').pop()};base64,${imageData}`;
+               
+                  res.setHeader('content-type', 'image/jpg');
+                  res.setHeader('Content-Length', imgSrcString.length);
+                  res.send({'image':imgSrcString,'fileName':filename});
+              }
+            
           });
+
       });
   });
 
