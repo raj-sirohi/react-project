@@ -102,19 +102,37 @@ const img = {
     height: '100px' //'100%'
 };
 
-const playIconImg={
+const playIconImg = {
     position: 'absolute',
-     zIndex: '100',
-      top: '20%',
-      left: '20%',
-   margin: 'auto'
+    zIndex: '100',
+    top: '20%',
+    left: '20%',
+    margin: 'auto'
+}
+const mediaDisplayOuter = {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center'
+}
+const mediaDisplayInner = {
+
+    borderRadius: 2,
+    border: '1px solid #c1c1c1',
+    overflow: 'auto',
+
+    padding: 4,
+    boxSizing: 'border-box',
+
 }
 
 const styles = {
-    card: {
-        maxWidth: 200,
-        maxHeigh: 200
+    paper: {
+        maxWidth: '1000px',
+        // maxHeigh: '200px', // cannot give max height, instead give height
+        height: '600px',
+        width: '1000px'
     },
+
     media: {
         height: 140,
     },
@@ -125,49 +143,74 @@ class MediaViewField extends Component {
         super()
         this.imagePreviewCanvasRef = React.createRef()
         this.fileInputRef = React.createRef()
-       
+
         this.state = {
             open: false,
-           
-            videoFiles: [],
-            imageFiles:[],
-            mediaFiles:[],
-            selectedMediaFile:null
-           
+            mediaFiles: [],
+            selectedMediaFile: null
+
         };
     }
     componentWillUnmount() {
         // Make sure to revoke the data uris to avoid memory leaks
-       // this.state.videoFiles.forEach(file => URL.revokeObjectURL(videoFiles.preview));
-       // this.state.imageFiles.forEach(file => URL.revokeObjectURL(imageFiles.preview))
+        // this.state.videoFiles.forEach(file => URL.revokeObjectURL(videoFiles.preview));
+        // this.state.imageFiles.forEach(file => URL.revokeObjectURL(imageFiles.preview))
     }
 
-    componentDidUpdate(){
-        const {open}=this.props;
+    componentDidUpdate() {
+        const { open } = this.props;
         //  this.setSavedFile();
         //  this.setState({ open: open }) 
-          logger.log('componentDidUpdate open',open)
-          
+        logger.log('componentDidUpdate open', open)
+
     }
     componentDidMount() {
-       // logger.log('componentDidUpdate open')
-      const {open}=this.props;
-      //  this.setSavedFile();
+        // logger.log('componentDidUpdate open')
+        const { open } = this.props;
+        //  this.setSavedFile();
         this.setState({ open: open })
 
-       
+
     }
 
-
-
-   
-
-    render() {
+    renderMediaDisplay = (file) => {
+        const { selectedMediaFile } = this.props;
        
-        const { mediaFiles,selectedMediaFile } = this.props;
+        const displayFile = this.state.selectedMediaFile || selectedMediaFile;
+        logger.log('renderMediaDisplay displayFile',displayFile);
+        if (displayFile.type === 'video') {
+
+            return (
+                <ReactPlayer
+                    // style is for the outer div for the video player
+                    // which included controls.
+                    // height and width apply to the video display area, without 
+                    // controls
+                    style={{ height: '300', width: '300px', margin: 'auto' }}
+                    height='300px'
+                    width='auto'
+                    url="/api/videos/file_example_MP4_480_1_5MG.mp4"
+                   // url="/api/videos/"{displayFile.videoFileName}
+                    controls />
+            )
+        } else {
+            return (
+                <img style={{ margin: 'auto', height: '300px', width: 'auto' }}
+                    src="/api222/images/flood-2.jpg"
+                    alt="Image preview..." />
+            )
+        }
+    }
+    render() {
+
+        const { classes, mediaFiles, selectedMediaFile } = this.props;
+
+        const displayFile = this.state.mediaFiles || selectedMediaFile;
+        logger.log('render displayFile',displayFile);
 
         const imageThumbs = mediaFiles.map(mediaFile => {
             const type = mediaFile.type
+            logger.log('mediaFile',mediaFile.file.name);
             if (type === 'image') {
                 return (
                     <div style={thumb} key={mediaFile.file.name}>
@@ -184,21 +227,23 @@ class MediaViewField extends Component {
         });
 
         const videoThumbs = mediaFiles.map(mediaFile => {
+            logger.log('mediaFile',mediaFile.file.name);
             const type = mediaFile.type
+
             if (type === 'video') {
                 return (
                     <div style={thumb} key={mediaFile.file.name}>
                         <div style={thumbInner}>
                             <div style={{ position: 'relative', float: 'left' }}
-                            onClick={() => this.setState({ open: true })} >
+                                onClick={() => this.setState({ open: true })} >
                                 <img
                                     src={mediaFile.file.preview}
                                     style={img}
                                 />
-                               
-                                    <img style={playIconImg} src={playIcon} />
 
-                               
+                                <img style={playIconImg} src={playIcon} />
+
+
                             </div>
                         </div>
                     </div>
@@ -207,14 +252,15 @@ class MediaViewField extends Component {
 
         });
 
-      
+
 
         const dialog = <div>
-           
-            <Dialog
+
+            <Dialog classes={{ paper: classes.paper }}
                 open={this.props.open}
                 onClose={this.props.handleClose}
                 aria-labelledby="form-dialog-title"
+
             >
                 <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
                 <DialogContent>
@@ -222,13 +268,31 @@ class MediaViewField extends Component {
                         To subscribe to this website, please enter your email address here. We will send
                         updates occasionally.
                     </DialogContentText>
-                    <ReactPlayer height='100%'
+                    <div style={mediaDisplayOuter}>
+                        <div style={mediaDisplayInner}>
+                            <ReactPlayer
+                                // style is for the outer div for the video player
+                                // which included controls.
+                                // height and width apply to the video display area, without 
+                                // controls
+                                style={{ height: '300', width: '300px', margin: 'auto' }}
+                                height='300px'
+                                width='auto'
+                                url="/api/videos/file_example_MP4_480_1_5MG.mp4"
+
+                                controls />
+                            {/* <img style={{margin:'auto',height:'300px',width:'auto'}} src="/api222/images/flood-2.jpg" alt="Image preview..." /> */}
+                        </div>
+                    </div>
+                    <ReactPlayer
                         width='100%'
+                        height='250px'
                         url="/api/videos/file_example_MP4_480_1_5MG.mp4"
 
                         controls />
-                       {imageThumbs}
-                       {videoThumbs}
+                    <img src="/api222/images/flood-2.jpg" alt="Image preview..." />
+                    {imageThumbs}
+                    {videoThumbs}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.props.handleClose} color="primary">
@@ -247,7 +311,7 @@ class MediaViewField extends Component {
         return (
             <div>
                 {dialog}
-               
+
             </div>
         );
     }

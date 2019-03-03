@@ -177,7 +177,7 @@ module.exports = app=>{
 
                       res.setHeader('content-type', 'image/jpg');
                       res.setHeader('Content-Length', imgSrcString.length);
-                      res.send({'image':imgSrcString,'fileName':filename+'_thumb.jpg'});
+                      res.send({'image':imgSrcString,type:'video',videoFileName:filename,'fileName':filename+'_thumb.jpg'});
                 })
                 .on('error', function(err) {
                   console.error('ffmped error:',err);
@@ -195,7 +195,7 @@ module.exports = app=>{
                
                   res.setHeader('content-type', 'image/jpg');
                   res.setHeader('Content-Length', imgSrcString.length);
-                  res.send({'image':imgSrcString,'fileName':filename});
+                  res.send({'image':imgSrcString,type:'image','fileName':filename});
               }
             
           });

@@ -328,7 +328,10 @@ class SignUpForm extends Component {
                    
                         url="/api/videos/file_example_MP4_480_1_5MG.mp4" controls light={this.state.imageData} />
                 </Grid>
-                
+               
+                <img style={{height:'200px',width:'auto'}} src="/api222/images/flood-2.jpg" alt="Image preview..." />
+                <img style={{height:'200px',width:'200px'}} src="/api222/images/flood-2.jpg" alt="Image preview..." />
+                <img  src="/api222/images/flood-2.jpg" alt="Image preview..." />
 
             </Grid>
 

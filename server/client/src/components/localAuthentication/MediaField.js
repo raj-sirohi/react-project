@@ -43,7 +43,7 @@ import Logger from '../../loggingUtil/logger';
 import zIndex from "../../../node_modules/@material-ui/core/styles/zIndex";
 import MediaViewField from './MediaViewField';
 
-const logger = Logger('ImageDropField3');
+const logger = Logger('MediaField');
 
 const imageMaxSize = 1000000000 // bytes
 const acceptedFileTypes = 'image/x-png, image/png, image/jpg, image/jpeg, image/gif'
@@ -134,6 +134,7 @@ class ImgDropAndCrop extends Component {
             droppedFileType: '',
             savedFiles: [],
             mediaFiles: [],
+            selectedMediaFile:null,
             imgSrc: null,
             imgSrcExt: null,
             videoFile: [],
@@ -248,6 +249,12 @@ class ImgDropAndCrop extends Component {
         this.setState({ open: false });
     };
 
+    handleMediaClick=(mediaFile)=>{
+       // logger.log('handleMediaClick file',JSON.stringify(file));
+       // console.log('aaaaaaaaaaaaaa',mediaFile)
+        this.setState({ open: true,selectedMediaFile: mediaFile})
+    }
+
     render() {
         const { imgSrc } = this.state
         const { mediaFiles, files, droppedFile, savedFiles, videoFile } = this.state;
@@ -256,7 +263,7 @@ class ImgDropAndCrop extends Component {
 
 
         const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
-       logger.log('render this.state.open', this.state.open);
+      // logger.log('render this.state.selectedMediaFile', this.state.selectedMediaFile);
 
         const thumbs = savedFiles.map(file => (
             <div style={thumb} key={file.name}>
@@ -270,10 +277,12 @@ class ImgDropAndCrop extends Component {
         ));
 
         const imageThumbs = mediaFiles.map(mediaFile => {
+            logger.log('imageThumbs mediaFile',mediaFile.file);
             const type = mediaFile.type
             if (type === 'image') {
                 return (
-                    <div style={thumb} key={mediaFile.file.name}>
+                    <div style={thumb} key={mediaFile.file.name}
+                    onClick={()=>this.handleMediaClick(mediaFile)} >
                         <div style={thumbInner}>
                             <img
                                 src={mediaFile.file.preview}
@@ -287,15 +296,18 @@ class ImgDropAndCrop extends Component {
         });
 
         const videoThumbs = mediaFiles.map(mediaFile => {
+            logger.log('videoThumbs mediaFile',mediaFile);
             const type = mediaFile.type
             if (type === 'video') {
                 return (
-                    <div style={thumb} key={mediaFile.file.name}>
+                    <div style={thumb} key={mediaFile.file.name}
+                     onClick={()=>this.handleMediaClick(mediaFile)} >
                         <div style={thumbInner}>
                             <div style={{ position: 'relative', float: 'left' }}
-                            onClick={() => this.setState({ open: true })} >
+                            >
                                 <img
                                     src={mediaFile.file.preview}
+                                   
                                     style={img}
                                 />
                                 {/* <div style={{
@@ -421,7 +433,10 @@ class ImgDropAndCrop extends Component {
                 <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
                 Open form dialog
                 </Button>
-                <MediaViewField handleClose ={()=>this.setState({open:false})} open={this.state.open} mediaFiles={this.state.mediaFiles}/>
+                <MediaViewField handleClose ={()=>this.setState({open:false})} 
+                open={this.state.open} 
+                selectedMediaFile={this.state.selectedMediaFile} 
+                mediaFiles={this.state.mediaFiles}/>
                 {dropImageSection}
                 <aside style={thumbsContainer}>
                     {imageThumbs}
