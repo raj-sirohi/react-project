@@ -151,21 +151,23 @@ class SignUpForm extends Component {
 
     state = {
         age: '',
-        imageData: ''
+        imageData: '',
+        imageBase64Data: ''
     };
 
     componentDidMount() {
         this.getImageData('/images/a.jpeg');
+        this.getImageBase64Data('/images/a.jpeg');
        // this.props.getVideo('file_example_MP4_480_1_5MG.mp4');
 
     }
 
     // working 
-    getImageData11 = async (imageUrl) => {
+    getImageBase64Data = async (imageUrl) => {
         const imageData = await this.props.getImage('/images/a.jpeg');
         // this.setState({imageData:'data:image/jpeg;base64,'+imageData.data})
         //const preview = URL.createObjectURL(imageData.data)
-        this.setState({ imageData: imageData.data })
+        this.setState({ imageBase64Data: imageData.data.imageBase64Data })
         // this.logger.log('getImageData imageData.data', imageData.data);
         // this.saveImage('ttt',imageData.data)
     }
@@ -187,7 +189,7 @@ class SignUpForm extends Component {
         const imageData = await this.props.getImage('/images/a.jpeg');
         // const imageData = "data:image/jpg;base64,"+imageData1;
         //logger.log('imageData',imageData);
-        const a = imageData.data;
+        const a = imageData.data.imageBase64Data;
         // logger.log('datauri split',a.split(',')[0].indexOf('base64'));
         const byteString = atob(a.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
         const blob = this.dataURItoBlob(a)
@@ -321,14 +323,20 @@ class SignUpForm extends Component {
                         placeholder="your first name" />
                 </Grid>
                 <img src={this.state.imageData} alt="Image preview..." />
+                <img src={this.state.imageBase64Data} alt="Image preview..." />
                 <img src="/api222/images/b.jpeg" alt="Image preview..." />
+
 
                 <Grid item xs={12}>
                     <ReactPlayer style={{height:'150px',width:'150px'}}
                    
                         url="/api/videos/file_example_MP4_480_1_5MG.mp4" controls light={this.state.imageData} />
                 </Grid>
-               
+                <video 
+      
+      src="/api/videos/file_example_MP4_480_1_5MG.mp4"
+      controls 
+      autoplay />
                 <img style={{height:'200px',width:'auto'}} src="/api222/images/flood-2.jpg" alt="Image preview..." />
                 <img style={{height:'200px',width:'200px'}} src="/api222/images/flood-2.jpg" alt="Image preview..." />
                 <img  src="/api222/images/flood-2.jpg" alt="Image preview..." />
@@ -357,7 +365,7 @@ class SignUpForm extends Component {
     render() {
         const { handleSubmit, userId, classes } = this.props;
         // this.props contains lot of values which are injected by redux form, such as submitFailed
-        console.log('signup form render this.props.submitFailed', this.props.submitFailed);
+        //console.log('signup form render this.props.submitFailed', this.props.submitFailed);
         const renderError = ({ input, meta, ...props }) => (
 
             <span >Error : {meta.error}</span>
@@ -485,7 +493,7 @@ const validate = (values) => {
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
         errors.email = 'Invalid email address'
     }
-    logger.log('values.asyncountry,', !(!!values.asyncountry));
+   // logger.log('values.asyncountry,', !(!!values.asyncountry));
     if (!(!!values.asyncountry)) {
         errors.asyncountry = 'country is required!'
     }

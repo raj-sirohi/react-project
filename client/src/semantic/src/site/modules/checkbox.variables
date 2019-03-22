@@ -1,0 +1,20 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+/* Checkbox - when it has no focus*/
+@checkboxActiveBackground: @primaryColor;
+@checkboxActiveBorderColor: @primaryColor;
+@checkboxActiveCheckColor: @white;
+/* Focused Checkbox when it has focus, that is mouse is clicked on it */
+@checkboxActiveFocusBackground: @primaryColorFocus;
+@checkboxActiveFocusBorderColor: @primaryColorFocus;
+@checkboxActiveFocusCheckColor: @white;
+@checkboxTransition: none;
+/* Radio - when radio has no focus*/
+@radioActiveBackground: @white;
+@radioActiveBorderColor: @primaryColor;
+@radioActiveBulletColor: @primaryColor;
+/* Focused Radio- when it has focus, that is mouse is clicked on it */
+@radioActiveFocusBackground: @white;
+@radioActiveFocusBorderColor: @primaryColorFocus;
+@radioActiveFocusBulletColor: @primaryColorFocus;

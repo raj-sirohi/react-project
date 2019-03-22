@@ -210,13 +210,13 @@ class MediaViewField extends Component {
 
         const imageThumbs = mediaFiles.map(mediaFile => {
             const type = mediaFile.type
-            logger.log('mediaFile',mediaFile.file.name);
+           // logger.log('mediaFile',mediaFile.file.name);
             if (type === 'image') {
                 return (
-                    <div style={thumb} key={mediaFile.file.name}>
+                    <div style={thumb} key={mediaFile.fileName}>
                         <div style={thumbInner}>
                             <img
-                                src={mediaFile.file.preview}
+                                src={mediaFile.imageBase64Data}
                                 style={img}
                             />
                         </div>
@@ -227,17 +227,17 @@ class MediaViewField extends Component {
         });
 
         const videoThumbs = mediaFiles.map(mediaFile => {
-            logger.log('mediaFile',mediaFile.file.name);
+           // logger.log('mediaFile',mediaFile.file.name);
             const type = mediaFile.type
 
             if (type === 'video') {
                 return (
-                    <div style={thumb} key={mediaFile.file.name}>
+                    <div style={thumb} key={mediaFile.filName}>
                         <div style={thumbInner}>
                             <div style={{ position: 'relative', float: 'left' }}
                                 onClick={() => this.setState({ open: true })} >
                                 <img
-                                    src={mediaFile.file.preview}
+                                    src={mediaFile.imageBase64Data}
                                     style={img}
                                 />
 

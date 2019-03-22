@@ -73,11 +73,15 @@ module.exports = app=>{
         let extensionName = path.extname(imageFullName);
         let imgSrcString = `data:image/${extensionName.split('.').pop()};base64,${imageData}`;
         //let imgSrcString =imageData;
-            res.writeHead(200, {
+           /*  res.writeHead(200, {
               'Content-Type': 'image/jpg',
               'Content-Length': imgSrcString.length
             });
-            res.end(imgSrcString); 
+            res.end(imgSrcString);  */
+
+            res.setHeader('content-type', 'image/jpg');
+            res.setHeader('Content-Length', imgSrcString.length);
+            res.send({imageBase64Data:imgSrcString,type:'image',fileName:imageName});
     });
 
     // converting readFile to return promise to asycn await can be used
@@ -177,7 +181,7 @@ module.exports = app=>{
 
                       res.setHeader('content-type', 'image/jpg');
                       res.setHeader('Content-Length', imgSrcString.length);
-                      res.send({'image':imgSrcString,type:'video',videoFileName:filename,'fileName':filename+'_thumb.jpg'});
+                      res.send({'imageBase64Data':imgSrcString,type:'video',videoFileName:filename,'fileName':filename+'_thumb.jpg'});
                 })
                 .on('error', function(err) {
                   console.error('ffmped error:',err);
@@ -195,7 +199,7 @@ module.exports = app=>{
                
                   res.setHeader('content-type', 'image/jpg');
                   res.setHeader('Content-Length', imgSrcString.length);
-                  res.send({'image':imgSrcString,type:'image','fileName':filename});
+                  res.send({'imageBase64Data':imgSrcString,type:'image','fileName':filename});
               }
             
           });

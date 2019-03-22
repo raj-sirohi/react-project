@@ -121,7 +121,7 @@ const styles = {
     },
 };
 
-class ImgDropAndCrop extends Component {
+class MediaField extends Component {
     constructor() {
         super()
         this.imagePreviewCanvasRef = React.createRef()
@@ -155,6 +155,34 @@ class ImgDropAndCrop extends Component {
     }
 
     setSavedFile = async () => {
+        let savedFiles = [];
+        const { input } = this.props
+
+        if (!!input.value) {
+            const savedImages = input.value;
+            for (const image of savedImages) {
+                const imageData64 = await this.props.getImage(image);
+                logger.log('setSavedFile imageData64.data',imageData64.data);
+               // const fileName = image.split('/').pop()
+                //const savedFile = base64StringtoFile(imageData64.data, fileName)
+                // Object.assign(savedFile, {
+                //     preview: URL.createObjectURL(savedFile)
+                // })
+
+               // Object.assign(savedFile, {
+               //     preview: imageData64
+               // })
+
+                savedFiles.push(imageData64.data);
+            }
+
+        }
+
+        this.setState({ mediaFiles: savedFiles })
+        input.onChange(this.state.savedFiles);
+    }
+
+    setSavedFile11 = async () => {
         let savedFiles = [];
         const { input } = this.props
 
@@ -228,7 +256,7 @@ class ImgDropAndCrop extends Component {
         logger.log('onDrop imageData64', imageData64.data)
 
         const fileName = imageData64.data.fileName;
-        const savedFile = base64StringtoFile(imageData64.data.image, fileName)
+        const savedFile = base64StringtoFile(imageData64.data.imageBase64Data, fileName)
         Object.assign(savedFile, {
             preview: URL.createObjectURL(savedFile)
         })
@@ -236,7 +264,7 @@ class ImgDropAndCrop extends Component {
 
         savedFiles.push(savedFile);
         const mediaFile = { file: savedFile, type: type }
-        this.setState({ savedFiles: savedFiles, mediaFiles: this.state.mediaFiles.concat(mediaFile) });
+        this.setState({ savedFiles: savedFiles, mediaFiles: this.state.mediaFiles.concat(imageData64.data) });
 
 
     }
@@ -265,27 +293,27 @@ class ImgDropAndCrop extends Component {
         const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
       // logger.log('render this.state.selectedMediaFile', this.state.selectedMediaFile);
 
-        const thumbs = savedFiles.map(file => (
-            <div style={thumb} key={file.name}>
-                <div style={thumbInner}>
-                    <img
-                        src={file.preview}
-                        style={img}
-                    />
-                </div>
-            </div>
-        ));
+        // const thumbs = savedFiles.map(file => (
+        //     <div style={thumb} key={file.name}>
+        //         <div style={thumbInner}>
+        //             <img
+        //                 src={file.preview}
+        //                 style={img}
+        //             />
+        //         </div>
+        //     </div>
+        // ));
 
         const imageThumbs = mediaFiles.map(mediaFile => {
-            logger.log('imageThumbs mediaFile',mediaFile.file);
+           // logger.log('imageThumbs mediaFile',mediaFile.file);
             const type = mediaFile.type
             if (type === 'image') {
                 return (
-                    <div style={thumb} key={mediaFile.file.name}
+                    <div style={thumb} key={mediaFile.fileName}
                     onClick={()=>this.handleMediaClick(mediaFile)} >
                         <div style={thumbInner}>
                             <img
-                                src={mediaFile.file.preview}
+                                src={mediaFile.imageBase64Data}
                                 style={img}
                             />
                         </div>
@@ -300,13 +328,13 @@ class ImgDropAndCrop extends Component {
             const type = mediaFile.type
             if (type === 'video') {
                 return (
-                    <div style={thumb} key={mediaFile.file.name}
+                    <div style={thumb} key={mediaFile.fileName}
                      onClick={()=>this.handleMediaClick(mediaFile)} >
                         <div style={thumbInner}>
                             <div style={{ position: 'relative', float: 'left' }}
                             >
                                 <img
-                                    src={mediaFile.file.preview}
+                                    src={mediaFile.imageBase64Data}
                                    
                                     style={img}
                                 />
@@ -326,36 +354,36 @@ class ImgDropAndCrop extends Component {
 
         });
 
-        const videoThumbs1 = mediaFiles.map(mediaFile => {
-            const type = mediaFile.type
-            if (type === 'video') {
-                return (
-                    <div style={thumb} key={mediaFile.file.name}>
-                        <div style={{ position: 'relative', float: 'left' }}>
+        // const videoThumbs1 = mediaFiles.map(mediaFile => {
+        //     const type = mediaFile.type
+        //     if (type === 'video') {
+        //         return (
+        //             <div style={thumb} key={mediaFile.file.name}>
+        //                 <div style={{ position: 'relative', float: 'left' }}>
 
 
-                            <img
-                                src={mediaFile.file.preview}
+        //                     <img
+        //                         src={mediaFile.file.preview}
 
-                                onClick={() => this.setState({ open: true })}
-                            />
-                            <div style={{
-                                position: 'absolute', zIndex: '100', top: '20%',
-                                width: '100px', height: '100px', margin: '0 auto', left: '0px', right: '0px'
-                            }} >
-                                {/* <h1 style={{color:'white'}}> this is icon</h1> */}
-                                <img src={playIcon} />
-                                <Icon color="disabled" style={{ fontSize: 60 }}>
-                                    play_circle_filled_white
-                                 </Icon>
-                            </div>
+        //                         onClick={() => this.setState({ open: true })}
+        //                     />
+        //                     <div style={{
+        //                         position: 'absolute', zIndex: '100', top: '20%',
+        //                         width: '100px', height: '100px', margin: '0 auto', left: '0px', right: '0px'
+        //                     }} >
+        //                         {/* <h1 style={{color:'white'}}> this is icon</h1> */}
+        //                         <img src={playIcon} />
+        //                         <Icon color="disabled" style={{ fontSize: 60 }}>
+        //                             play_circle_filled_white
+        //                          </Icon>
+        //                     </div>
 
-                        </div>
-                    </div>
-                )
-            }
+        //                 </div>
+        //             </div>
+        //         )
+        //     }
 
-        });
+        // });
 
       
 
@@ -464,11 +492,11 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-ImgDropAndCrop.propTypes = {
+MediaField.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
 
 //export default ImgDropAndCrop
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(ImgDropAndCrop));
+export default connect(null, mapDispatchToProps)(withStyles(styles)(MediaField));
