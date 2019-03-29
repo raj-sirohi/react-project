@@ -1,4 +1,4 @@
-// displays images and videos as preview when they are dropped in drop section,
+c// displays images and videos as preview when they are dropped in drop section,
 // and when images/videos are dropped hided the drop section
 
 import React, { Component, Fragment } from "react";

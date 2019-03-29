@@ -2,3 +2,7 @@
      User Global Variables
 *******************************/
 
+@fontName          : 'Roboto';
+@blue             : #2196f3;
+@primaryColorHover: #1976d2;
+
