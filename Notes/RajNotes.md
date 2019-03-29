@@ -144,3 +144,7 @@ git rm -r --cached server/node_modules
 - push files to remote repository
 git push origin master
 <strong>Note:</strong> for passphrase check <strong>privateConfiguration.md</strong>
+
+- after software update, git may not work, so run the following command on terminal  
+`xcode-select --install` 
+then you will be prompter in window to update,select install, after install it will work again. This will also fix git issue in visual studio code.
