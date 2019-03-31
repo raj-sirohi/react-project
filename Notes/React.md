@@ -23,6 +23,7 @@
   - dipatch: dispatch is an function used to dispatch action to the reducers.when we dispatch an action, its dispatched to all reducers, and which ever reducer has action type matching the action, is executed and it return updated state
   store.dispatch(createUserActionCreator(payload))
   - reducer : maintains the state for redux, when an action is dispatched it returns the updated state.When an action is dispatched its dispached to all reducers
+  <strong>reducer state should be immutable, i:e we should not update the existing state, but return new state. Otherwise sometimes redux may think state is same, since its a object, and may not update the props when we pass state from mapStateToProps in connect function. Result of which will be that our component will not be updated.</strong>
 
 #### Redux in React
 - in React we use Provider funtion to pass the store the react components, so store is availabe to all the components.  
@@ -49,13 +50,15 @@ For eg, when we call createUserActionCreator({}), connect function dispatches th
 This is where redux-thunk middleware comes handy. With redux-thunk middleware, when connect invokes dispatch it is passed to redux-thunk.
 <Strong>redux-thunk allows the action creator to return action of function, so if action creator returns function, redux-thunk executes that function, and also passes two parameters to the function, dispatch and getState(), dispatch is same what is passed from connect.</strong> which means that in action creator we can return our function, and since redux-thunk passes dispatch and state( i:e current state of the reducer),we can make api call can once we get the data we can invoke dispatch.  
 so with redux-thunk, in  action creator we can return the function as follows:  
-`const createUserActionCreator=>(somevalue)=>(dispatch,state)`=>{`   
-   `  make some api call`
-    `response = axios.get....`
+<pre>
+const createUserActionCreator=>(somevalue)=>(dispatch,state)=>{  
+     //make some api call
+    response = axios.get....
 
-   ` dispatch ({type:'CREATE_USER', payload:{firstName:'raj'}`
-   `})`
-`}`
+    dispatch ({type:'CREATE_USER', payload:{firstName:'raj'}
+   })
+}
+</pre>
 and redux-thunk will invoke our function.
 
 ### <strong>React components</strong>
