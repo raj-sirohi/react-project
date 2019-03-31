@@ -82,6 +82,15 @@ npm list gulp ( for local)
 - `npm uninstall packageName --save-dev`: also removes it from devDependencies in package.json
 - `npm -g uninstall packageName --save`: also removes it globally
 
+#### absolute paths in react
+- in order to avoid long import path for logger as below:-  
+  `import Logger from '../../loggingUtil/logger'`  
+  create .env file at root, same as package.json, and enter the following values:-  
+    `NODE_PATH=src/loggingUtil` 
+    Now we can import logger as :-  
+    `import Logger from 'logger';` 
+    <strong>Note:</strong> we are setting node_path to  `src/loggingUtil` , for making it convenient to import logger.
+    If we set the path as `NODE_PATH=src` then we can import other files without giving full path. For now we want to avoid confusion betweeen importing our modules and the node_modules, so keep it restricting  to `src/logginUtil`
 
 ### React
 - ( eg authActions)  when error is thrown , it contains response object and response object
