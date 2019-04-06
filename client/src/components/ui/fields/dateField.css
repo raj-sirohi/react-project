@@ -1,0 +1,9 @@
+.errorField{
+    border: 5px solid red;
+
+}
+
+.ui.form input.errorField{
+    border: 1px solid red;
+    background-color: aqua
+}

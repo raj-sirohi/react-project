@@ -62,6 +62,57 @@ const createUserActionCreator=>(somevalue)=>(dispatch,state)=>{
 and redux-thunk will invoke our function.
 
 ### <strong>React components</strong>
+- consider following code: 
+<pre>
+ < Field
+            component={semanticFormCheckBox}
+            as={Form.Checkbox} 
+            defaultChecked={true}
+            label="last name"
+            name="lastName"
+            type='checkbox'
+            bogusProps='bogusValue'
+            placeholder="last name"
+          />
+</pre>
+
+if we define component as follows
+<pre>
+const semanticFormCheckBox =(props)=>
+   {
+   }
+</pre>  
+then following props will be passed by redux Field component to semanticFormCheckBox:  
+  - input : which contains, name, value, onchange, onblur etc.
+  - meta: which contains , error, form,pristine, touched etc
+  - and other props such as, bogusProps,placeHolder,label,type,
+    defaultCheckedValue.
+ so if we spread the props in semanticCheckBox component as follows
+   <pre>
+   const semanticFormCheckBox =(props)=>
+   {
+  return (
+    < Form.Field>
+      < Form.Checkbox  {...props}   />
+      {touched && ((error && <span><i>{error}</i></span>) || (warning && <span><i>{warning}</i></span>))}
+    </Form.Field>
+  );
+}
+   </pre> 
+   then there are few problems as below:  
+    -  checkBox doesn't have value, since props has value, it will give error as invalid prop value passed, because spreading props will create code as value = 'someValue' 
+    - onChange will have a default value, as onChange='someFunction'.But in checkBox onChange should be as follows:  
+    `onChange={(e, data) => input.onChange(data.checked)}`  
+    so clicking checkbox will not work.
+    - extracting error , touched will be not easy, as we will have to do something like this 
+    `props.meta.touched && ((props.meta.error...`   
+    <Strong>Solution:</strong> lets extract the data we need to we can use correctly as below:
+    first lets extract relevant properties from input as below  
+    `{input: { value, onChange, ...input }}` 
+    this means looks for property input in props,then assign value from input to value, onchange to onchange, and remaining spread it.we are extracting value, onChange from input and then remaining we are spreading using rest operator. So basically  input object will contain following  values:value, onchange, and ...input will contain onBlur,onDrag etc, note ...input will not contain value and onChange, since we extracted from it.
+    So now if we spread input as {...input} in checkBox it will not contain value and Onchange.Now we can bind the onChange passed to us with out code as follows:
+    `onChange={(e, data) => onChange(data.checked)}`
+      
 - custom components can be used as follows:-   
 define custom component:   
 `customDate =(input)=>{
@@ -95,10 +146,52 @@ define custom component:
                />`  
     <strong>Now if user types in the field its value will not be changed</strong>
 
-    <strong>Note:</strong> when we set the intial value of the component , it becomes controlled component. Meaning value is not set via the DOM to the native input component, when user types in the field. Once component becomes controlled we need to change it ourself by using onChange event.
+    <strong>Note:</strong> when we set the intial value of the component , it becomes controlled component. Meaning value is not set via the DOM to the native input component, when user types in the field. Once component becomes controlled we need to change it ourself by using onChange event.However if we use semantic-ui field component and provide value ={this.state.vaue}, then if on changeHandler is not provided then state will not be updated.
 
 
 #### Redux Form
-- when field is used from redux form , field passes input, name, meta etc as props to the component. Redux form connect  Field compnent  to the redux store, and when user makes changes to the component it automatically fires onChange to change the state in redux store, due to which its value is updated automatically as compared to non redux fields where we need to write onChange to change the state. 
+- when field is used from redux form , field passes input, name, meta etc as props to the component. Redux form connects Field compnent  to the redux store, and when user makes changes to the component it automatically fires onChange to change the state in redux store, due to which its value is updated automatically as compared to non redux fields where we need to write onChange to change the state. 
 - If we used third party component in redux form , at minimum we need to connect the value and onChange of the third party component to the props passed for value and onChange from redux form.
+- when we use redux form, when form is submitted, onSubmit call handleSubmit, which invokes the function we pass to it, with two parameters, values and dispatch.
+There if we do onSubmit ={this.ourSubmitHandler}, then values as name value pair and dispatch will not be passed to it. So if we want to pass the values and dispatch
+then we need to use like this onSubmit={handleSubmit(this.ourSubmitHandler)}.
+- if ourSubmitHandler is outside the class then we need to set the property as follows, so its passed as props to handleSubmit as below 
+<pre> 
+
+ < Form onSubmit={handleSubmit}>
+
+ // outside the class
+ ourSubmitHandler =(values, dispatch)=>{
+
+ }
+ export default compose(
+   connect(mapStateToProps),
+  reduxForm({
+    validate,
+    form: 'SignUpForm',
+    enableReinitialize: true,
+    destroyOnUnmount: false,
+   onSubmit:ourSubmitHandler
+
+  })
+)(SignUpForm);
+</pre>
+
+<strong> < Form/> component can be from semantic-ui-react or it can form component < form/>
+redux-form </strong>
+
+### React General
+- PropTypes ensure that the right type of props is passed to a component  and, conversely, that the receiving component is receiving the right type of props.
+
+ <pre>
+  Person.propTypes = {
+    email: PropTypes.string,
+    age: PropTypes.number,
+    adult: PropTypes.bool,
+    name:PropTypes.string.isRequired
+    handleSubmit: PropTypes.func
+    countryDefault:'canada' 
+    (countryDefault will have value Canada,if its not passed)
+}
+</pre>
 
