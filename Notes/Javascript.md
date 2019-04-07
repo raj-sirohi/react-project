@@ -1,4 +1,23 @@
-### Javascript
+## Javascript
+### Null and undefined
+- undefined means variable is declared but doesn't have a value, eg var a;
+- null is a value , it can be assigned eg var =null; 
+- null=== undefined, will return false, because, type of null is object and type of undefined is undefined
+- null == undefined will return true, because both are falsy values and in double ==, only values will be compared. 
+In JavaScript there are only six falsy values. Both null and undefined are two of the six falsy values. Here’s a full list:  
+<pre>
+false
+0 (zero)
+“” (empty string)
+null
+undefined
+NaN (Not A Number)
+</pre>
+
+- so to check if value is null or undefined we can use `if (!value)` and to 
+check if it contains value we can use if `(!!value)`
+
+### object and arrays
 - object and arrays are mutable.
    const colors =['red','green']
    colors.push('pink')

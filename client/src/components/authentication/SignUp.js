@@ -14,6 +14,8 @@ import "react-datepicker/dist/react-datepicker.css";
 //import {semanticInputField, semanticCheckbox} from '../ui/semanticFormFields'
 import * as FIELDS from '../ui/semanticFormFields'
 import * as FIELDS2 from '../ui/fields'
+import {required} from '../../utils/validationUtil'
+
 import Logger from 'logger';
 
 
@@ -31,7 +33,17 @@ const renderSelect =  ({ input:{value,onChange,...input},
     value={value}
   />
 );
-const required = value => (value ? undefined : 'Required');
+const required1 = value => (value ? undefined : 'Required');
+
+const required2 = (value,allValues,props,errorMessage) =>(value ? undefined : 'Required');
+
+const required3 = (value,allValues,props,errorMessage) => {
+  logger.log('value',value);
+  logger.log('errorMessage',errorMessage);
+  
+
+  return (value ? undefined : 'Required');
+}
 
 const renderDatePicker1 = ({input, placeholder, defaultValue, meta: {touched, error}}) => (
   <div>
@@ -171,13 +183,14 @@ renderDatePicker1=(field)=>{
       <div>
      
      
-      <Form onSubmit={handleSubmit}>
+      <Form  onSubmit={handleSubmit}>
 
       
       
       <Field
             component={FIELDS.semanticInput}
             as={Form.Input} 
+          //  validate={(value)=>required(value)}
             validate={required}
             type="text" 
             label="First name"
@@ -196,7 +209,8 @@ renderDatePicker1=(field)=>{
           />
            <Field
             component={FIELDS2.dateField}
-            validate={required}
+           validate={required1}
+          //validate={(value)=>required1(value)}
             label="Date of Bith"
             name="dob2"
             placeholderText="Select a date between today and 5 days in the future"
@@ -267,7 +281,9 @@ renderDatePicker1=(field)=>{
         
         <button type="submit">Submit</button>
       </Form>
-     {this.renderError()}
+    
+  
+  
       </div>
     )
   }

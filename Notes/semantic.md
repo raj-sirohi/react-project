@@ -185,5 +185,40 @@ and @blue is defined as
 
 <Strong>Note:</Strong>We can define the variables in site.variables or button.variables ( in src/site). If we define in site.variables, then it will effect all the components, for eg defining @blue: : #2185D0;, then menu, checkbos, radio etc, will have the blue color. If we define in button.varialbes then only button will the new color. So if we wanted only button to have new blue  color then we can only define @primaryColor: #2196f3, in button variables. But if want all the blue to have new value then we can define @blue in site.variabes, because later in the chain @primaryColor uses @blue.
 
+- when /semantic/dist/semantic.min.css is generated, it contains all the classes, but it has no variabes (@blue) or reference to variables. During generation process variables defined in theme/default/site.variables are used to generate the semantic.min.css. So if we import semantic.min.css we cannot use variables like @blue in our app.  
+In order to override the classes for say particular component ( custom component date-picker), we can check the styles applied in dev tools and then override it in our class file.  
+for example if we date component in semantic form as a field then in dev tools, we can see applied class to it is `.ui.form input[type=text]`, there will be other classes also but they are not applied .
+so if we want to apply our own class we can create  class `errorField`  and use it, then it will override the applied class:    
+<pre>
+.ui.form input.errorField{
+    border: 1px solid red;
+    background-color: aqua
+}
+</pre>
 
+- other option is to use !important in class name, that tell it to override all the rules and apply this class, so if we declare errorField as below , then also it will work:  
+<pre>
+.errorField{
+    border: 1px solid red !important;
+    background-color: aqua !important;
+</pre>
 
+## CSS General
+- you can define variables as follows:
+<pre> 
+// declare the constant
+:root{
+  --my-red-color:red
+}
+
+// access it as follows
+.myClass{
+  color:var(--red-color)
+}
+</pre>
+<strong>Note:</strong>variables have to defined with two dashes (--). The :root element is the element who has no parents, anything defined in :root is applied to entire document. The :root is same as :  
+<pre>
+html{
+  
+}
+</pre>

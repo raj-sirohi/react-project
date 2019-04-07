@@ -3,3 +3,16 @@ body {
   height: 100vh;
  background: #eee; 
 }
+
+/* Global constants  */
+:root{
+  /* input field error message font size */
+  --input-errorMessage-font-weight:500;
+  --errorColor:blue;
+
+  }
+
+  .form_input--errorMessage{
+    font-weight: var(--input-errorMessage-font-weight) !important;
+    color:var(--errorColor) !important;
+  }
