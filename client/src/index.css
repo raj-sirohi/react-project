@@ -16,3 +16,11 @@ body {
     font-weight: var(--input-errorMessage-font-weight) !important;
     color:var(--errorColor) !important;
   }
+
+  .ui.form .field.a{
+    margin-bottom: 1px;
+  }
+
+  .aaa{
+    margin-bottom: 1px !important;
+  }

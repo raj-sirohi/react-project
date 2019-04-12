@@ -1,6 +1,32 @@
 ## Javascript
 ### Null and undefined
-- undefined means variable is declared but doesn't have a value, eg var a;
+- In JavaScript, there are six primitive values. Both null and undefined are primitive values. Here is a full list:  
+<pre>
+Boolean
+Null
+Undefined
+Number
+String
+Symbol
+</pre> 
+- everything else is an object, so arrays and object are object. so typeof array will return object. 
+- string is primitive and also object in javascript:  
+<pre>
+> var foo = "foo"
+undefined
+> var bar = new String("bar");
+undefined
+> foo
+"foo"
+> bar
+String
+> typeof foo
+"string"
+> typeof bar
+"object"
+</pre>
+- typeof undefined returns undefined, but <strong>typeof null, return object</strong>
+- undefined means variable is declared but value is not assigned, eg var a;
 - null is a value , it can be assigned eg var =null; 
 - null=== undefined, will return false, because, type of null is object and type of undefined is undefined
 - null == undefined will return true, because both are falsy values and in double ==, only values will be compared. 

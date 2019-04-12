@@ -203,6 +203,49 @@ so if we want to apply our own class we can create  class `errorField`  and use 
     background-color: aqua !important;
 </pre>
 
+### Semantic form fields
+- semantic fields can be defined in 3 ways as follows: 
+<pre>
+(1)
+< Form.Field error={touched && !!error}>
+    <label>{label}</label>
+  <Input {...props} {...input} type={type} value={input.value} placeholder={placeholder} onChange={handleChange} />
+     {touched && ((error && <label className='form_input--errorMessage' ><i>{error}</i></label>))}
+  </Form.Field>
+  );
+< React.Fragment>
+
+(2)
+< React.Fragment>
+< label style={{display:'inline-block',marginTop:'50px'}}>{label}</label>
+  < Form.Input {...props} {...input}  error={touched && !!error}
+  value={input.value} 
+placeholder={placeholder} 
+onChange={handleChange}
+  >
+< /Form.Input>
+  {touched && ((error && <label className='form_input--errorMessage' ><i>{error}</i></label>))}
+  < /React.Fragment>
+</pre>
+
+- when we define fields for the form, then we need to use `<Form.Field> or <Form.Input>`. If we simply define the field without Form, then Form props will not be passed down to the label and input field. So when there is an error , it will show as black and field may not be highlighted and will not be filled with error color.
+Also for input label will be to the left.    
+Following the example of defining without Form field:
+<pre>
+< React.Fragment>
+< label style={{display:'inline-block',marginTop:'50px'}}>{label}</label>
+  < Input {...props} {...input}  error={touched && !!error}
+  value={input.value} 
+placeholder={placeholder} 
+onChange={handleChange}
+  >
+< /Input>
+  {touched && ((error && <label className='form_input--errorMessage' ><i>{error}<  /i></label>))}
+  < /React.Fragment>
+</pre>  
+
+- difference between using <Form.Field><Input> versus <Form.Input>. Especially for input and drop list, if we use <Form.Input> it will create 14px bottom margin between its fields, so error message will be 14px below. If we want to it to close to the field, then we have to use css. With <Form.Field><Input>, we can give error message after Input, so error message and input will be enclosed in <Form.Field>, and there will be no margin. Basically when using <Form.Field>, margin is created by <Form.Field>. Same concept is used in DateField.js. However for checkBox it doesn't work because we have label to the right.
+
 ## CSS General
 - you can define variables as follows:
 <pre> 

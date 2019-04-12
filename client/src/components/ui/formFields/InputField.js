@@ -24,5 +24,9 @@ export const semanticInput = ({ input, type, label, placeholder,
   />
      {touched && ((error && <label className='form_input--errorMessage' ><i>{error}</i></label>))}
   </Form.Field>
+
+
   );
+
+
 }
