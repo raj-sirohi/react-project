@@ -6,13 +6,13 @@ import {
   withRouter
 } from "react-router-dom";
 
-import Navbar from './navbar/Navbar';
-import Header from './header/Header';
-import Message from './message/Message';
-import Gallery from './gallery/Gallery';
-import Wall from './wall/Wall';
-import Friend from './friend/Friend';
-import SignUp from './authentication/SignUp'
+import Navbar from './Navbar/Navbar';
+import Header from './Header/Header';
+import Message from './Message/Message';
+import Gallery from './Gallery/Gallery';
+import Wall from './Wall/Wall';
+import Friend from './Friend/Friend';
+import SignUp from './Authentication/SignUp'
 
 import { Radio, Button, Container, Loader, Segment, Dimmer } from 'semantic-ui-react'
 import './App.css';

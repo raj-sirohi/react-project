@@ -1,26 +1,17 @@
 html,
 body {
   height: 100vh;
- background: #eee; 
+ background: #eee; /* bacground color for entire app */
 }
 
 /* Global constants  */
 :root{
   /* input field error message font size */
-  --input-errorMessage-font-weight:500;
-  --errorColor:blue;
+  --input-error-font-weight:500;
+  --input-error-color:#9f3938;
+  --font-size:1em;
+  --input-error-font-size:.93em;
+  --margin:1em;
+  
 
-  }
-
-  .form_input--errorMessage{
-    font-weight: var(--input-errorMessage-font-weight) !important;
-    color:var(--errorColor) !important;
-  }
-
-  .ui.form .field.a{
-    margin-bottom: 1px;
-  }
-
-  .aaa{
-    margin-bottom: 1px !important;
   }

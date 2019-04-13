@@ -1,9 +1,0 @@
-.ui.form .field.error label.input__label--errorMessage{
-    
-    font-weight: var(--input-errorMessage-font-weight);
-    /* background-color : var(--errorColor); */
- }
- .errorM{
-     font-weight: var(--input-errorMessage-font-weight) !important; ;
-     background-color : var(--errorColor) !important; 
- }
