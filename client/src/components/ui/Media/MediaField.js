@@ -103,12 +103,12 @@ const img = {
     height: '100px' //'100%'
 };
 
-const playIconImg={
+const playIconImg = {
     position: 'absolute',
-     zIndex: '100',
-      top: '20%',
-      left: '20%',
-   margin: 'auto'
+    zIndex: '100',
+    top: '20%',
+    left: '20%',
+    margin: 'auto'
 }
 
 const styles = {
@@ -134,7 +134,7 @@ class MediaField extends Component {
             droppedFileType: '',
             savedFiles: [],
             mediaFiles: [],
-            selectedMediaFile:null,
+            selectedMediaFile: null,
             imgSrc: null,
             imgSrcExt: null,
             videoFile: [],
@@ -162,16 +162,16 @@ class MediaField extends Component {
             const savedImages = input.value;
             for (const image of savedImages) {
                 const imageData64 = await this.props.getImage(image);
-                logger.log('setSavedFile imageData64.data',imageData64.data);
-               // const fileName = image.split('/').pop()
+                logger.log('setSavedFile imageData64.data', imageData64.data);
+                // const fileName = image.split('/').pop()
                 //const savedFile = base64StringtoFile(imageData64.data, fileName)
                 // Object.assign(savedFile, {
                 //     preview: URL.createObjectURL(savedFile)
                 // })
 
-               // Object.assign(savedFile, {
-               //     preview: imageData64
-               // })
+                // Object.assign(savedFile, {
+                //     preview: imageData64
+                // })
 
                 savedFiles.push(imageData64.data);
             }
@@ -277,10 +277,10 @@ class MediaField extends Component {
         this.setState({ open: false });
     };
 
-    handleMediaClick=(mediaFile)=>{
-       // logger.log('handleMediaClick file',JSON.stringify(file));
-       // console.log('aaaaaaaaaaaaaa',mediaFile)
-        this.setState({ open: true,selectedMediaFile: mediaFile})
+    handleMediaClick = (mediaFile) => {
+        // logger.log('handleMediaClick file',JSON.stringify(file));
+        // console.log('aaaaaaaaaaaaaa',mediaFile)
+        this.setState({ open: true, selectedMediaFile: mediaFile })
     }
 
     render() {
@@ -291,26 +291,15 @@ class MediaField extends Component {
 
 
         const { input, classes, width, fullWidth, theme, options, loadOptions, placeholder, meta: { touched, error } } = this.props;
-      // logger.log('render this.state.selectedMediaFile', this.state.selectedMediaFile);
 
-        // const thumbs = savedFiles.map(file => (
-        //     <div style={thumb} key={file.name}>
-        //         <div style={thumbInner}>
-        //             <img
-        //                 src={file.preview}
-        //                 style={img}
-        //             />
-        //         </div>
-        //     </div>
-        // ));
 
         const imageThumbs = mediaFiles.map(mediaFile => {
-           // logger.log('imageThumbs mediaFile',mediaFile.file);
+            // logger.log('imageThumbs mediaFile',mediaFile.file);
             const type = mediaFile.type
             if (type === 'image') {
                 return (
                     <div style={thumb} key={mediaFile.fileName}
-                    onClick={()=>this.handleMediaClick(mediaFile)} >
+                        onClick={() => this.handleMediaClick(mediaFile)} >
                         <div style={thumbInner}>
                             <img
                                 src={mediaFile.imageBase64Data}
@@ -324,26 +313,23 @@ class MediaField extends Component {
         });
 
         const videoThumbs = mediaFiles.map(mediaFile => {
-            logger.log('videoThumbs mediaFile',mediaFile);
+            logger.log('videoThumbs mediaFile', mediaFile);
             const type = mediaFile.type
             if (type === 'video') {
                 return (
                     <div style={thumb} key={mediaFile.fileName}
-                     onClick={()=>this.handleMediaClick(mediaFile)} >
+                        onClick={() => this.handleMediaClick(mediaFile)} >
                         <div style={thumbInner}>
                             <div style={{ position: 'relative', float: 'left' }}
                             >
                                 <img
                                     src={mediaFile.imageBase64Data}
-                                   
+
                                     style={img}
                                 />
-                                {/* <div style={{
-                                    position: 'absolute', zIndex: '100', top: '20%',
-                                    margin: 'auto', left: '20%'
-                                }} > */}
 
-                                    <img style={playIconImg} src={playIcon} />
+
+                                <img style={playIconImg} src={playIcon} />
 
                                 {/* </div> */}
                             </div>
@@ -354,38 +340,6 @@ class MediaField extends Component {
 
         });
 
-        // const videoThumbs1 = mediaFiles.map(mediaFile => {
-        //     const type = mediaFile.type
-        //     if (type === 'video') {
-        //         return (
-        //             <div style={thumb} key={mediaFile.file.name}>
-        //                 <div style={{ position: 'relative', float: 'left' }}>
-
-
-        //                     <img
-        //                         src={mediaFile.file.preview}
-
-        //                         onClick={() => this.setState({ open: true })}
-        //                     />
-        //                     <div style={{
-        //                         position: 'absolute', zIndex: '100', top: '20%',
-        //                         width: '100px', height: '100px', margin: '0 auto', left: '0px', right: '0px'
-        //                     }} >
-        //                         {/* <h1 style={{color:'white'}}> this is icon</h1> */}
-        //                         <img src={playIcon} />
-        //                         <Icon color="disabled" style={{ fontSize: 60 }}>
-        //                             play_circle_filled_white
-        //                          </Icon>
-        //                     </div>
-
-        //                 </div>
-        //             </div>
-        //         )
-        //     }
-
-        // });
-
-      
 
 
         const dialog = <div>
@@ -408,10 +362,10 @@ class MediaField extends Component {
                         url="/api/videos/file_example_MP4_480_1_5MG.mp4"
 
                         controls />
-                         <aside style={thumbsContainer}>
-                    {imageThumbs}
-                </aside>
-                
+                    <aside style={thumbsContainer}>
+                        {imageThumbs}
+                    </aside>
+
 
                     <aside style={thumbsContainer}>
                         {videoThumbs}
@@ -440,12 +394,11 @@ class MediaField extends Component {
                 return (
                     <div
                         {...getRootProps()}
-                        style={styles}
-                    >
+                        style={styles}>
                         <input {...getInputProps()} />
                         <div>
                             {isDragAccept ? 'Drop' : 'Drag'} files here...
-                    </div>
+                        </div>
                         {isDragReject && <div>Unsupported file type...</div>}
                         <Typography className={classes.title} color="textSecondary" gutterBottom>
                             uploadProgress
@@ -459,12 +412,12 @@ class MediaField extends Component {
             <div>
                 {/* {dialog} */}
                 <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-                Open form dialog
+                    Open form dialog
                 </Button>
-                <MediaViewField handleClose ={()=>this.setState({open:false})} 
-                open={this.state.open} 
-                selectedMediaFile={this.state.selectedMediaFile} 
-                mediaFiles={this.state.mediaFiles}/>
+                <MediaViewField handleClose={() => this.setState({ open: false })}
+                    open={this.state.open}
+                    selectedMediaFile={this.state.selectedMediaFile}
+                    mediaFiles={this.state.mediaFiles} />
                 {dropImageSection}
                 <aside style={thumbsContainer}>
                     {imageThumbs}

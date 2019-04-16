@@ -7,6 +7,7 @@ import moment from 'moment'
 import { Form, Icon, Button, Input, Grid, Header, Dropdown } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 import * as FIELDS from '../UI/FormFields'
+import MediaDropZone from '../UI/Media/MediaDropZone'
 import { required } from '../../utils/validationUtil'
 import Logger from 'logger';
 
@@ -83,12 +84,12 @@ class SignUpForm extends Component {
             ]}
             placeholder="placeholder Gender"
             selection
-           // validate={(value) => required(value, 'gender')}
+          // validate={(value) => required(value, 'gender')}
           />
           <Field
             component={FIELDS.InputField}
             as={Form.Input}
-          //  validate={(value) => required(value, 'first name')}
+            //  validate={(value) => required(value, 'first name')}
             type="text"
             label="First name"
             name="firstName"
@@ -96,8 +97,7 @@ class SignUpForm extends Component {
           />
           <Field
             component={FIELDS.DateField}
-            // validate={required}
-          //  validate={(value) => required(value, 'date of birth')}
+            //  validate={(value) => required(value, 'date of birth')}
             label="Date of Bith"
             name="dob2"
             placeholderText="Select a date between today and 5 days in the future"
@@ -107,49 +107,41 @@ class SignUpForm extends Component {
             validate={(value) => required(value, 'checkbox')}
             label="check box test"
             name="chekbox1"
-            
             bogusprops='bogusValue'
             placeholder="last name"
           />
-        
           <Field
             component={FIELDS.InputField}
             as={Form.Input}
-           // validate={(value) => required(value, 'first name')}
+            // validate={(value) => required(value, 'first name')}
             type="text"
             label="First name"
             name="firstName1"
             placeholder="First name"
           />
-            <Field
+          <Field
             component={FIELDS.RadioMultiField}
             label="RadioMulti"
             name="radioMulti"
-            
-           testValue ={[{label:'labelOne',value:'one'},
-           {label:'labelTwo',value:'two'}]} 
-           validate={required}
+            testValue={[{ label: 'labelOne', value: 'one' },
+            { label: 'labelTwo', value: 'two' }]}
+            validate={required}
           />
-           <Field
-            component={FIELDS.RadioMultiField}
-            label="RadioMulti2"
-            name="radioMulti2"
-            vertical
-           testValue ={[{label:'labelOne',value:'one'},
-           {label:'labelTwo',value:'two'}]} 
-           validate={required}
+          <Field
+            component={MediaDropZone}
+            label="Media Drop Zone label"
+            name="mediaDropZoneName"
+            placeholder="drop zone placeholder"
           />
 
-           <Field
+          <Field
             component={FIELDS.InputField}
-          
-         validate={(value) => required(value, 'first name')}
-           
+            validate={(value) => required(value, 'first name')}
             label="First name2"
             name="firstName2"
             placeholder="First name"
           />
-        
+
           <button type="submit">Submit</button>
         </Form>
       </div>
@@ -175,8 +167,8 @@ const mapStateToProps = state => {
     fieldMeta: getFormMeta('SignUpForm')(state),
     initialValues: {
       // firstName: 'rajesh',
-    //  quantity:1,
-    //  radioMulti:'one',
+      //  quantity:1,
+      //  radioMulti:'one',
       lastName: false,
       dob: '01/01/2019'
 
