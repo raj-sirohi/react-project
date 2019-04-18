@@ -146,7 +146,7 @@ define custom component:
                />`  
     <strong>Now if user types in the field its value will not be changed</strong>
 
-    <strong>Note:</strong> when we set the intial value of the component , it becomes controlled component. Meaning value is not set via the DOM to the native input component, when user types in the field. Once component becomes controlled we need to change it ourself by using onChange event.However if we use semantic-ui field component and provide value ={this.state.vaue}, then if on changeHandler is not provided then state will not be updated.
+    <strong>Note:</strong> when we set the intial value of the component , it becomes controlled component. Meaning value is not set via the DOM to the native input component, when user types in the field. Once component becomes controlled we need to change it ourself by using onChange event.However if we use semantic-ui field component and provide value ={this.state.vaue}, then if on changeHandler is not provided then state will not be updated.<Strong>when we give value ='something' then that value is passed to the component and it becomes controlled component and it displays the values. Now we use input.onChange(XXX), to set the value for the input.value when ever we change the value</strong>
 
 
 #### Redux Form

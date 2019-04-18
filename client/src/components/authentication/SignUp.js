@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import _ from 'lodash';
 import moment from 'moment'
-import { Form, Icon, Button, Input, Grid, Header, Dropdown } from 'semantic-ui-react'
+import { Form,Segment, Icon, Button, Input, Grid, Header, Dropdown } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 import * as FIELDS from '../UI/FormFields'
 import MediaDropZone from '../UI/Media/MediaDropZone'
