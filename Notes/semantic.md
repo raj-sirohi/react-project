@@ -246,6 +246,21 @@ onChange={handleChange}
 
 - difference between using <Form.Field><Input> versus <Form.Input>. Especially for input and drop list, if we use <Form.Input> it will create 14px bottom margin between its fields, so error message will be 14px below. If we want to it to close to the field, then we have to use css. With <Form.Field><Input>, we can give error message after Input, so error message and input will be enclosed in <Form.Field>, and there will be no margin. Basically when using <Form.Field>, margin is created by <Form.Field>. Same concept is used in DateField.js. However for checkBox it doesn't work because we have label to the right.
 
+#### Semantic modal
+- we can provide transition to modal as follows:  
+<pre>
+ < TransitionablePortal 
+    open={this.state.open} 
+   transition={ {animation:'fade up', duration:'1500'}}>
+   < Modal open <-- see comment on this property below
+   onClose={this.onCloseModalHanlder}
+   >
+   ...
+</pre>
+
+- if open is given as `open={this.state.open}` then if will open with transition, but will close immediately without transition, because modal would have immediately closed while transition is taking place.
+- so if we want to close the modal immediately then give ` open={this.state.open} `
+
 ## CSS General
 - you can define variables as follows:
 <pre> 
@@ -265,3 +280,52 @@ html{
   
 }
 </pre>
+
+#### CSS Image
+- consider following div:  
+<pre>
+  < div style={{maxWidth:'100px' height:'120px'}}>
+    < img class ='imgClass>
+  < /div>
+</pre>
+
+- this mean div cannot have width more then 100px,
+- also it mean div width can increase or decrease based on its content, but cannot go behyond 100px.<strong>maxWidth allows div's width to increase or decrease. IF we just gave width then it will not increase or decrease</strong>
+- consider following imgClass:  
+<pre>
+.imgClass{
+  width:100%
+  height:100%
+}
+</pre>
+- if we have image of width =150px and height of 200px, then it will try to take the width of 100px ( since max is 100px), and it will take height corresponding to 100px width of image ( based on aspect ratio) and will go beyong the div vertically. But if image's width was 150px and height was 120px, then it will take width of 100px and then calculate its height , which will be less then 120px, so it will remain in the div.
+
+- so resolve the above situation, let change the imgClass as follows: 
+<pre>
+ width:100%
+ maxHeight:120px
+</pre>
+Now image will remain within div, but will be crooked, i:e it will not be proportional. Image will try to take the max width of container of 100px ( if image width is more then 100px), and it height will be up to 120px. So image of width 150 and height of 200, will take the width of 100 and height of 120 ( even thought it proportional height is more then 120), which will make it crooked.Similary even if we do maxHeight:100%, same thing will happen.
+
+- lets change the imgClass as follows: 
+<pre>
+maxWidth: '100%'
+maxHeight: '100%',
+</pre>
+same think as in previous cases. 
+- the issue we are having in above cases is image is trying to take 100px width then it calculates it height, and if height is more the 120, it tries to confine its height within 120px, which makes it crooked.
+- so how about we set the width to auto as below:
+<pre>
+width: 'auto'
+maxHeight: '120px',
+</pre>
+now if image's width is less then 100,but height is more then 150px, then it will work fine, because its height will adjust ( since we have maxHeight), it will try to take the width upto 100 and calculate it height, and only take the height for which its width is within 100.
+But if image width=150 and height=100, then it will try to take width of 150,which will make it go beyong the div.
+
+- So how about we set the maxHeight to 120px, as below: 
+<pre>
+ maxWidth: '100%'
+maxHeight: '120px',
+
+</pre>
+Now image will try to take width of 100px and calcualte it height , and if its height is more then 120px, then it will reduce its with so it can come within 120px. which will make it within div and also no crooked.

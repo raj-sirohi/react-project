@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import _ from 'lodash';
 import moment from 'moment'
-import { Form,Segment, Icon, Button, Input, Grid, Header, Dropdown } from 'semantic-ui-react'
+import { Form,Segment, Icon, Button, Input, Grid, Header, Dropdown,
+  TransitionablePortal,Image,Modal as ModalComponent } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 import * as FIELDS from '../UI/FormFields'
 import MediaDropZone from '../UI/Media/MediaDropZone'
@@ -19,7 +20,8 @@ class SignUpForm extends Component {
     firstName: 'aa',
     lastName: '',
     dob: '',
-    date: ''
+    date: '',
+    open:false
   }
 
   handleChange = event => {
@@ -45,6 +47,15 @@ class SignUpForm extends Component {
 
     return true;
   }
+
+  openModalHandler=(e)=>{
+    logger.log('openModalHandler')
+    e.preventDefault();
+    this.setState({open:true})
+}
+onCloseModalHanlder=()=>{
+    this.setState({open:false})
+}
 
   renderRadioError = () => {
     const { fieldError, submitFailed } = this.props;
@@ -72,7 +83,7 @@ class SignUpForm extends Component {
     if (!this.isEmpty(submitErrors)) {
     }
     return (
-      <div>
+      <React.Fragment>
         <Form onSubmit={handleSubmit}>
           <Field
             component={FIELDS.DropListField}
@@ -144,7 +155,8 @@ class SignUpForm extends Component {
 
           <button type="submit">Submit</button>
         </Form>
-      </div>
+      
+      </React.Fragment>
     )
   }
 }

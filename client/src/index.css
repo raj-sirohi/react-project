@@ -4,6 +4,10 @@ body {
  background: #eee; /* bacground color for entire app */
 }
 
+div::-webkit-scrollbar-track {
+  background:#eee; 
+}
+
 /* Global constants  */
 :root{
   /* input field error message font size */
@@ -14,4 +18,10 @@ body {
   --margin:1em;
   
 
+  }
+
+  .test{
+   height: 50px;
+   width:auto;
+   
   }

@@ -1,64 +1,68 @@
 import React,{Component} from 'react'
 import Logger from 'logger';
+import {Image,Icon} from 'semantic-ui-react'
 
-const logger = Logger('MediaView');
+const logger = Logger('MediaThumbList');
 
-/* .wrapper { 
-    background:#EFEFEF; 
-    box-shadow: 1px 1px 10px #999; 
-    margin: auto; 
-    text-align: center; 
-    position: relative;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    margin-bottom: 20px !important;
-    width: 800px;
-    padding-top: 5px;
+
+const wrapper = {
+
+    border: '1px solid #c7c7c7',
+   
+
+    position: 'relative',
+    WebkitBorderRadius: '5px',
+    MozBorderRadius: '5px',
+    borderRadius: '5px',
+   
+    paddingTop: '.4em'
 }
-.scrolls { 
-    overflow-x: scroll;
-    overflow-y: hidden;
-    height: 80px;
-white-space:nowrap
-} 
-.imageDiv img { 
-    box-shadow: 1px 1px 10px #999; 
-    margin: 2px;
-    max-height: 50px;
-    cursor: pointer;
-display:inline-block;
-*display:inline;
-*zoom:1;
-vertical-align:top;
-} */
+const scrolls = {
+    overflowX: 'scroll',
+    overflowY: 'hidden',
+    display:'flex',
+    height: '6em',
+    whiteSpace: 'nowrap'
+}
+
+
+//***************************************** */
 
 const thumb = {
     display: 'inline-flex',
     borderRadius: 2,
     border: '1px solid #bfbfbf',
-    marginBottom: 8,
-    marginRight: 8,
-   // width: '3em',
-    maxHeight: '4em',
-    padding: 4,
+    marginLeft:'.5em',
+ 
+    background:'white',
+  padding: '.4em',
     boxSizing: 'border-box',
 
 };
 const thumbInner = {
     display: 'flex',
     minWidth: 0,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    
 }
-const img = {
-    display: 'block',
-  //  width: '100px', //'auto',
-  maxHeight: '4em', //'100%'
-    float:'left'
-};
+
+const thumbImg={
+ maxHeight: '4em',
+
+
+}
+
+const close= {
+    position: 'absolute',
+    top: 0,
+    right: 0
+  }
+
 class MediaThumbList extends Component{
 
-    renderThumbImage = () => {
+   
+
+    getThumbImages = () => {
         const {files}=this.props;
         logger.log('files',files);
         if (Array.isArray(files) && files.length){
@@ -67,13 +71,18 @@ class MediaThumbList extends Component{
                 const type = file.type
                 if (type === 'image') {
                     return (
+                        <div>
                         <div style={thumb} key={file.file.name}>
                         <div style={thumbInner}>
                             <img
                                 src={file.preview}
-                                style={img}
+                                style={thumbImg}
                             />
+                            <Icon style={close} name='times circle'  color='red' />
                         </div>
+                       
+                        </div>
+                       
                     </div>
                     )
                 }
@@ -85,19 +94,31 @@ class MediaThumbList extends Component{
         return false;
     }
 
+    renderThumbImages = () => {
+        return (
+            <div style={wrapper}>
+                <div style={scrolls}>
+                   
+                        {this.getThumbImages()}
+
+                  
+                </div>
+            </div>
+        )
+    }
+
     render(){
 
         const {files}= this.props
         return(
-            <div  style={{overflow: 'auto', maxWidth: '240px', maxHeight:'200px' }}>
-             <div 
-             //style={{width: '500px'}}
+          
+             <React.Fragment 
+            
              > 
-                {this.renderThumbImage()}
+             <label>selected Pic </label>
+                {this.renderThumbImages()}
 
-            </div>
-            </div>
-
+            </React.Fragment >
         )
     }
 }
