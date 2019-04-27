@@ -1,0 +1,75 @@
+/* common image thumb nail */
+.thumb  {
+    /* display: inline-flex; */
+   
+   
+    margin-left:.5em;
+ 
+    /* position:relative; */
+    border: 1px solid #bfbfbf;
+ background:white;
+padding: .4em;
+ box-sizing: border-box;
+   
+
+}
+
+.thumb__inner  {
+    display: flex;
+    min-width:  0;
+    overflow: hidden;
+   
+    
+}
+
+.thumbImage{
+ max-height: 4em;
+ 
+
+
+}
+
+.wrapper  {
+
+    border: 1px solid #c7c7c7;
+   
+
+    position: relative;
+    /* WebkitBorderRadius: '5px';
+    MozBorderRadius: '5px'; */
+    border-radius: 5px;
+   
+    padding-top: .4em;
+}
+.wrapper__scrolls  {
+    overflow-X: scroll;
+    overflow-Y: hidden;
+ 
+    height: 6em;
+    white-space: nowrap;
+}
+
+
+
+
+
+.imageCloseIcon {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 100;
+    background-color: white;
+    padding: 5px 2px 2px;
+    color: red;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: .7;
+    text-align: center;
+    font-size: 22px;
+    line-height: 10px;
+    border-radius: 50%;
+}
+
+  .imageCloseIcon:hover {
+    opacity: 1;
+}

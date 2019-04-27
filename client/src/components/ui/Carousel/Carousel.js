@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Popup, Header,Icon,Modal, Grid, Image,  Button, Transition, TransitionablePortal, Segment } from 'semantic-ui-react'
 import Logger from 'logger';
-import MediaThumbList from './MediaThumbList'
+import ThumbList from '../ThumbList/ThumbList'
 
-const logger = Logger('MediaCarousel');
+const logger = Logger('Carousel');
 
 const viewImageOuterWrapper = {
     border: '1px solid #c7c7c7',
@@ -91,7 +91,7 @@ const thumbImg = {
 
 }
 
-class MediaCarousel extends Component {
+class Carousel extends Component {
 
     state = {
         //  files: '',
@@ -307,7 +307,7 @@ class MediaCarousel extends Component {
                 <Modal.Content style={{ paddingTop: 0 }} >
 
                     {/* {this.renderThumbImages()} */}
-                    <MediaThumbList files={files} clickImage={this.imageClickHandler}
+                    <ThumbList files={files} clickImage={this.imageClickHandler}
                         deleteImage={this.deleteImageHandler} />
 
                     {this.state.openDeleteModal && this.renderDeleteConfModal()}
@@ -335,4 +335,4 @@ class MediaCarousel extends Component {
     }
 }
 
-export default MediaCarousel
+export default Carousel

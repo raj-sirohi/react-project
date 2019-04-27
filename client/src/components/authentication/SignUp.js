@@ -8,7 +8,7 @@ import { Form,Segment, Icon, Button, Input, Grid, Header, Dropdown,
   TransitionablePortal,Image,Modal as ModalComponent } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 import * as FIELDS from '../UI/FormFields'
-import MediaDropZone from '../UI/Media/MediaDropZone'
+import DropZone from '../UI/DropZone/DropZone'
 import { required } from '../../utils/validationUtil'
 import Logger from 'logger';
 
@@ -139,9 +139,9 @@ onCloseModalHanlder=()=>{
             validate={required}
           />
           <Field
-            component={MediaDropZone}
-            label="Media Drop Zone label"
-            name="mediaDropZoneName"
+            component={DropZone}
+            label="Drop Zone label"
+            name="DropZoneName"
             placeholder="drop zone placeholder"
           />
 
