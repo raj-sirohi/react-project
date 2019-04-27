@@ -175,7 +175,11 @@ class MediaCarousel extends Component {
                         className='thumbImage'
                     />
                 </div>
-            
+                {/* <Popup
+                    trigger={<span
+                        onClick={() => deleteHandler(file.file)}
+                        className='imageCloseIcon' >&times;</span>}
+                    content='Delete File' /> */}
             </div>
         )
     }

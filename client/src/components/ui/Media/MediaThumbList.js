@@ -1,126 +1,124 @@
-import React,{Component} from 'react'
+import React, { Component } from 'react'
 import Logger from 'logger';
-import {Image,Icon} from 'semantic-ui-react'
+import { Image, Icon, Popup,Button ,Modal,TransitionablePortal} from 'semantic-ui-react'
+import PropTypes from 'prop-types';
+import './Media.css'
 
 const logger = Logger('MediaThumbList');
 
+class MediaThumbList extends Component {
 
-const wrapper = {
+   /*  state = {
+        openDeleteModal: false,
+        deleteFile:''
+    }
 
-    border: '1px solid #c7c7c7',
-   
+    deleteImageHandler = (file) => {
+        this.setState({deleteFile:file,openDeleteModal:true})
+    }
 
-    position: 'relative',
-    WebkitBorderRadius: '5px',
-    MozBorderRadius: '5px',
-    borderRadius: '5px',
-   
-    paddingTop: '.4em'
-}
-const scrolls = {
-    overflowX: 'scroll',
-    overflowY: 'hidden',
-    display:'flex',
-    height: '6em',
-    whiteSpace: 'nowrap'
-}
+    modalDeleteImageHandler=()=>{
+        const{deleteFile}= this.state;
+        logger.log('modalDeleteImageHandler deleteFile')
+       
+        this.setState({deleteFile:'',openDeleteModal:false})
+        this.props.deleteImage(deleteFile.name)
+    }
 
+    onModalCloseHandler=()=>{
+        this.setState({deleteFile:'',openDeleteModal:false})
+    }
 
-//***************************************** */
-
-const thumb = {
-    display: 'inline-flex',
-    borderRadius: 2,
-    border: '1px solid #bfbfbf',
-    marginLeft:'.5em',
- 
-    background:'white',
-  padding: '.4em',
-    boxSizing: 'border-box',
-
-};
-const thumbInner = {
-    display: 'flex',
-    minWidth: 0,
-    overflow: 'hidden',
-    
-}
-
-const thumbImg={
- maxHeight: '4em',
-
-
-}
-
-const close= {
-    position: 'absolute',
-    top: 0,
-    right: 0
-  }
-
-class MediaThumbList extends Component{
+    renderDeleteConfModal = () => {
+        const {openDeleteModal}= this.state;
+        logger.log('renderDeleteConfModal',openDeleteModal)
+        return (
+            
+            <TransitionablePortal open={openDeleteModal} transition={{ animation: 'fade up', duration: '300' }}>
+                <Modal open onClose={this.onModalCloseHandler}
+                    closeOnDimmerClick={false} closeIcon>
+                    <Modal.Header>Confirm Delete</Modal.Header>
+                    <Modal.Content scrolling>
+                        Delete this image?
+                </Modal.Content>
+                    <Modal.Actions>
+                        <Button color='black' onClick={this.modalDeleteImageHandler}>
+                            Delete
+                        </Button>
+                        <Button
+                            positive
+                            icon='checkmark'
+                            labelPosition='right'
+                            content="Cancel"
+                            onClick={this.onModalCloseHandler}
+                        />
+                    </Modal.Actions>
+                </Modal>
+            </TransitionablePortal>
+        )
+    } */
 
    
-
     getThumbImages = () => {
-        const {files}=this.props;
-        logger.log('files',files);
-        if (Array.isArray(files) && files.length){
+        const { files, clickImage,deleteImage } = this.props;
+        if (Array.isArray(files) && files.length) {
             return files.map(file => {
-         
                 const type = file.type
                 if (type === 'image') {
-                    return (
-                        <div>
-                        <div style={thumb} key={file.file.name}>
-                        <div style={thumbInner}>
-                            <img
-                                src={file.preview}
-                                style={thumbImg}
-                            />
-                            <Icon style={close} name='times circle'  color='red' />
-                        </div>
-                       
-                        </div>
-                       
-                    </div>
-                    )
+                    return  this.getThumbImage(file,clickImage,deleteImage);
                 }
-    
             });
         }
-       
-
         return false;
+    }
+
+    getThumbImage=(file,clickHandler,deleteHandler)=>{
+        return (
+            <div className='thumb' key={file.file.name}>
+                <div className='thumb__inner'>
+                    <img onClick={() => clickHandler(file)}
+                        src={file.preview}
+                        className='thumbImage'
+                    />
+                </div>
+                <Popup
+                    trigger={<span 
+                        onClick={()=>deleteHandler(file)}
+                        className='imageCloseIcon' >&times;</span>}
+                    content='Delete File' />
+            </div>
+        )
     }
 
     renderThumbImages = () => {
         return (
-            <div style={wrapper}>
-                <div style={scrolls}>
-                   
-                        {this.getThumbImages()}
-
-                  
+            <div className='wrapper'>
+                <div className='wrapper__scrolls'>
+                    {this.getThumbImages()}
                 </div>
             </div>
         )
     }
 
-    render(){
-
-        const {files}= this.props
-        return(
-          
-             <React.Fragment 
-            
-             > 
-             <label>selected Pic </label>
+    render() {
+        return (
+            <React.Fragment>
+                <label>selected Pic </label>
                 {this.renderThumbImages()}
-
             </React.Fragment >
         )
     }
 }
+
+MediaThumbList.propTypes = {
+    files:PropTypes.array.isRequired,
+    clickImage: PropTypes.func,
+    deleteImage: PropTypes.func
+  };
+
+  MediaThumbList.defaultProps = {
+    clickImage: ()=>{},
+    deleteImage: ()=>{}
+  };
 
 export default MediaThumbList;

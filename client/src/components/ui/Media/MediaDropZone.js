@@ -129,7 +129,7 @@ class MediaDropZone extends Component {
         //image/jpeg
         //video/mp4
         const droppedFile = files[0];
-        logger.log('onDropHandler droppedFile', droppedFile.name);
+      //  logger.log('onDropHandler droppedFile', droppedFile.name);
         const fileName = droppedFile.name;
         const type = droppedFile.type.split('/')[0]
 
@@ -158,12 +158,12 @@ class MediaDropZone extends Component {
         //video/mp4
         const droppedFile = files[0];
 
-        logger.log('onDropHandler')
+      //  logger.log('onDropHandler')
         this.getBase64(droppedFile, (result) => {
-            logger.log('idCardBase64', result)
+           // logger.log('idCardBase64', result)
             const idCardBase64 = result;
             this.setState({ base64: idCardBase64 })
-            logger.log('idCardBase64', idCardBase64)
+           // logger.log('idCardBase64', idCardBase64)
         });
         const preview = URL.createObjectURL(droppedFile)
         const type = droppedFile.type.split('/')[0]
@@ -209,25 +209,19 @@ class MediaDropZone extends Component {
         const { droppedFile } = this.state;
         const newStateFiles = this.state.files.slice();
         newStateFiles.unshift(droppedFile);
-
         this.setState({ droppedFile: '', files: newStateFiles })
         const { input } = this.props;
         input.onChange(this.state.files);
-
     }
 
     openModalHandler = (e) => {
-        logger.log('openModalHandler')
         e.preventDefault();
         this.setState({ open: true })
     }
     onCloseModalHanlder = () => {
         this.setState({ open: false })
     }
-    handleClose = (event, data) => {
-        this.setOpen(false);
-    };
-
+   
     renderDropZone = () => {
         const { droppedFile } = this.state;
         const isFileDropped = !!droppedFile
@@ -247,8 +241,8 @@ class MediaDropZone extends Component {
                         </div>
                         <div>
                             {isFileDropped && <div style={{ marginBottom: '2px', textAlign: 'center' }}>
-                                <Button onClick={this.dropZoneAddHandler} content='Add' size='mini' primary />
-                                <Button onClick={this.dropZoneClearHandler} content='Cancel' size='mini' primary /></div>}
+                                <Button onClick={this.dropZoneAddHandler} content='Add' size='mini'  positive />
+                                <Button onClick={this.dropZoneClearHandler} content='Cancel' size='mini'   /></div>}
                         </div>
                     </div>
 
@@ -257,49 +251,49 @@ class MediaDropZone extends Component {
         )
     }
 
-    renderModal = () => {
-        //console.log('renderModal',this.state.showModal);
-        return (
-            <ModalContainer show={this.state.open}  >
-                <ModalHeader title="this is modal title"></ModalHeader>
-                <ModalBody>
-                    <p>this is my modal body</p>
 
+    deleteImageHandler = fileName => {
 
-                </ModalBody>
-                <ModalButtonPanel>
-                    <Button content='Add' primary />
-                    <Button onClick={this.onCloseModalHanlder} content='Cancel' primary />
-                </ModalButtonPanel>
-
-            </ModalContainer>
-        )
+        const { files } = this.state;
+        const newFileArray = files.filter((value) => {
+            if (value.file.name !== fileName.file.name) {
+                return true
+            }
+        })
+        this.setState({ files: newFileArray })
     }
+
+
     render() {
-        logger.log('this.state.open', this.state.open)
+        logger.log(' render this.state', this.state)
         return (
 
-         
-              <div>
-                  <Grid stackable columns={2}>
-                      <Grid.Column mobile={16} tablet={5} computer={3}>
-                          <Segment basic compact>
-                              <label>Test label</label>
-                              {this.renderDropZone()}
-                          </Segment>
-                      </Grid.Column>
-                      <Grid.Column mobile={16} tablet={11} computer={13}>
-                          <Segment basic >
-                              <MediaThumbList files={this.state.files} />
-                          </Segment>
-                          <Segment basic >
-                              <MediaThumbList files={this.state.files} />
-                          </Segment>
-                      </Grid.Column>
-                  </Grid>
-                  {this.state.open && <MediaCarousel files={this.state.files} open={this.state.open} onClose={this.onCloseModalHanlder} />}
-                  <Button content='open Modal' onClick={this.openModalHandler} />
-              </div>
+
+            <div>
+                <Grid stackable columns={2}>
+                    <Grid.Column mobile={16} tablet={5} computer={3}>
+                        <Segment basic compact>
+                            <label>Test label</label>
+                            {this.renderDropZone()}
+                        </Segment>
+                    </Grid.Column>
+                    <Grid.Column mobile={16} tablet={11} computer={13}>
+                        <Segment basic >
+                            <MediaThumbList files={this.state.files}
+                                deleteImage={this.deleteImageHandler} />
+                        </Segment>
+                        <Segment basic >
+                            <MediaThumbList files={this.state.files} />
+                        </Segment>
+                    </Grid.Column>
+                </Grid>
+                {this.state.open && <MediaCarousel files={this.state.files}
+                 open={this.state.open} 
+                 deleteImage={this.deleteImageHandler}
+                 onClose={this.onCloseModalHanlder} />}
+                <Button content='open Modal' 
+                onClick={this.openModalHandler} />
+            </div>
 
         )
     }
