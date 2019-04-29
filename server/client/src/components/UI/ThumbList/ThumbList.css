@@ -1,0 +1,15 @@
+
+.wrapper  {
+    border: 1px solid #c7c7c7;
+    position: relative;
+    -webkit-border-radius: '5px';
+    -moz-border-radius: '5px';
+    border-radius: 5px;
+    padding-top: .4em;
+}
+.wrapper__scrolls  {
+    overflow-X: scroll;
+    overflow-Y: hidden;
+    height: 6em;
+    white-space: nowrap;
+}

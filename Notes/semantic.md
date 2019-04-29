@@ -203,7 +203,11 @@ so if we want to apply our own class we can create  class `errorField`  and use 
     background-color: aqua !important;
 </pre>
 
-### Semantic form fields
+- following files are modified for react application
+   <strong>theme/default/global/site.varialbes </strong>   
+   <strong>checkbox.varialbes in client/src/semantic/src/site/modules </strong>
+
+## Semantic form fields
 - semantic fields can be defined in 3 ways as follows: 
 <pre>
 (1)

@@ -43,8 +43,9 @@ require('./routes/fileUploadRoutes')(app);
 app.get('/', (req, res) => {
     res.send({hi:'buddy'});
 });
-
+////
 // client id : 352649846414-njfm45nifg3rflhusmb78rrpt5soovgc.apps.googleusercontent.com
 //client_secret":"wSU59XmWbIPMfab9voH19mnk
 
 app.listen(5000);
+console.log('Server listening on port:5000');

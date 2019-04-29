@@ -1,0 +1,27 @@
+
+/* for displaying the error message below the field */
+ .input__label--error{
+    font-weight: var(--input-error-font-weight) !important;
+    font-size:var( --input-error-font-size) !important;
+    color:var(--input-error-color) !important;
+  }
+
+
+  /* for radio multi */
+  .form-group{
+    margin-bottom:0em  !important
+  }
+  .form-group--margin-bottom-1em{
+    margin-bottom: var(--margin) !important;
+  }
+  .label{
+    display:block !important;
+  }
+  
+  .label--margin-bottom-1em{
+    margin-bottom:1em !important;
+  }
+ 
+  .label--color-error{
+    color:var(--input-error-color) !important;
+  }

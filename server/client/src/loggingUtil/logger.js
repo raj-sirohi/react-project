@@ -1,8 +1,6 @@
 import loggerConfig from './loggerConfig'
 import Moment from 'moment';
 
-
-
 const printLogMessage = (logType, className, ...args) => {
 
     const txtColor = loggerConfig.getLoggerConfig(logType).TXT_COLOR;

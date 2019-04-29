@@ -1,0 +1,18 @@
+.segment{
+    padding:.3em 0 !important;
+}
+.menu{
+    border-width:0 !important;
+}
+
+.menu-item__button{
+    height:2.4em;
+}
+.menu-item__right{
+    padding-right:0 !important;
+}
+.menu-item__right--middle{
+    padding-right:0 !important;
+    margin-right: 0 !important;
+}
+
