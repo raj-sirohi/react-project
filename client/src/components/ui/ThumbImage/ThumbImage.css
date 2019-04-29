@@ -1,26 +1,18 @@
 .thumb  {
     display: inline-flex;
-   
-   
     margin-left:.5em;
- 
-    /* position:relative; */
+    position:relative;
     border: 1px solid #bfbfbf;
- background:white;
-padding: .4em;
- box-sizing: border-box;
-   
-
+    background:white;
+    padding: .4em;
+    box-sizing: border-box;
 }
 
-.thumbImage{
+.thumb__image{
  max-height: 4em;
- 
-
-
 }
 
-.imageCloseIcon {
+.thumb__closeIcon {
     position: absolute;
     top: 2px;
     right: 2px;
@@ -37,6 +29,6 @@ padding: .4em;
     border-radius: 50%;
 }
 
-  .imageCloseIcon:hover {
+  .thumb__closeIcon:hover {
     opacity: 1;
 }
