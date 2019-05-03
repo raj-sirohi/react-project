@@ -2,16 +2,18 @@
 import axios from '../../config/axios/axiosBlog'   //'../config/axios/axiosBlog';
 import * as ACTIONS from './types';
 import {SIGN_IN_START} from "./types";
-import Logger from '../../loggingUtil/logger';
+
 import {processStart,processSuccess,processMessage,processError,clearMessage} from './messageActions'
 import {getApplicationErrorDTO} from '../utils/errorUtil'
 import * as MESSAGES from '../messages/authMessages';
+import Logger from 'logger';
 
 const logger = Logger('Auth-Actions');
 
 export const createUser = (user, history) => async dispatch => {
     try {
 
+        logger.log('createUser user',user);
        // dispatch({type: ACTIONS.CREATE_USER_START});
        // dispatch(clearMessage());
        dispatch( processStart({type: ACTIONS.CREATE_USER_START}));

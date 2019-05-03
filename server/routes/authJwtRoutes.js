@@ -46,7 +46,7 @@ module.exports = app => {
 
     app.post('/api/signup2', authenticate.validateSignUp,function (req, res) {
 
-        console.log('awtJwtRoutes /api/signup2')
+        console.log('awtJwtRoutes**************** /api/signup2')
         const {firstName, lastName, email, password} = req.body;
 
         User.findOne({email: email}, (error, existingUser) => {

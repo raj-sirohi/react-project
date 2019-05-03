@@ -4,7 +4,7 @@ const ErrorDTO = require('../dto/ErrorDTO');
 
 var validateSignUp = (req, res, next) => {
 const emailRegexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-  const { firstName, lastName, email, password } = req.body;
+  const { firstName='', lastName='', email='', password='' } = req.body;
   console.log('authenticate-validateSignUp', email);
   var errorMessage = "";
   if (!!password) {
@@ -52,13 +52,17 @@ const emailRegexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"
     }
   }
 
-  if (lastName.trim().length == 0) {
-    if (errorMessage.trim().length == 0) {
-      errorMessage = "Last Name is required";
-    } else {
-      errorMessage += ', Last Name is required'
+  console.log('QQQQQQQQQQqqqqqqqqqqqqqq lastName',lastName);
+  if (!!lastName){
+    if (lastName.trim().length == 0) {
+      if (errorMessage.trim().length == 0) {
+        errorMessage = "Last Name is required";
+      } else {
+        errorMessage += ', Last Name is required'
+      }
     }
   }
+ 
 
   if (!!errorMessage) {
     const errorDTO = new ErrorDTO(ErrorDTO.ERROR_TYPES.ERROR, errorMessage, 'authenticate-validateSignUp', null);

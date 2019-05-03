@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import _ from 'lodash';
 import moment from 'moment'
-import { Form,Segment, Icon, Button, Input, Grid, Header, Dropdown,
-  TransitionablePortal,Image,Modal as ModalComponent } from 'semantic-ui-react'
+import { Form,Button,Modal as ModalComponent } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 import * as FIELDS from '../UI/FormFields'
 import DropZone from '../UI/DropZone/DropZone'
+import * as ACTIONS from '../../store/actions/authActions'
 import { required } from '../../utils/validationUtil'
 import Logger from 'logger';
 
@@ -76,6 +76,9 @@ onCloseModalHanlder=()=>{
     }
     return false;
   }
+  submit =(values)=>{
+    logger.log('submit values',values)
+  }
 
   render() {
     this.radioHasError()
@@ -84,7 +87,7 @@ onCloseModalHanlder=()=>{
     }
     return (
       <React.Fragment>
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit(submit)}>
           <Field
             component={FIELDS.DropListField}
             label="Gender"
@@ -110,7 +113,7 @@ onCloseModalHanlder=()=>{
             component={FIELDS.DateField}
             //  validate={(value) => required(value, 'date of birth')}
             label="Date of Bith"
-            name="dob2"
+            name="dob"
             placeholderText="Select a date between today and 5 days in the future"
           />
           <Field
@@ -169,6 +172,7 @@ const validate = (values) => {
 // form submit action
 const submit = (values, dispatch, props) => {
   logger.log('ON SUBMIT VALUES ', values);
+  dispatch(ACTIONS.createUser(values));
 };
 
 const mapStateToProps = state => {
@@ -188,8 +192,15 @@ const mapStateToProps = state => {
   }
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+       createUser: (user, history) => dispatch(ACTIONS.createUser(user, history))
+
+  }
+}
+
 export default compose(
-  connect(mapStateToProps),
+  connect(mapStateToProps,mapDispatchToProps),
   reduxForm({
     validate,
     form: 'SignUpForm',
