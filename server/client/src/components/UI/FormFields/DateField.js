@@ -8,11 +8,11 @@ import Logger from 'logger';
 
 const logger = Logger('dateField');
 
-export const DateField = ({ input, label, defaultValue, meta: { touched, error }, ...rest }) => {
+export const DateField = ({ input, label, defaultValue, meta: { touched, error }, width,...rest }) => {
     return (
-        <Form.Field error={touched && !!error} >
+        <Form.Field  error={touched && !!error} >
             <label  >{label}</label>
-            <DatePicker {...rest}
+            <DatePicker {...rest} style={{width:'200px'}}
                 selected={input.value ? moment(input.value).toDate() : null}
                 onChange={input.onChange}
                 onBlur={() => input.onBlur(input.value)}

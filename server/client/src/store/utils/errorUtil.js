@@ -23,7 +23,7 @@ export const getApplicationErrorDTO = (error) =>  {
     logger.log('getApplicationErrorDTO DDDD error',error);
     errorDTO = new ErrorDTO(ErrorDTO.ERROR_TYPES.SYSTEM,
         'Cannot complete your action at this time. Contact support!','errorUtil', error);
-        logger.log('getApplicationErrorDTO eeee');
+        logger.log('getApplicationErrorDTO eeee errorDTO',errorDTO.toJSON());
    return errorDTO;
 
     

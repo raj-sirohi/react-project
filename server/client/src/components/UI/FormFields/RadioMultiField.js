@@ -22,12 +22,12 @@ class RadioMultiField extends Component {
    
     render() {
         const { input: { value, name, onChange }, vertical = false,
-            label, testValue, meta: { touched, error }, ...props } = this.props
+            label, testValue, meta: { touched, error },width, ...props } = this.props
         var radioArray = testValue.map(val => {
             var label = val.label;
             var radioValue = val.value;
             return (
-                <Form.Field
+                <Form.Field width={width}
                     error={touched && !!error} key={radioValue}>
                     <Radio
                         label={label}

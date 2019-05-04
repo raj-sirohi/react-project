@@ -52,7 +52,7 @@ const emailRegexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"
     }
   }
 
-  console.log('QQQQQQQQQQqqqqqqqqqqqqqq lastName',lastName);
+  
   if (!!lastName){
     if (lastName.trim().length == 0) {
       if (errorMessage.trim().length == 0) {
@@ -60,6 +60,12 @@ const emailRegexp = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"
       } else {
         errorMessage += ', Last Name is required'
       }
+    }
+  }else{
+    if (errorMessage.trim().length == 0) {
+      errorMessage = "Last Name is required";
+    } else {
+      errorMessage += ', Last Name is required'
     }
   }
  

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import _ from 'lodash';
 import moment from 'moment'
-import { Form,Button,Modal as ModalComponent } from 'semantic-ui-react'
+import { Form, Button, Modal as ModalComponent } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 import * as FIELDS from '../UI/FormFields'
 import DropZone from '../UI/DropZone/DropZone'
@@ -21,7 +21,7 @@ class SignUpForm extends Component {
     lastName: '',
     dob: '',
     date: '',
-    open:false
+    open: false
   }
 
   handleChange = event => {
@@ -48,14 +48,14 @@ class SignUpForm extends Component {
     return true;
   }
 
-  openModalHandler=(e)=>{
+  openModalHandler = (e) => {
     logger.log('openModalHandler')
     e.preventDefault();
-    this.setState({open:true})
-}
-onCloseModalHanlder=()=>{
-    this.setState({open:false})
-}
+    this.setState({ open: true })
+  }
+  onCloseModalHanlder = () => {
+    this.setState({ open: false })
+  }
 
   renderRadioError = () => {
     const { fieldError, submitFailed } = this.props;
@@ -76,8 +76,9 @@ onCloseModalHanlder=()=>{
     }
     return false;
   }
-  submit =(values)=>{
-    logger.log('submit values',values)
+  submit = (values) => {
+    logger.log('inside form submit values', values)
+    this.props.createUser(values)
   }
 
   render() {
@@ -87,7 +88,7 @@ onCloseModalHanlder=()=>{
     }
     return (
       <React.Fragment>
-        <Form onSubmit={handleSubmit(submit)}>
+        <Form onSubmit={handleSubmit(this.submit)}>
           <Field
             component={FIELDS.DropListField}
             label="Gender"
@@ -100,6 +101,42 @@ onCloseModalHanlder=()=>{
             selection
           // validate={(value) => required(value, 'gender')}
           />
+
+          <Form.Group>
+            <Field width={4}
+              component={FIELDS.DropListField}
+              label="Gender"
+              name="gender"
+              options={[
+                { key: "m", text: "Male", value: "maleValue" },
+                { key: "f", text: "Female", value: "femaleValue" }
+              ]}
+              placeholder="placeholder Gender"
+              selection
+            // validate={(value) => required(value, 'gender')}
+            />
+            <Field width={4}
+              component={FIELDS.InputField}
+              validate={(value) => required(value, 'last name')}
+              label="Last Name"
+              name="lastName"
+              placeholder="last name"
+            />
+            <Field width={4}
+              component={FIELDS.InputField}
+              validate={(value) => required(value, 'email')}
+              label="email"
+              name="email"
+              placeholder="email"
+            />
+            <Field width={4}
+              component={FIELDS.InputField}
+              validate={(value) => required(value, 'password')}
+              label="Password"
+              name="password"
+              placeholder="password"
+            />
+          </Form.Group>
           <Field
             component={FIELDS.InputField}
             as={Form.Input}
@@ -118,7 +155,7 @@ onCloseModalHanlder=()=>{
           />
           <Field
             component={FIELDS.CheckboxField}
-            validate={(value) => required(value, 'checkbox')}
+            //  validate={(value) => required(value, 'checkbox')}
             label="check box test"
             name="chekbox1"
             bogusprops='bogusValue'
@@ -130,10 +167,10 @@ onCloseModalHanlder=()=>{
             // validate={(value) => required(value, 'first name')}
             type="text"
             label="First name"
-            name="firstName1"
+            name="firstName"
             placeholder="First name"
           />
-          <Field
+          <Field width={4}
             component={FIELDS.RadioMultiField}
             label="RadioMulti"
             name="radioMulti"
@@ -147,18 +184,20 @@ onCloseModalHanlder=()=>{
             name="DropZoneName"
             placeholder="drop zone placeholder"
           />
+          <Form.Group>
+            <Field width={4}
+              component={FIELDS.InputField}
 
-          <Field
-            component={FIELDS.InputField}
-            validate={(value) => required(value, 'first name')}
-            label="First name2"
-            name="firstName2"
-            placeholder="First name"
-          />
+              label="dummy field"
+              name="dummy"
+              placeholder="dummy"
+            />
+
+          </Form.Group>
 
           <button type="submit">Submit</button>
         </Form>
-      
+
       </React.Fragment>
     )
   }
@@ -184,8 +223,8 @@ const mapStateToProps = state => {
     initialValues: {
       // firstName: 'rajesh',
       //  quantity:1,
-      //  radioMulti:'one',
-      lastName: false,
+        radioMulti:'one',
+      chekbox1: true,
       dob: '01/01/2019'
 
     }
@@ -194,19 +233,19 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-       createUser: (user, history) => dispatch(ACTIONS.createUser(user, history))
+    createUser: (user) => dispatch(ACTIONS.createUser(user))
 
   }
 }
 
 export default compose(
-  connect(mapStateToProps,mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   reduxForm({
     validate,
     form: 'SignUpForm',
     enableReinitialize: true,
     destroyOnUnmount: false,
-    onSubmit: submit
+    // onSubmit: submit
 
   })
 )(SignUpForm);

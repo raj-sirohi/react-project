@@ -2,9 +2,9 @@ import React from 'react';
 import { Form, Input, Dropdown } from 'semantic-ui-react'
 
 export const DropListField = ({ input: { value, onChange, ...input }, label,
-  meta: { touched, error, warning }, as: As = Input, ...props }) => (
+  meta: { touched, error, warning }, as: As = Input, width,...props }) => (
     <React.Fragment>
-      <Form.Field error={touched && !!error}>
+      <Form.Field width={width} error={touched && !!error}>
         <label>{label}</label>
         <Dropdown error={touched && !!error}
           {...input}
