@@ -67,8 +67,8 @@ const getErrorDTO = (error) => {
     }
 
     errorDTO = new ErrorDTO(ErrorDTO.ERROR_TYPES.SYSTEM,
-        'Cannot complete your action at this time. Contact support! '+error, '[messageAction]:getErrorDTO', error);
-    errorDTO.setTitle('System Error!');
+        'Cannot complete your action at this time. Contact support. '+error, '[messageAction]:getErrorDTO', error);
+    errorDTO.setTitle('System Error !');
     
     return errorDTO.toJSON();
 }

@@ -6,6 +6,7 @@ import {
   withRouter
 } from "react-router-dom";
 
+import globalErrorHandler from '../hoc/errorHandler/globalErrorHandler'
 import Navbar from './Navbar/Navbar';
 import Header from './Header/Header';
 import Message from './Message/Message';
@@ -14,10 +15,9 @@ import Wall from './Wall/Wall';
 import Friend from './Friend/Friend';
 import SignUp from './Authentication/SignUp'
 
-import { Radio, Button, Container, Loader, Segment, Dimmer } from 'semantic-ui-react'
+import {  Container } from 'semantic-ui-react'
 import './App.css';
-import { Checkbox } from 'semantic-ui-react'
-//import '../semantic/dist/semantic.min.css'
+
 
 class App extends Component {
   render() {
@@ -38,4 +38,6 @@ class App extends Component {
     );
   }
 }
-export default App;
+//export default App;
+//export default connect(null, actions)(globalErrorHandler(App));
+export default globalErrorHandler(App);

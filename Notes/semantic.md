@@ -183,6 +183,30 @@ and @blue is defined as
 - open src/site/global/site.variables and define as follows:  
 `@primaryColorHover: #1976d2;` 
 
+- changing the color of form field labels (note this is different then labels)
+    open file src/definition/collection/form.less  and see following class is defined there 
+    <pre>
+    .ui.form .field > label {
+     display: block;
+     margin: @labelMargin;
+    color: @labelColor;
+    font-size: @labelFontSize;
+    font-weight: @labelFontWeight;
+   text-transform: @labelTextTransform;
+   }
+    </pre>
+    if we search for @labelColor in file form.less ,we find its only used once  in above class.
+    
+    Here label color is @labelColor, if we look for @labelColor in src/theme/default/collections/form.variables we see its defined there as 
+  @labelColor: @textColor;
+
+  so change the label color open file form.variables in src/site/collection and define the color as below:
+  <pre>
+  @labelColor: #595959;
+  </pre>
+   
+
+
 <Strong>Note:</Strong>We can define the variables in site.variables or button.variables ( in src/site). If we define in site.variables, then it will effect all the components, for eg defining @blue: : #2185D0;, then menu, checkbos, radio etc, will have the blue color. If we define in button.varialbes then only button will the new color. So if we wanted only button to have new blue  color then we can only define @primaryColor: #2196f3, in button variables. But if want all the blue to have new value then we can define @blue in site.variabes, because later in the chain @primaryColor uses @blue.
 
 - when /semantic/dist/semantic.min.css is generated, it contains all the classes, but it has no variabes (@blue) or reference to variables. During generation process variables defined in theme/default/site.variables are used to generate the semantic.min.css. So if we import semantic.min.css we cannot use variables like @blue in our app.  
@@ -206,6 +230,7 @@ so if we want to apply our own class we can create  class `errorField`  and use 
 - following files are modified for react application
    <strong>theme/default/global/site.varialbes </strong>   
    <strong>checkbox.varialbes in client/src/semantic/src/site/modules </strong>
+    <strong>form.variables in client/src/semantic/src/site/collection</strong>
 
 ## Semantic form fields
 - semantic fields can be defined in 3 ways as follows: 

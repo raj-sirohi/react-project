@@ -3,7 +3,7 @@ import { Form, Input } from 'semantic-ui-react';
 
 export const RadioField = ({ input: { value, onChange, ...input },
     radioValue, meta: { touched, error }, ...props }) => (
-        <Form.Radio  {...props}
+        <Form.Radio disabled {...props}
             checked={value === radioValue}
             error={touched && !!error}
             onChange={(e, { checked }) => onChange(radioValue)} />

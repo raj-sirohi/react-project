@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import _ from 'lodash';
 import moment from 'moment'
-import { Form, Button, Modal as ModalComponent } from 'semantic-ui-react'
+import { Segment, Form, Dimmer, Input, Button, Loader, Modal as ModalComponent } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
+//import Loader from 'react-loader-spinner'
 import * as FIELDS from '../UI/FormFields'
 import DropZone from '../UI/DropZone/DropZone'
 import * as ACTIONS from '../../store/actions/authActions'
@@ -83,12 +84,22 @@ class SignUpForm extends Component {
 
   render() {
     this.radioHasError()
-    const { handleSubmit, submitErrors } = this.props
-    if (!this.isEmpty(submitErrors)) {
-    }
+    const { handleSubmit, formSubmitError, formSyncError, formMeta, processing } = this.props
+    logger.log('formSyncError:', formSyncError)
+    logger.log('formMeta:', formMeta)
+    logger.log('formSubmitError:', formSubmitError)
+    logger.log('processing:', processing)
+
     return (
       <React.Fragment>
+
+
+
         <Form onSubmit={handleSubmit(this.submit)}>
+
+          <Loader style={{ color: 'green' }} size='massive' active={processing}></Loader>
+
+
           <Field
             component={FIELDS.DropListField}
             label="Gender"
@@ -103,7 +114,7 @@ class SignUpForm extends Component {
           />
 
           <Form.Group>
-            <Field width={4}
+            <Field width={4} disabled={processing}
               component={FIELDS.DropListField}
               label="Gender"
               name="gender"
@@ -115,21 +126,21 @@ class SignUpForm extends Component {
               selection
             // validate={(value) => required(value, 'gender')}
             />
-            <Field width={4}
+            <Field width={4} disabled={processing}
               component={FIELDS.InputField}
               validate={(value) => required(value, 'last name')}
               label="Last Name"
               name="lastName"
               placeholder="last name"
             />
-            <Field width={4}
+            <Field width={4} disabled={processing}
               component={FIELDS.InputField}
               validate={(value) => required(value, 'email')}
               label="email"
               name="email"
               placeholder="email"
             />
-            <Field width={4}
+            <Field width={4} disabled={processing}
               component={FIELDS.InputField}
               validate={(value) => required(value, 'password')}
               label="Password"
@@ -137,7 +148,7 @@ class SignUpForm extends Component {
               placeholder="password"
             />
           </Form.Group>
-          <Field
+          <Field disabled={processing}
             component={FIELDS.InputField}
             as={Form.Input}
             //  validate={(value) => required(value, 'first name')}
@@ -146,14 +157,14 @@ class SignUpForm extends Component {
             name="firstName"
             placeholder="First name"
           />
-          <Field
+          <Field disabled={processing}
             component={FIELDS.DateField}
             //  validate={(value) => required(value, 'date of birth')}
             label="Date of Bith"
             name="dob"
             placeholderText="Select a date between today and 5 days in the future"
           />
-          <Field
+          <Field disabled={processing}
             component={FIELDS.CheckboxField}
             //  validate={(value) => required(value, 'checkbox')}
             label="check box test"
@@ -170,7 +181,7 @@ class SignUpForm extends Component {
             name="firstName"
             placeholder="First name"
           />
-          <Field width={4}
+          <Field width={4} disabled={processing}
             component={FIELDS.RadioMultiField}
             label="RadioMulti"
             name="radioMulti"
@@ -178,7 +189,7 @@ class SignUpForm extends Component {
             { label: 'labelTwo', value: 'two' }]}
             validate={required}
           />
-          <Field
+          <Field disabled={processing}
             component={DropZone}
             label="Drop Zone label"
             name="DropZoneName"
@@ -187,15 +198,17 @@ class SignUpForm extends Component {
           <Form.Group>
             <Field width={4}
               component={FIELDS.InputField}
-
+               disabled
               label="dummy field"
               name="dummy"
               placeholder="dummy"
             />
-
+          
           </Form.Group>
 
-          <button type="submit">Submit</button>
+          <Button primary loading={processing} disabled={processing} type="submit">
+            Submit</Button>
+
         </Form>
 
       </React.Fragment>
@@ -215,15 +228,16 @@ const submit = (values, dispatch, props) => {
 };
 
 const mapStateToProps = state => {
-  // console.log('mapStateToprops state',state.form.SignUpForm);
+  console.log('mapStateToprops state', state);
   return {
-
-    fieldError: getFormSyncErrors('SignUpForm')(state),
-    fieldMeta: getFormMeta('SignUpForm')(state),
+    processing: state.auth.processing,
+    formSyncError: getFormSyncErrors('SignUpForm')(state),
+    formMeta: getFormMeta('SignUpForm')(state),
+    formSubmitError: getFormSubmitErrors('SignUpForm')(state),
     initialValues: {
       // firstName: 'rajesh',
       //  quantity:1,
-        radioMulti:'one',
+      radioMulti: 'one',
       chekbox1: true,
       dob: '01/01/2019'
 

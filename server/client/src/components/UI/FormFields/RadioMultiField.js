@@ -21,15 +21,15 @@ const logger = Logger('RadioMultiField');
 class RadioMultiField extends Component {
    
     render() {
-        const { input: { value, name, onChange }, vertical = false,
+        const { input: { value, name, onChange }, vertical = false,disabled,
             label, testValue, meta: { touched, error },width, ...props } = this.props
         var radioArray = testValue.map(val => {
             var label = val.label;
             var radioValue = val.value;
             return (
-                <Form.Field width={width}
+                <Form.Field disabled={disabled} width={width}
                     error={touched && !!error} key={radioValue}>
-                    <Radio
+                    <Radio 
                         label={label}
                         name={name}
                         value={radioValue}
@@ -45,7 +45,7 @@ class RadioMultiField extends Component {
 
         return (
             <React.Fragment>
-                <Form.Group {...radioLayout} className={formGroupClassName} >
+                <Form.Group  {...radioLayout} className={formGroupClassName} >
                     <label className={labelClassName}>
                         {label}
                     </label>

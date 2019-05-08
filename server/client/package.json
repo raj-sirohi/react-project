@@ -2,7 +2,6 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  
   "dependencies": {
     "axios": "^0.18.0",
     "blueimp-load-image": "^2.21.0",
@@ -13,6 +12,7 @@
     "react-datepicker": "^2.5.0",
     "react-dom": "^16.8.6",
     "react-dropzone": "^10.1.4",
+    "react-loader-spinner": "^2.3.0",
     "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
     "react-scripts": "3.0.0",

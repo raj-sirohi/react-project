@@ -20188,7 +20188,7 @@ ol.ui.horizontal.list li:before,
 .ui.form .field > label {
   display: block;
   margin: 0em 0em 0.28571429rem 0em;
-  color: rgba(0, 0, 0, 0.87);
+  color: #595959;
   font-size: 0.92857143em;
   font-weight: bold;
   text-transform: none;
@@ -20943,7 +20943,7 @@ ol.ui.horizontal.list li:before,
 
 .ui.form .grouped.fields > label {
   margin: 0em 0em 0.28571429rem 0em;
-  color: rgba(0, 0, 0, 0.87);
+  color: #595959;
   font-size: 0.92857143em;
   font-weight: bold;
   text-transform: none;
@@ -21215,7 +21215,7 @@ ol.ui.horizontal.list li:before,
   vertical-align: baseline;
   font-size: 0.92857143em;
   font-weight: bold;
-  color: rgba(0, 0, 0, 0.87);
+  color: #595959;
   text-transform: none;
 }
 
