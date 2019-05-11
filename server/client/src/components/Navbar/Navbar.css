@@ -3,6 +3,11 @@
 }
 .menu{
     border-width:0 !important;
+   
+}
+
+.ui.container.menu__container{
+    margin-left: 1px !important;
 }
 
 .menu-item__button{

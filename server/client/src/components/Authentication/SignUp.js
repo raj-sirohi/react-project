@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import _ from 'lodash';
 import moment from 'moment'
-import { Segment, Form, Dimmer, Input, Button, Loader, Modal as ModalComponent } from 'semantic-ui-react'
+import { Segment, Card,Form, Dimmer, Input, Button, Loader, Modal as ModalComponent } from 'semantic-ui-react'
 import "react-datepicker/dist/react-datepicker.css";
 //import Loader from 'react-loader-spinner'
 import * as FIELDS from '../UI/FormFields'
@@ -93,8 +93,8 @@ class SignUpForm extends Component {
     return (
       <React.Fragment>
 
-
-
+      <Card fluid>
+      <Card.Content>
         <Form onSubmit={handleSubmit(this.submit)}>
 
           <Loader style={{ color: 'green' }} size='massive' active={processing}></Loader>
@@ -210,7 +210,8 @@ class SignUpForm extends Component {
             Submit</Button>
 
         </Form>
-
+        </Card.Content>
+</Card>
       </React.Fragment>
     )
   }

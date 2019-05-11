@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom'
-import { Menu, Segment, Container, Form, Input, Icon, Button, Label } from 'semantic-ui-react'
+import { Menu,Sticky, Segment, Container, Form, Input, Icon, Button, Label } from 'semantic-ui-react'
 import './Navbar.css'
 
 class Navbar extends Component {
@@ -16,12 +16,16 @@ class Navbar extends Component {
     const { activeItem } = this.state
     const { name, email, submittedName, submittedEmail } = this.state
     return (
+    <Sticky>
+     
       <Segment color='blue' inverted className='segment'>
-        <Menu inverted pointing secondary className='menu' >
-          <Container >
-            <Menu.Item header>
+      
+        <Menu inverted pointing secondary className='menu' style={{ margin: 0 }} >
+          {/* <Container className='menu__container'> */}
+            <Menu.Item header style={{width:'15%', marginRight:'1em',marginLeft:'1em'}}>
               LOGO
           </Menu.Item>
+          <Menu.Menu style={{width:'60%'}}>
             <Menu.Item as={NavLink} exact to="/" content="Messages" />
             <Menu.Item as={NavLink} to="/gallery" content="Gallery" />
             <Menu.Item as={NavLink} to="/wall" content="Wall" />
@@ -38,10 +42,11 @@ class Navbar extends Component {
                 <Button className='menu-item__button' color='teal'>Sign In</Button>
               </Menu.Item>
             </Menu.Menu>
-
-          </Container>
+          </Menu.Menu>
+          {/* </Container> */}
         </Menu>
       </Segment>
+     </Sticky>
     );
   }
 }

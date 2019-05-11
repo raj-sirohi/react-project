@@ -1,3 +1,5 @@
 .app{
-  background:#ffff;
+  /* background:#ffff; */
+  height: 100vh;
+  background: #eee;
 }

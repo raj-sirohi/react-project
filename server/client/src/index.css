@@ -1,7 +1,10 @@
 html,
 body {
   height: 100vh;
- background: #eee; /* bacground color for entire app */
+   /* bacground color for entire app */
+ background: #eee;
+ /* background: #ffff; */
+ 
 }
 
 div::-webkit-scrollbar-track {
@@ -16,6 +19,11 @@ div::-webkit-scrollbar-track {
   --font-size:1em;
   --input-error-font-size:.93em;
   --margin:1em;
+
+  /* colors */
+  /* this color is used for form fields labels. Its modified in semantic-ui.
+  For own labels this color can be used to be consistent with form input labels */
+  --label-color:#595959;
   
 
   }

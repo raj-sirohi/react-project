@@ -5,9 +5,9 @@ class Header1 extends Component {
     render() {
         return (
             <React.Fragment>
-                <Container>
+                <div style={{ background: 'white', height: '5em' }}>
                     <Header as='h3'> This is header </Header>
-                </Container>
+                </div>
             </React.Fragment>
         )
     }
