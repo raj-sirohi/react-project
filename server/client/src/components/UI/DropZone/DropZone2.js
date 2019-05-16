@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
-import { Button} from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import ThumbList from '../ThumbList/ThumbList'
 import Carousel from '../Carousel/Carousel'
-import { Grid, Segment } from 'semantic-ui-react'
+import { Grid, Segment, Input, Checkbox } from 'semantic-ui-react'
 import * as loadImage from 'blueimp-load-image';
 
 import './DropZone2.css'
@@ -21,13 +21,13 @@ class DropZone extends Component {
     }
 
     componentDidMount() {
-      //  const { input } = this.props;
-      //  input.onChange(this.state.files);
+        //  const { input } = this.props;
+        //  input.onChange(this.state.files);
     }
 
     componentDidUpdate() {
-      //  const { input } = this.props;
-      //  input.onChange(this.state.files);
+        //  const { input } = this.props;
+        //  input.onChange(this.state.files);
     }
 
     onDropHandler = (files) => {
@@ -38,13 +38,13 @@ class DropZone extends Component {
         const type = droppedFile.type.split('/')[0]
 
         loadImage(droppedFile, (img) => {
-           // img.className = 'test'; // css class: { max-width: 100%; max-height: 100%; }
+            // img.className = 'test'; // css class: { max-width: 100%; max-height: 100%; }
             this.setState({ base64: img.toDataURL() })
             const newFile = this.base64StringtoFile(img.toDataURL(), fileName);
             const preview = URL.createObjectURL(newFile)
             const file = { file: newFile, type: type, preview: preview }
             this.setState({ droppedFile: file })
-            }, {
+        }, {
                 orientation: true
             });
     }
@@ -60,8 +60,8 @@ class DropZone extends Component {
         const newStateFiles = this.state.files.slice();
         newStateFiles.unshift(droppedFile);
         this.setState({ droppedFile: '', files: newStateFiles })
-       // const { input } = this.props;
-       // input.onChange(this.state.files);
+        // const { input } = this.props;
+        // input.onChange(this.state.files);
     }
 
     openModalHandler = (e) => {
@@ -85,36 +85,75 @@ class DropZone extends Component {
         const { droppedFile } = this.state;
         if (!!droppedFile) {
             return (
-                <div key={droppedFile.file.name} className='dropImage'>
+                <div key={droppedFile.file.name} className='dropImage2'>
                     <img
                         src={droppedFile.preview}
-                        className='dropImage__image'
+                        className='dropImage__image2'
                     />
                 </div>
             )
         }
     }
+    handleCheckBoxClick = (e) => {
+        logger.log('handleCHeckBoxClick', e.target.value)
+    }
+
+    state = { checked: false }
+    toggle = () => {
+        logger.log('toggle', this.state)
+        this.setState(prevState => ({ checked: !prevState.checked }))
+    }
+
 
     renderDropZone = () => {
         const { droppedFile } = this.state;
         const isFileDropped = !!droppedFile
 
         return (
-            <Dropzone onDrop={(files) => this.onDropHandler(files)}>
+            <Dropzone style={{}} onDrop={(files) => this.onDropHandler(files)}>
                 {({ getRootProps, getInputProps }) => (
+                    <Segment inverted style={{ width: '100%' }}>
+                        <div {...getRootProps()} className='dropZone-wrapper' >
 
-                    <div {...getRootProps()} className='dropZone2' >
-                        <input {...getInputProps()} />
-                        <div style={{ margin: 'auto' }}>
-                            {isFileDropped && this.renderDropImage()}
-                            {isFileDropped || <p style={{ color: '#c7c7c7', padding: '14px' }}>
-                                Drag 'n' drop some files here, or click to select files
-                            </p>
-                            }
+                            <input {...getInputProps()} />
+                            <div className='dropZone-wrapper__dropzone'
+                           // style={{ display: 'flex', alignItems: 'center', height: '32em' }}
+                            >
+                                <div style={{ textAlign: 'center', margin: 'auto', width: '80%' }}>
+                                    {isFileDropped && this.renderDropImage()}
+                                    {isFileDropped || <p style={{ color: '#c7c7c7', padding: '1em' }}>
+                                        Drag 'n' drop some files here, or click to select files
+                                    </p>
+                                    }
+
+                                </div>
+
+                                <div style={{ alignSelf: 'baseline', width: '20%' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'center1' }}>
+                                        <Segment inverted >
+                                            <label style={{ fontWeight: 'bold' }}>Display Preferences</label>
+                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                                <Checkbox style={{ marginTop: '1em' }} label='Private circle' />
+                                                <Checkbox style={{ marginTop: '1em' }} label='Intimate circle' />
+                                                <Checkbox style={{ marginTop: '1em' }} label='Inner' />
+                                                <Checkbox style={{ marginTop: '1em' }} label='Public' />
+                                            </div>
+
+                                        </Segment>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
                         </div>
-                       
-                    </div>
-
+                        <div style={{ marginBottom: '2px', textAlign: 'center', width: '80%' }}>
+                            <Button onClick={this.dropZoneAddHandler} inverted
+                                content='Add' size='mini' color='blue' />
+                            <Button onClick={this.dropZoneClearHandler} inverted color='red' content='Cancel' size='mini' />
+                        </div>
+                    </Segment>
                 )}
             </Dropzone>
         )
@@ -134,21 +173,11 @@ class DropZone extends Component {
         // logger.log(' render this.state', this.state)
         return (
             <div>
-               
-                   
-                       
-                            <label>Test label</label>
-                            {this.renderDropZone()}
-                       
-                   
-                   
-                
-                {this.state.open && <Carousel files={this.state.files}
-                    open={this.state.open}
-                    deleteImage={this.deleteImageHandler}
-                    onClose={this.onCloseModalHanlder} />}
-                <Button content='open Modal'
-                    onClick={this.openModalHandler} />
+                {this.renderDropZone()}
+
+
+
+
             </div>
         )
     }

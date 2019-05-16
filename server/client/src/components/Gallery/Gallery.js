@@ -11,20 +11,18 @@ class Gallery extends Component {
             <div >
 
                 <div style={{display:'flex'}}>
-                <div style={{  width: '70%' }}>
+                <div style={{  width: '100%' }}>
                     <DropZone2/>
                 </div>
-                <div style={{ border: '1px solid black', height: '400px', width: '20%' }}>
-                </div>
+                
                 </div>
                
 
                 <div>
 
-                   <div style={{ border: '1px solid black', height: '100px', width: '100%' }}>
+                   <div style={{ marginTop:'1em',border: '1px solid black', height: '100px', width: '100%' }}>
                     </div>
-                    <div style={{ border: '1px solid black', height: '100px', width: '100%' }}>
-                    </div>
+                   
 
                 </div>
                 

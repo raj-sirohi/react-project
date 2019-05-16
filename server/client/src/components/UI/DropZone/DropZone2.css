@@ -1,20 +1,33 @@
-.dropZone2  {
+.dropZone-wrapper  {
     max-width: 100%;
-    height: 420px;
-    border-width: 2px;
-    border-color: #dededf;
+    /* height: 440px; */
+    height: 32em;
+    outline: none;
+    /* border-width: 2px; */
+    /* border-color: #dededf;
     border-style: dashed;
-    border-radius: 5px;
+    background: black;
+    border-radius: 5px; */
     display: flex;
     flex-direction: column;
-};
+}
 
-.dropImage{
+.dropZone-wrapper__dropzone{
+    display: flex;
+     align-items: center;
+      height: 32em
+}
+  .dropZone-wrapper label {
+    color:#53c8ff !important;
+}
+
+
+.dropImage2{
     text-align: center;
 }
 
-.dropImage__image{
-    max-height: 400px;
+.dropImage__image2{
+    max-height: 30em;
     max-width: 100%;
     padding: 5px ;
 }
