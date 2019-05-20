@@ -20,10 +20,7 @@ export const ImagePreference = ({vertical=true}) => {
   else{
     checkboxClassArray.push('image-preference__checkbox--horizontal');
   }
-
   const checkboxClass = checkboxClassArray.join(" ");
-
-  logger.log('flexDirection',flexDirection)
     return (
         <div className='image-preference-wrapper'>
             <div className={className}

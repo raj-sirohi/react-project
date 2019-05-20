@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, GridColumn } from 'semantic-ui-react';
 import ThumbList from '../ThumbList/ThumbList'
 import Carousel from '../Carousel/Carousel'
-import { Grid, Segment, Input, Checkbox } from 'semantic-ui-react'
+import { Grid, Segment, Dimmer, Loader, Input, Checkbox } from 'semantic-ui-react'
 import * as loadImage from 'blueimp-load-image';
 import { ImagePreference } from '../ImagePreference/ImagePreference'
 
@@ -16,15 +16,20 @@ const logger = Logger('DropZone2');
 class DropZone extends Component {
 
     state = {
+        fileDropStarted:false,
         droppedFile: '',
         files: [],
         open: false,
-        base64: ''
+        base64: '',
+        isMobile: false
     }
 
     componentDidMount() {
-        //  const { input } = this.props;
-        //  input.onChange(this.state.files);
+        window.addEventListener('resize', () => {
+            this.setState({
+                isMobile: window.innerWidth < 648
+            });
+        }, false);
     }
 
     componentDidUpdate() {
@@ -33,6 +38,7 @@ class DropZone extends Component {
     }
 
     onDropHandler = (files) => {
+        this.setState({fileDropStarted:true});
         //image/jpeg
         //video/mp4
         const droppedFile = files[0];
@@ -45,7 +51,7 @@ class DropZone extends Component {
             const newFile = this.base64StringtoFile(img.toDataURL(), fileName);
             const preview = URL.createObjectURL(newFile)
             const file = { file: newFile, type: type, preview: preview }
-            this.setState({ droppedFile: file })
+            this.setState({ droppedFile: file,fileDropStarted:false })
         }, {
                 orientation: true
             });
@@ -84,12 +90,16 @@ class DropZone extends Component {
     }
 
     renderDropImage = () => {
-        const{height='32em'} = this.props;
+        const { height = '32em' } = this.props;
+        var dropZoneHeight = height;
+        if (this.state.isMobile) {
+            dropZoneHeight = '15em';
+        }
         const { droppedFile } = this.state;
         if (!!droppedFile) {
             return (
                 <div key={droppedFile.file.name} className='dropImage2'>
-                    <img style={{maxHeight:height}}
+                    <img style={{ maxHeight: dropZoneHeight }}
                         src={droppedFile.preview}
                         className='dropImage__image2'
                     />
@@ -103,37 +113,45 @@ class DropZone extends Component {
 
     state = { checked: false }
     toggle = () => {
-        logger.log('toggle', this.state)
         this.setState(prevState => ({ checked: !prevState.checked }))
     }
     renderDropZone = () => {
-        const{ height='32em',displayImgPreferences=true} = this.props
-        const imagePrefTopClassArray=[];
-        const imagePrefSideClassArray=[];
+        logger.log('renderDropZone this.state.droppedFile', this.state.droppedFile)
+        const { height = '32em', displayImgPreferences = true } = this.props
+
+        var dropZoneHeight = height;
+
+        if (this.state.isMobile) {
+            dropZoneHeight = '15em';
+        }
+        const imageInnerClassArray = [];
+        imageInnerClassArray.push('dropzone2__image-inner');
+        const imagePrefTopClassArray = [];
+        const imagePrefSideClassArray = [];
         // if image preferences are not displayed then set the width to 100%
-        var width='80%';
-       
-        if (!displayImgPreferences){
-            width='100%';
+        if (!displayImgPreferences) {
+            // width='100%';
+            imageInnerClassArray.push('dropzone2__image-inner--hundred-percent');
             imagePrefTopClassArray.push('dropzone2__image-pref--hide')
             imagePrefSideClassArray.push('dropzone2__image-pref--hide')
-        }else{
+        } else {
+            imageInnerClassArray.push('dropzone2__image-inner--eighty-percent');
             imagePrefTopClassArray.push('dropzone2__image-pref-top')
-            imagePrefSideClassArray.push('dropzone2__image-pref-side')  
+            imagePrefSideClassArray.push('dropzone2__image-pref-side')
         }
-        const imagePrefTopClass =imagePrefTopClassArray.join(" ")
-        const imagePrefSideClass= imagePrefSideClassArray.join(" ")
+        const imageInnerClass = imageInnerClassArray.join(" ");
+        const imagePrefTopClass = imagePrefTopClassArray.join(" ");
+        const imagePrefSideClass = imagePrefSideClassArray.join(" ");
 
-       
-        const buttonSectionClassArray=[];
+        const buttonSectionClassArray = [];
         buttonSectionClassArray.push('dropzone2__button')
-        if (!displayImgPreferences){
+        if (!displayImgPreferences) {
             buttonSectionClassArray.push('dropzone2__button--full-width')
-        }else{
+        } else {
             buttonSectionClassArray.push('dropzone2__button--eighty-percent')
         }
-        const buttonSectionClass= buttonSectionClassArray.join(" ")
-        
+        const buttonSectionClass = buttonSectionClassArray.join(" ")
+
         const { droppedFile } = this.state;
         const isFileDropped = !!droppedFile
 
@@ -141,13 +159,16 @@ class DropZone extends Component {
             <Dropzone style={{}} onDrop={(files) => this.onDropHandler(files)}>
                 {({ getRootProps, getInputProps }) => (
                     <Segment inverted className='dropzone2'>
+                        <Dimmer active={this.state.fileDropStarted}>
+                            <Loader>Loading...</Loader>
+                        </Dimmer>
                         <div className={imagePrefTopClass}>
                             <ImagePreference vertical={false} />
                         </div>
-                        <div style={{height:height}} className='dropzone2__image-outer' >
-                            <div {...getRootProps()} style={{width:width}} className='dropzone2__image-inner'>
+                        <div style={{ height: dropZoneHeight }} className='dropzone2__image-outer' >
+                            <div {...getRootProps()} className={imageInnerClass}>
                                 <input {...getInputProps()} />
-                                <div style={{height:height}} className='dropzone2__image' >
+                                <div style={{ height: dropZoneHeight }} className='dropzone2__image' >
                                     {isFileDropped && this.renderDropImage()}
                                     {isFileDropped || <p style={{ color: '#c7c7c7', padding: '1em' }}>
                                         Drag 'n' drop some files here, or click to select files
@@ -162,7 +183,7 @@ class DropZone extends Component {
                                 </Segment>
                             </div>
                         </div>
-                        <div  className={buttonSectionClass}>
+                        <div className={buttonSectionClass}>
                             <Button onClick={this.dropZoneAddHandler} inverted
                                 content='Add New Files' size='mini' color='blue' />
                             <Button onClick={this.dropZoneAddHandler} inverted

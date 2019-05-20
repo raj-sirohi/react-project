@@ -5,8 +5,6 @@
     width: 100%
 }
 
-
-
 .dropzone2__image-outer  {
     width: 100%;
     /* height: 32em; */
@@ -19,8 +17,15 @@
 }
 
 .dropzone2__image-inner{
-      width:80%;
       outline: none;
+}
+
+.dropzone2__image-inner--eighty-percent{
+    width:80%;
+}
+
+.dropzone2__image-inner--hundred-percent{
+    width:100%;
 }
 
 .dropzone2__image{
@@ -59,9 +64,26 @@
 .dropzone2__button--full-width{
     width:100%;
 }
+
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 768px) {
+    .dropzone2__image-outer  {
        
+        height: 20em;
+
+       
+    } 
+    
+    .dropzone2__image{
+        height: 20em; 
+       
+    }
+
+    .dropImage__image2{
+        max-height: 20em;
+       
+    }
+    
 }
 
 /* Large devices (laptops/desktops, 992px and down) */
