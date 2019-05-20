@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
-import { Button } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { Button, GridColumn } from 'semantic-ui-react';
 import ThumbList from '../ThumbList/ThumbList'
 import Carousel from '../Carousel/Carousel'
 import { Grid, Segment, Input, Checkbox } from 'semantic-ui-react'
 import * as loadImage from 'blueimp-load-image';
+import { ImagePreference } from '../ImagePreference/ImagePreference'
 
 import './DropZone2.css'
 import Logger from 'logger';
@@ -82,11 +84,12 @@ class DropZone extends Component {
     }
 
     renderDropImage = () => {
+        const{height='32em'} = this.props;
         const { droppedFile } = this.state;
         if (!!droppedFile) {
             return (
                 <div key={droppedFile.file.name} className='dropImage2'>
-                    <img
+                    <img style={{maxHeight:height}}
                         src={droppedFile.preview}
                         className='dropImage__image2'
                     />
@@ -103,55 +106,70 @@ class DropZone extends Component {
         logger.log('toggle', this.state)
         this.setState(prevState => ({ checked: !prevState.checked }))
     }
-
-
     renderDropZone = () => {
+        const{ height='32em',displayImgPreferences=true} = this.props
+        const imagePrefTopClassArray=[];
+        const imagePrefSideClassArray=[];
+        // if image preferences are not displayed then set the width to 100%
+        var width='80%';
+       
+        if (!displayImgPreferences){
+            width='100%';
+            imagePrefTopClassArray.push('dropzone2__image-pref--hide')
+            imagePrefSideClassArray.push('dropzone2__image-pref--hide')
+        }else{
+            imagePrefTopClassArray.push('dropzone2__image-pref-top')
+            imagePrefSideClassArray.push('dropzone2__image-pref-side')  
+        }
+        const imagePrefTopClass =imagePrefTopClassArray.join(" ")
+        const imagePrefSideClass= imagePrefSideClassArray.join(" ")
+
+       
+        const buttonSectionClassArray=[];
+        buttonSectionClassArray.push('dropzone2__button')
+        if (!displayImgPreferences){
+            buttonSectionClassArray.push('dropzone2__button--full-width')
+        }else{
+            buttonSectionClassArray.push('dropzone2__button--eighty-percent')
+        }
+        const buttonSectionClass= buttonSectionClassArray.join(" ")
+        
         const { droppedFile } = this.state;
         const isFileDropped = !!droppedFile
 
         return (
             <Dropzone style={{}} onDrop={(files) => this.onDropHandler(files)}>
                 {({ getRootProps, getInputProps }) => (
-                    <Segment inverted style={{ width: '100%' }}>
-                        <div {...getRootProps()} className='dropZone-wrapper' >
-
-                            <input {...getInputProps()} />
-                            <div className='dropZone-wrapper__dropzone'
-                           // style={{ display: 'flex', alignItems: 'center', height: '32em' }}
-                            >
-                                <div style={{ textAlign: 'center', margin: 'auto', width: '80%' }}>
+                    <Segment inverted className='dropzone2'>
+                        <div className={imagePrefTopClass}>
+                            <ImagePreference vertical={false} />
+                        </div>
+                        <div style={{height:height}} className='dropzone2__image-outer' >
+                            <div {...getRootProps()} style={{width:width}} className='dropzone2__image-inner'>
+                                <input {...getInputProps()} />
+                                <div style={{height:height}} className='dropzone2__image' >
                                     {isFileDropped && this.renderDropImage()}
                                     {isFileDropped || <p style={{ color: '#c7c7c7', padding: '1em' }}>
                                         Drag 'n' drop some files here, or click to select files
                                     </p>
                                     }
-
                                 </div>
-
-                                <div style={{ alignSelf: 'baseline', width: '20%' }}>
-                                    <div style={{ display: 'flex', justifyContent: 'center1' }}>
-                                        <Segment inverted >
-                                            <label style={{ fontWeight: 'bold' }}>Display Preferences</label>
-                                            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                                                <Checkbox style={{ marginTop: '1em' }} label='Private circle' />
-                                                <Checkbox style={{ marginTop: '1em' }} label='Intimate circle' />
-                                                <Checkbox style={{ marginTop: '1em' }} label='Inner' />
-                                                <Checkbox style={{ marginTop: '1em' }} label='Public' />
-                                            </div>
-
-                                        </Segment>
-                                    </div>
-
-                                </div>
-
                             </div>
 
-
+                            <div className={imagePrefSideClass} >
+                                <Segment inverted >
+                                    <ImagePreference vertical={true} />
+                                </Segment>
+                            </div>
                         </div>
-                        <div style={{ marginBottom: '2px', textAlign: 'center', width: '80%' }}>
+                        <div  className={buttonSectionClass}>
+                            <Button onClick={this.dropZoneAddHandler} inverted
+                                content='Add New Files' size='mini' color='blue' />
                             <Button onClick={this.dropZoneAddHandler} inverted
                                 content='Add' size='mini' color='blue' />
-                            <Button onClick={this.dropZoneClearHandler} inverted color='red' content='Cancel' size='mini' />
+                            <Button onClick={this.dropZoneClearHandler}
+                                inverted color='red' content='Cancel'
+                                size='mini' />
                         </div>
                     </Segment>
                 )}
@@ -170,17 +188,16 @@ class DropZone extends Component {
     }
 
     render() {
-        // logger.log(' render this.state', this.state)
         return (
-            <div>
+            <div >
                 {this.renderDropZone()}
-
-
-
-
             </div>
         )
     }
 }
+
+DropZone.propTypes = {
+    height: PropTypes.string.isRequired
+};
 
 export default DropZone

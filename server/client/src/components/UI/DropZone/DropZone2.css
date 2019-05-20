@@ -1,33 +1,94 @@
-.dropZone-wrapper  {
-    max-width: 100%;
-    /* height: 440px; */
-    height: 32em;
+
+
+/* third version */
+.dropzone2{
+    width: 100%
+}
+
+
+
+.dropzone2__image-outer  {
+    width: 100%;
+    /* height: 32em; */
     outline: none;
-    /* border-width: 2px; */
-    /* border-color: #dededf;
-    border-style: dashed;
-    background: black;
-    border-radius: 5px; */
     display: flex;
-    flex-direction: column;
+    /* vertical alignement */
+    align-items: center;  
+    /* horizontal allignment */
+    justify-content: center;   
 }
 
-.dropZone-wrapper__dropzone{
-    display: flex;
-     align-items: center;
-      height: 32em
-}
-  .dropZone-wrapper label {
-    color:#53c8ff !important;
+.dropzone2__image-inner{
+      width:80%;
+      outline: none;
 }
 
+.dropzone2__image{
+    /* height: 32em;  */
+    display: flex;
+    /* vertical alignement */
+    align-items: center;  
+    /* horizontal allignment */
+    justify-content: center;  
+}
+
+.dropzone2__image-pref-top{
+    display:none;
+}
+
+.dropzone2__image-pref-side{
+    align-self:baseline;
+    width:20%;
+}
+
+.dropzone2__image-pref--hide{
+    display:none;  
+}
+
+.dropzone2__button{
+    display: flex;
+     justify-content: center;
+     /* width:80%; */
+}
+
+.dropzone2__button--eighty-percent{
+   
+     width:80%;
+}
+
+.dropzone2__button--full-width{
+    width:100%;
+}
+/* Medium devices (landscape tablets, 768px and down) */
+@media only screen and (max-width: 768px) {
+       
+}
+
+/* Large devices (laptops/desktops, 992px and down) */
+@media only screen and (max-width: 992px) {
+    .dropzone2__image-pref-side{
+        display:none;
+    }
+    
+    .dropzone2__image-inner{
+        width:100%;
+    }
+
+    .dropzone2__image-pref-top{
+        display:block;
+    }
+
+    .dropzone2__button--eighty-percent{
+        width:100%
+    }
+} 
 
 .dropImage2{
     text-align: center;
 }
 
 .dropImage__image2{
-    max-height: 30em;
+    /* max-height: 32em; */
     max-width: 100%;
-    padding: 5px ;
+    padding: .5em ;
 }

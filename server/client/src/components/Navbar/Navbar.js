@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { NavLink, withRouter } from 'react-router-dom'
-import { Menu,Sticky, Segment, Container, Form, Input, Icon, Button, Label } from 'semantic-ui-react'
+import { Menu,Sticky, Segment, Grid,Container, Form, Input, Icon, Button, Label } from 'semantic-ui-react'
 import './Navbar.css'
 
 class Navbar extends Component {
@@ -22,10 +22,78 @@ class Navbar extends Component {
       
         <Menu inverted pointing secondary className='menu' style={{ margin: 0 }} >
           {/* <Container className='menu__container'> */}
-            <Menu.Item header style={{width:'15%', marginRight:'1em',marginLeft:'1em'}}>
-              LOGO
-          </Menu.Item>
-          <Menu.Menu style={{width:'60%'}}>
+        
+           
+            <Menu.Item header 
+              //style={{ marginRight:'1em',marginLeft:'1em'}}
+              style={{ width:'12.5%'}}
+              >
+                LOGO
+            </Menu.Item>
+
+            <Menu.Menu style={{width:'60%'}}>
+            <Menu.Item as={NavLink} exact to="/" content="Messages" />
+            <Menu.Item as={NavLink} to="/gallery" content="Gallery" />
+            <Menu.Item as={NavLink} to="/wall" content="Wall" />
+            <Menu.Item as={NavLink} to="/friend" content="Friends" />
+            <Menu.Item as={NavLink} to="/signup" content="Sign Up" />
+            <Menu.Menu position='right'>
+              <Menu.Item className='menu-item__right'>
+                <Input size='small' placeholder='email...' />
+              </Menu.Item>
+              <Menu.Item className='menu-item__right--middle'>
+                <Input size='small' placeholder='password...' />
+              </Menu.Item>
+              <Menu.Item className='menu-item__right'>
+                <Button  className='menu-item__button1' color='teal'>Sign In</Button>
+              </Menu.Item>
+            </Menu.Menu>
+           
+          </Menu.Menu>
+             
+        
+
+           {/* <Menu.Menu position='right'>
+              <Menu.Item className='menu-item__right'>
+                <Input size='small' placeholder='email...' />
+              </Menu.Item>
+              <Menu.Item className='menu-item__right--middle'>
+                <Input size='small' placeholder='password...' />
+              </Menu.Item>
+              <Menu.Item className='menu-item__right'>
+                <Button className='menu-item__button' color='teal'>Sign In</Button>
+              </Menu.Item>
+            </Menu.Menu> */}
+          
+          {/* <Grid.Column width={3}>
+          <Menu.Item as={NavLink} to="/gallery" content="Gallery" />
+          </Grid.Column>
+          
+          <Grid.Column width={3}>
+          <Menu.Item as={NavLink} to="/wall" content="Wall" />
+          </Grid.Column>
+
+          <Grid.Column width={3}>
+          <Menu.Item as={NavLink} to="/friend" content="Friends" />
+          </Grid.Column> */}
+
+          {/* <Grid.Column width={3}>
+          <Menu.Item as={NavLink} to="/signup" content="Sign Up" />
+          </Grid.Column> */}
+
+          {/* <Grid.Column width={2}>
+          <Input size='tiny' placeholder='email...' />
+          </Grid.Column>
+
+          <Grid.Column width={2}>
+          <Input size='tiny' placeholder='password...' />
+          </Grid.Column>
+
+          <Grid.Column width={2}>
+          <Button size='tiny' color='teal'>Sign In</Button>
+          </Grid.Column> */}
+
+          {/* <Menu.Menu style={{width:'60%'}}>
             <Menu.Item as={NavLink} exact to="/" content="Messages" />
             <Menu.Item as={NavLink} to="/gallery" content="Gallery" />
             <Menu.Item as={NavLink} to="/wall" content="Wall" />
@@ -42,8 +110,11 @@ class Navbar extends Component {
                 <Button className='menu-item__button' color='teal'>Sign In</Button>
               </Menu.Item>
             </Menu.Menu>
-          </Menu.Menu>
+           
+          </Menu.Menu> */}
+         
           {/* </Container> */}
+        
         </Menu>
       </Segment>
      </Sticky>

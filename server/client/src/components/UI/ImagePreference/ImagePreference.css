@@ -1,0 +1,43 @@
+.image-preference-wrapper{
+    display: flex;
+}
+
+.image-preference{
+    width:100%;
+}
+
+
+
+.image-preference--horizontal{
+    padding:1em;
+}
+
+.image-preference__title{
+
+}
+
+.image-preference__title label{
+    color:red !important;
+}
+
+.image-preference__checkbox{
+    display: flex;
+   
+}
+
+.image-preference__checkbox label{
+    color:#53c8ff !important;
+}
+
+.image-preference__checkbox--vertical{
+   
+    flex-direction: column; 
+   
+}
+
+
+.image-preference__checkbox--horizontal{
+   
+    flex-direction: row; 
+    justify-content:space-between;
+}
