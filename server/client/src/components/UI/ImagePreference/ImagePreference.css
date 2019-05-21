@@ -6,8 +6,6 @@
     width:100%;
 }
 
-
-
 .image-preference--horizontal{
     padding:1em;
 }
@@ -22,7 +20,6 @@
 
 .image-preference__checkbox{
     display: flex;
-   
 }
 
 .image-preference__checkbox label{
@@ -30,11 +27,9 @@
 }
 
 .image-preference__checkbox--vertical{
-   
-    flex-direction: column; 
-   
-}
 
+    flex-direction: column; 
+}
 
 .image-preference__checkbox--horizontal{
    

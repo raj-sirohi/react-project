@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Header, Button, Card, Container } from 'semantic-ui-react'
 import DropZone2 from '../UI/DropZone/DropZone2';
-import {ImagePreference} from '../UI/ImagePreference/ImagePreference'
+import ImagePreference2 from '../UI/ImagePreference/ImagePreference2'
 
 import Logger from 'logger';
 
@@ -35,7 +35,7 @@ class Gallery extends Component {
                
 
                 <div>
-
+             
                    <div style={{ marginTop:'1em',border: '1px solid black', height: '100px', width: '100%' }}>
                     </div>
                    
@@ -45,6 +45,11 @@ class Gallery extends Component {
             </div>
         )
     }
+
+    checkboxClickHander=(checkboxList)=>{
+        logger.log('checkboxClickHandler', checkboxList);
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -53,8 +58,8 @@ class Gallery extends Component {
                         <Card.Header>Manage My Collection</Card.Header>
                         <Card.Description>
                             {this.renderGallery()}
-                            <ImagePreference/>
-                            <ImagePreference/>
+                            <ImagePreference2 value={true} onCheckboxClick={this.checkboxClickHander}
+                             />
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>

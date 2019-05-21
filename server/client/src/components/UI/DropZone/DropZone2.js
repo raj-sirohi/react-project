@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
 import PropTypes from 'prop-types';
-import { Button, GridColumn } from 'semantic-ui-react';
+import { Button, GridColumn,Icon } from 'semantic-ui-react';
 import ThumbList from '../ThumbList/ThumbList'
 import Carousel from '../Carousel/Carousel'
 import { Grid, Segment, Dimmer, Loader, Input, Checkbox } from 'semantic-ui-react'
@@ -115,6 +115,44 @@ class DropZone extends Component {
     toggle = () => {
         this.setState(prevState => ({ checked: !prevState.checked }))
     }
+
+    renderImagePreference=(orientation='vertical')=>{
+       // logger.log('props',props);
+       // const {vertical=true}=props;
+       // const flexDirection=vertical? 'column':'row';
+        const className = orientation ==='vertical'? 'image-preference': ['image-preference', 'image-preference--horizontal'].join(" ");
+      
+        const checkboxClassArray = [];
+        checkboxClassArray.push('image-preference__checkbox');
+        if (orientation ==='vertical'){
+          checkboxClassArray.push('image-preference__checkbox--vertical');
+        }
+        else{
+          checkboxClassArray.push('image-preference__checkbox--horizontal');
+        }
+        const checkboxClass = checkboxClassArray.join(" ");
+          return (
+              <div className='image-preference-wrapper'>
+                  <div className={className}>
+                 <div className='image-preference__title'>
+                      <label>Display Preferences</label>
+                  </div>
+                  <div className={checkboxClass}>
+                      <Checkbox style={{ marginTop: '1em' }} 
+                      // onChange={onChange}
+                      // checked={checked}
+                      label={<label>Private <span><Icon circular size='small' inverted name ='user' color='teal'></Icon></span>
+                          </label>} />
+                      <Checkbox style={{ marginTop: '1em' }} label='Intimate circle' />
+                      <Checkbox style={{ marginTop: '1em' }} label='Inner' />
+                      <Checkbox style={{ marginTop: '1em' }} label='Public' />
+                  </div>
+                 </div>
+                 </div>
+              
+      
+          )
+    }
     renderDropZone = () => {
         logger.log('renderDropZone this.state.droppedFile', this.state.droppedFile)
         const { height = '32em', displayImgPreferences = true } = this.props
@@ -163,6 +201,7 @@ class DropZone extends Component {
                             <Loader>Loading...</Loader>
                         </Dimmer>
                         <div className={imagePrefTopClass}>
+                        {/* {this.renderImagePreference('horizontal')} */}
                             <ImagePreference vertical={false} />
                         </div>
                         <div style={{ height: dropZoneHeight }} className='dropzone2__image-outer' >
@@ -180,6 +219,7 @@ class DropZone extends Component {
                             <div className={imagePrefSideClass} >
                                 <Segment inverted >
                                     <ImagePreference vertical={true} />
+                                    {/* {this.renderImagePreference('vertical')} */}
                                 </Segment>
                             </div>
                         </div>

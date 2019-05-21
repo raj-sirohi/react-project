@@ -19,22 +19,23 @@ import Logger from 'logger';
 const logger = Logger('RadioMultiField');
 
 class RadioMultiField extends Component {
-   
+
     render() {
-        const { input: { value, name, onChange }, vertical = false,disabled,
-            label, testValue, meta: { touched, error },width, ...props } = this.props
+        const { input: { value, name, onChange }, vertical = false, disabled,
+            label, testValue, meta: { touched, error }, width, ...props } = this.props
+
         var radioArray = testValue.map(val => {
             var label = val.label;
             var radioValue = val.value;
             return (
                 <Form.Field disabled={disabled} width={width}
                     error={touched && !!error} key={radioValue}>
-                    <Radio 
+                    <Radio
                         label={label}
                         name={name}
                         value={radioValue}
                         checked={value === radioValue}
-                        onChange={(e, { checked }) => onChange(radioValue)}
+                        onChange={(e, radioValue) => onChange(radioValue.checked)}
                     />
                 </Form.Field>
             )
@@ -63,9 +64,9 @@ class RadioMultiField extends Component {
 RadioMultiField.propTypes = {
     input: PropTypes.object,
     label: PropTypes.string,
-    testValue:PropTypes.array.isRequired,
+    testValue: PropTypes.array.isRequired,
     meta: PropTypes.object
-   
-  };
+
+};
 
 export default RadioMultiField

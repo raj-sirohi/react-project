@@ -65,23 +65,30 @@
     width:100%;
 }
 
+.dropImage2{
+    text-align: center;
+}
+
+.dropImage__image2{
+    /* max-height: 32em; */
+    max-width: 100%;
+    padding: .5em ;
+}
+
+  /********** Media Queries ***********/
+
 /* Medium devices (landscape tablets, 768px and down) */
 @media only screen and (max-width: 768px) {
     .dropzone2__image-outer  {
-       
         height: 20em;
-
-       
     } 
     
     .dropzone2__image{
         height: 20em; 
-       
     }
 
     .dropImage__image2{
         max-height: 20em;
-       
     }
     
 }
@@ -104,13 +111,3 @@
         width:100%
     }
 } 
-
-.dropImage2{
-    text-align: center;
-}
-
-.dropImage__image2{
-    /* max-height: 32em; */
-    max-width: 100%;
-    padding: .5em ;
-}

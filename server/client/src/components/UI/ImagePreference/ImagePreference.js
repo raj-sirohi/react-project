@@ -1,14 +1,14 @@
 import React from 'react';
-import { Checkbox, Segment, Grid } from 'semantic-ui-react';
-import moment from 'moment'
-import DatePicker from "react-datepicker";
+import { Checkbox,Icon } from 'semantic-ui-react';
 import 'react-datepicker/dist/react-datepicker.css';
 import './ImagePreference.css';
 import Logger from 'logger';
 
 const logger = Logger('ImagePreference');
 
-export const ImagePreference = ({vertical=true}) => {
+export const ImagePreference = (props) => {
+  logger.log('props',props);
+  const {vertical=true}=props;
   const flexDirection=vertical? 'column':'row';
   const className = vertical? 'image-preference': ['image-preference', 'image-preference--horizontal'].join(" ");
 
@@ -23,20 +23,15 @@ export const ImagePreference = ({vertical=true}) => {
   const checkboxClass = checkboxClassArray.join(" ");
     return (
         <div className='image-preference-wrapper'>
-            <div className={className}
-           // style={{width:'100%', }}
-            >
-                
-           
-         
+            <div className={className}>
            <div className='image-preference__title'>
                 <label>Display Preferences</label>
             </div>
-            <div className={checkboxClass}
-                //className='image-preference__checkbox'
-                //style={{ display: 'flex', flexDirection: flexDirection, justifyContent:'space-between' }}
-                >
-                <Checkbox style={{ marginTop: '1em' }} label='Private circle' />
+            <div className={checkboxClass}>
+                <Checkbox style={{ marginTop: '1em' }} 
+                // onChange={onChange}
+                // checked={checked}
+                label={<label>Private circle <span><Icon circular size='small' inverted name ='user' color='teal'></Icon></span></label>} />
                 <Checkbox style={{ marginTop: '1em' }} label='Intimate circle' />
                 <Checkbox style={{ marginTop: '1em' }} label='Inner' />
                 <Checkbox style={{ marginTop: '1em' }} label='Public' />
