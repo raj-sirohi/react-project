@@ -31,7 +31,7 @@ export const ImagePreference = (props) => {
                 <Checkbox style={{ marginTop: '1em' }} 
                 // onChange={onChange}
                 // checked={checked}
-                label={<label>Private circle <span><Icon circular size='small' inverted name ='user' color='teal'></Icon></span></label>} />
+                label={<label>Private circle <span><Icon circular size='tiny' inverted name ='user' color='teal'></Icon></span></label>} />
                 <Checkbox style={{ marginTop: '1em' }} label='Intimate circle' />
                 <Checkbox style={{ marginTop: '1em' }} label='Inner' />
                 <Checkbox style={{ marginTop: '1em' }} label='Public' />

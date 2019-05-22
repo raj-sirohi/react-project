@@ -195,3 +195,26 @@ redux-form </strong>
 }
 </pre>
 
+- do not directly update the state, if updated directly then it may not work correctly.
+ For example componentDidUpdate will not see this as an update because it's modified directly.
+  <strong> Wrong way!</strong>
+handleChange = (e) => {
+    const { items } = this.state;
+    items[1].name = e.target.value; <---- directly modifying the state
+
+    // update state
+    this.setState({
+        items,
+    });
+};
+
+<strong> Correct Way</strong>
+
+handleChange = (e) => {
+    this.setState(prevState => ({
+        items: {
+            ...prevState.items,
+            [prevState.items[1].name]: e.target.value,
+        },
+    }));
+};

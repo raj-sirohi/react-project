@@ -62,10 +62,17 @@ check if it contains value we can use if `(!!value)`
    color[0]='blue'     color.map  
 
    Object
-   objectA.name='test    [...objectA, name:'test']
-   object.age='30'       [...objectA,age:'30']
+   objectA.name='test    {...objectA, name:'test'}
+   object.age='30'       {...objectA,age:'30'}
    delete object.age     _.omit(objectA, age) (lodash lib)
    (delete an property)
+   
+   to clone a object (immutable) :-
+  const newObject = {...objectA}
+     or
+     const newObject = Object.assign({}, objectA)
+
+
   </pre>
 - string and numbers is not mutable.
   const name = 'raj'

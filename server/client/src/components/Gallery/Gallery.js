@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { Header, Button, Card, Container } from 'semantic-ui-react'
 import DropZone2 from '../UI/DropZone/DropZone2';
-import ImagePreference2 from '../UI/ImagePreference/ImagePreference2'
+import ThumbList from '../UI/ThumbList/ThumbList'
 
 import Logger from 'logger';
 
 const logger = Logger('Gallery');
 
 class Gallery extends Component {
+
+    state={
+        files:[]
+    }
 
   getWindowDimensions=()=> {
         const { innerWidth: width, innerHeight: height } = window;
@@ -20,15 +24,22 @@ class Gallery extends Component {
       buttonClickHandler =()=>{
           logger.log('dimentions',this.getWindowDimensions())
       }
-    renderGallery = () => {
 
+      addFileHandler =(newFile)=>{
+        logger.log('newFile',newFile);
+        this.setState({files:[...this.state.files,newFile]})
+      }
+    renderGallery = () => {
+        const {files}= this.state;
         return (
 
             <div >
 
                 <div style={{display:'flex'}}>
                 <div style={{ width: '100%' }}>
-                    <DropZone2 height='32em' displayImgPreferences={true}/>
+                    <DropZone2 height='32em' displayImgPreferences={true}
+                    addFile={this.addFileHandler}
+                    />
                 </div>
                 
                 </div>
@@ -36,7 +47,8 @@ class Gallery extends Component {
 
                 <div>
              
-                   <div style={{ marginTop:'1em',border: '1px solid black', height: '100px', width: '100%' }}>
+                   <div >
+                       <ThumbList files={files}/>
                     </div>
                    
 
@@ -50,6 +62,17 @@ class Gallery extends Component {
         logger.log('checkboxClickHandler', checkboxList);
     }
 
+    getCheckboxArray=()=>{
+        return(
+            [
+                { name: 'private', label: 'private label', icon:'user',iconColor:'red', value:false },
+                { name: 'intimate', label: 'intimate label', icon:'eye',iconColor:'teal', value:false },
+                { name: 'inner', label: 'inner label', icon:'', iconColor:'', value:false },
+                { name: 'public', label: 'public label', icon:'',iconColor:'', value:false }
+            ]
+        )
+    }
+
     render() {
         return (
             <React.Fragment>
@@ -58,8 +81,7 @@ class Gallery extends Component {
                         <Card.Header>Manage My Collection</Card.Header>
                         <Card.Description>
                             {this.renderGallery()}
-                            <ImagePreference2 value={true} onCheckboxClick={this.checkboxClickHander}
-                             />
+                          
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>

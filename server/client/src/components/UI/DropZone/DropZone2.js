@@ -6,7 +6,7 @@ import ThumbList from '../ThumbList/ThumbList'
 import Carousel from '../Carousel/Carousel'
 import { Grid, Segment, Dimmer, Loader, Input, Checkbox } from 'semantic-ui-react'
 import * as loadImage from 'blueimp-load-image';
-import { ImagePreference } from '../ImagePreference/ImagePreference'
+import  CheckboxList  from '../CheckboxList/CheckboxList'
 
 import './DropZone2.css'
 import Logger from 'logger';
@@ -14,6 +14,14 @@ import Logger from 'logger';
 const logger = Logger('DropZone2');
 
 class DropZone extends Component {
+
+    /* 
+    To remove the following warning, using _isMounted trick
+    Warning: Can’t call setState (or forceUpdate) on an unmounted component. 
+    This is a no-op, but it indicates a memory leak in your application. To fix, 
+    cancel all subscriptions and asynchronous tasks in the componentWillUnmount method.
+    */
+    _isMounted = false;
 
     state = {
         fileDropStarted:false,
@@ -25,12 +33,20 @@ class DropZone extends Component {
     }
 
     componentDidMount() {
+        this._isMounted = true;
         window.addEventListener('resize', () => {
-            this.setState({
-                isMobile: window.innerWidth < 648
-            });
+            if (this._isMounted){
+                this.setState({
+                    isMobile: window.innerWidth < 648
+                });
+            }
+            
         }, false);
     }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+      }
 
     componentDidUpdate() {
         //  const { input } = this.props;
@@ -65,11 +81,12 @@ class DropZone extends Component {
     dropZoneAddHandler = (e) => {
         e.stopPropagation();
         const { droppedFile } = this.state;
-        const newStateFiles = this.state.files.slice();
+        this.props.addFile(droppedFile);
+        this.setState({ droppedFile: '' });
+       /*  const newStateFiles = this.state.files.slice();
         newStateFiles.unshift(droppedFile);
-        this.setState({ droppedFile: '', files: newStateFiles })
-        // const { input } = this.props;
-        // input.onChange(this.state.files);
+        this.setState({ droppedFile: '', files: newStateFiles }) */
+    
     }
 
     openModalHandler = (e) => {
@@ -115,43 +132,19 @@ class DropZone extends Component {
     toggle = () => {
         this.setState(prevState => ({ checked: !prevState.checked }))
     }
+    checkboxClickHander=(checkboxList)=>{
+        logger.log('checkboxClickHandler', checkboxList);
+    }
 
-    renderImagePreference=(orientation='vertical')=>{
-       // logger.log('props',props);
-       // const {vertical=true}=props;
-       // const flexDirection=vertical? 'column':'row';
-        const className = orientation ==='vertical'? 'image-preference': ['image-preference', 'image-preference--horizontal'].join(" ");
-      
-        const checkboxClassArray = [];
-        checkboxClassArray.push('image-preference__checkbox');
-        if (orientation ==='vertical'){
-          checkboxClassArray.push('image-preference__checkbox--vertical');
-        }
-        else{
-          checkboxClassArray.push('image-preference__checkbox--horizontal');
-        }
-        const checkboxClass = checkboxClassArray.join(" ");
-          return (
-              <div className='image-preference-wrapper'>
-                  <div className={className}>
-                 <div className='image-preference__title'>
-                      <label>Display Preferences</label>
-                  </div>
-                  <div className={checkboxClass}>
-                      <Checkbox style={{ marginTop: '1em' }} 
-                      // onChange={onChange}
-                      // checked={checked}
-                      label={<label>Private <span><Icon circular size='small' inverted name ='user' color='teal'></Icon></span>
-                          </label>} />
-                      <Checkbox style={{ marginTop: '1em' }} label='Intimate circle' />
-                      <Checkbox style={{ marginTop: '1em' }} label='Inner' />
-                      <Checkbox style={{ marginTop: '1em' }} label='Public' />
-                  </div>
-                 </div>
-                 </div>
-              
-      
-          )
+    getPrefCheckboxArray=()=>{
+        return(
+            [
+                { name: 'private', label: 'private label', icon:'user',iconColor:'red', value:false },
+                { name: 'intimate', label: 'intimate label', icon:'eye',iconColor:'teal', value:false },
+                { name: 'inner', label: 'inner label', icon:'', value:false },
+                { name: 'public', label: 'public label', icon:'', value:false }
+            ]
+        )
     }
     renderDropZone = () => {
         logger.log('renderDropZone this.state.droppedFile', this.state.droppedFile)
@@ -201,8 +194,10 @@ class DropZone extends Component {
                             <Loader>Loading...</Loader>
                         </Dimmer>
                         <div className={imagePrefTopClass}>
-                        {/* {this.renderImagePreference('horizontal')} */}
-                            <ImagePreference vertical={false} />
+                            <CheckboxList vertical={false}
+                             checkboxArray ={this.getPrefCheckboxArray()}
+                             onCheckboxClick={this.checkboxClickHander}
+                             />
                         </div>
                         <div style={{ height: dropZoneHeight }} className='dropzone2__image-outer' >
                             <div {...getRootProps()} className={imageInnerClass}>
@@ -218,13 +213,17 @@ class DropZone extends Component {
 
                             <div className={imagePrefSideClass} >
                                 <Segment inverted >
-                                    <ImagePreference vertical={true} />
-                                    {/* {this.renderImagePreference('vertical')} */}
+                                    <CheckboxList 
+                                    vertical={true} 
+                                    checkboxArray ={this.getPrefCheckboxArray()}
+                                    onCheckboxClick={this.checkboxClickHander} />
                                 </Segment>
                             </div>
                         </div>
                         <div className={buttonSectionClass}>
-                            <Button onClick={this.dropZoneAddHandler} inverted
+                            <Button onClick={this.dropZoneAddHandler}
+                             onMouseDown={e => e.preventDefault()}
+                             inverted
                                 content='Add New Files' size='mini' color='blue' />
                             <Button onClick={this.dropZoneAddHandler} inverted
                                 content='Add' size='mini' color='blue' />
@@ -262,3 +261,5 @@ DropZone.propTypes = {
 };
 
 export default DropZone
+//favourite color//
+//blue

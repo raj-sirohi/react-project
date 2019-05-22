@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import { Popup } from 'semantic-ui-react'
+import { Popup, Icon } from 'semantic-ui-react'
 import './ThumbImage.css';
 
 export const ThumbImage = ({ file, clickImage, deleteImage, displayCloseIcon, ...props }) => {
@@ -10,13 +10,27 @@ export const ThumbImage = ({ file, clickImage, deleteImage, displayCloseIcon, ..
                 src={file.preview}
                 className='thumb__image'
             />
-           {displayCloseIcon && <Popup
+            {displayCloseIcon && <Popup
+                trigger={<span
+                    onClick={() => deleteImage(file)}
+                    className='thumb__closeIcon' ><Icon size='mini'inverted  name ='eye' color='red'></Icon></span>}
+                content='Delete File' />
+            }
+        </div>
+
+
+      /*   <div className='thumb'>
+            <img onClick={() => clickImage(file)}
+                src={file.preview}
+                className='thumb__image'
+            />
+            {displayCloseIcon && <Popup
                 trigger={<span
                     onClick={() => deleteImage(file)}
                     className='thumb__closeIcon' >&times;</span>}
                 content='Delete File' />
-           }
-        </div>
+            }
+        </div> */
     )
 }
 

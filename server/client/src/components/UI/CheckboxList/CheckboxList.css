@@ -1,0 +1,40 @@
+.checkbox-list{
+    display: flex;
+   
+   
+}
+
+.checkbox-list--full-width{
+    width:100%;
+}
+
+.checkbox-list--horizontal{
+    padding:1em;
+}
+
+.icheckbox-list__title{
+
+}
+
+.checkbox-list__title label{
+    color:red !important;
+}
+
+.checkbox-list__checkbox{
+    display: flex;
+}
+
+.checkbox-list__checkbox label{
+    color:#53c8ff !important;
+}
+
+.checkbox-list__checkbox--vertical{
+
+    flex-direction: column; 
+}
+
+.checkbox-list__checkbox--horizontal{
+   
+    flex-direction: row; 
+    justify-content:space-between;
+}
