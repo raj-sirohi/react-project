@@ -7,6 +7,7 @@ import Carousel from '../Carousel/Carousel'
 import { Grid, Segment, Dimmer, Loader, Input, Checkbox } from 'semantic-ui-react'
 import * as loadImage from 'blueimp-load-image';
 import  CheckboxList  from '../CheckboxList/CheckboxList'
+import ImgSecurityPreference from '../ImgSecurityPreference/ImgSecurityPreference'
 
 import './DropZone2.css'
 import Logger from 'logger';
@@ -26,6 +27,7 @@ class DropZone extends Component {
     state = {
         fileDropStarted:false,
         droppedFile: '',
+        imagePreference:[],
         files: [],
         open: false,
         base64: '',
@@ -34,6 +36,7 @@ class DropZone extends Component {
 
     componentDidMount() {
         this._isMounted = true;
+     
         window.addEventListener('resize', () => {
             if (this._isMounted){
                 this.setState({
@@ -44,14 +47,26 @@ class DropZone extends Component {
         }, false);
     }
 
+    componentWillMount(){
+        this.setState({
+            imagePreference:this.getPrefCheckboxArray()
+        });
+    }
+
+    getPrefCheckboxArray=()=>{
+        return(
+            [
+                { level:3,name: 'private', label: 'private label', icon:'user',iconColor:'red', value:false },
+                {level:2 , name: 'intimate', label: 'intimate label', icon:'eye',iconColor:'teal', value:false },
+                { level:1 ,name: 'inner', label: 'inner label', icon:'', value:true },
+                { level:0, name: 'public', label: 'public label', icon:'', value:false }
+            ]
+        )
+    }
+
     componentWillUnmount() {
         this._isMounted = false;
       }
-
-    componentDidUpdate() {
-        //  const { input } = this.props;
-        //  input.onChange(this.state.files);
-    }
 
     onDropHandler = (files) => {
         this.setState({fileDropStarted:true});
@@ -80,13 +95,36 @@ class DropZone extends Component {
 
     dropZoneAddHandler = (e) => {
         e.stopPropagation();
-        const { droppedFile } = this.state;
-        this.props.addFile(droppedFile);
+        const { droppedFile,imagePreference } = this.state;
+        const imagePreferenceArray = Object.entries(this.state.imagePreference).map(([k, v]) => (v));
+       
+        var securityLevelCheckbox= undefined;
+        var highestLevel=3;
+        imagePreference.forEach(checkbox => {
+            
+            if (checkbox.value){
+                if (checkbox.level <= highestLevel){
+                    highestLevel=checkbox.level;
+                    securityLevelCheckbox = checkbox;
+                }
+            }
+        });
+       
+        this.props.addFile(droppedFile,securityLevelCheckbox);
         this.setState({ droppedFile: '' });
        /*  const newStateFiles = this.state.files.slice();
         newStateFiles.unshift(droppedFile);
         this.setState({ droppedFile: '', files: newStateFiles }) */
     
+    }
+
+    imgSecCheckboxClickHandler=(checkboxList)=>{
+        logger.log('checkboxClickHandler', checkboxList);
+        this.setState({imagePreference:checkboxList})
+        const {droppedFile}=  this.state;
+        // Object.assign(droppedFile, {
+        //     impagePreference: URL.createObjectURL(currentFile)
+        // })
     }
 
     openModalHandler = (e) => {
@@ -132,22 +170,21 @@ class DropZone extends Component {
     toggle = () => {
         this.setState(prevState => ({ checked: !prevState.checked }))
     }
-    checkboxClickHander=(checkboxList)=>{
-        logger.log('checkboxClickHandler', checkboxList);
-    }
+   
 
-    getPrefCheckboxArray=()=>{
+ 
+
+    renderImagePreferences=(isVertical)=>{
+        const {imagePreference}= this.state;
+        logger.log('renderImagePreferences imagePreference',imagePreference)
         return(
-            [
-                { name: 'private', label: 'private label', icon:'user',iconColor:'red', value:false },
-                { name: 'intimate', label: 'intimate label', icon:'eye',iconColor:'teal', value:false },
-                { name: 'inner', label: 'inner label', icon:'', value:false },
-                { name: 'public', label: 'public label', icon:'', value:false }
-            ]
+            <ImgSecurityPreference vertical={isVertical} 
+            onImgSecCheckboxClick={this.imgSecCheckboxClickHandler}
+            imgSecurityPrefArray={imagePreference} />
         )
     }
     renderDropZone = () => {
-        logger.log('renderDropZone this.state.droppedFile', this.state.droppedFile)
+      //  logger.log('renderDropZone this.state.droppedFile', this.state.droppedFile)
         const { height = '32em', displayImgPreferences = true } = this.props
 
         var dropZoneHeight = height;
@@ -194,10 +231,11 @@ class DropZone extends Component {
                             <Loader>Loading...</Loader>
                         </Dimmer>
                         <div className={imagePrefTopClass}>
-                            <CheckboxList vertical={false}
-                             checkboxArray ={this.getPrefCheckboxArray()}
-                             onCheckboxClick={this.checkboxClickHander}
-                             />
+                        {
+                             this.renderImagePreferences(false)
+                             
+                        }
+                            
                         </div>
                         <div style={{ height: dropZoneHeight }} className='dropzone2__image-outer' >
                             <div {...getRootProps()} className={imageInnerClass}>
@@ -213,10 +251,15 @@ class DropZone extends Component {
 
                             <div className={imagePrefSideClass} >
                                 <Segment inverted >
-                                    <CheckboxList 
+                               
+                                    {
+                                         this.renderImagePreferences(true)
+                                    }
+                              
+                                    {/* <CheckboxList 
                                     vertical={true} 
                                     checkboxArray ={this.getPrefCheckboxArray()}
-                                    onCheckboxClick={this.checkboxClickHander} />
+                                    onCheckboxClick={this.checkboxClickHander} /> */}
                                 </Segment>
                             </div>
                         </div>

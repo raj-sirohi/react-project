@@ -16,19 +16,62 @@ class CheckboxList extends Component {
              intimate :{name :intimate, label: intimate label,...}
             }
          */
-        this.props.checkboxArray.map((v, i) => {
+
+       //  this.setState({checkboxArray:this.props.checkboxArray});
+    //   logger.log('this.props.checkboxArray',this.props.checkboxArray)
+      this.setState({checkboxArray:this.props.checkboxArray});
+        /* this.props.checkboxArray.map((v, i) => {
+            v.clicked=false;
             this.state[v.name] = v;
-        })
+        }) */
     }
 
     componentDidUpdate() {
-        this.props.onCheckboxClick({ ...this.state })
+    //  const imagePreferenceArray = Object.entries(this.state).map(([k, v]) => (v));
+    //     this.props.onCheckboxClick(imagePreferenceArray);
     }
 
     onChangeHandler = (name) => {
-        const checkboxChanged = {...this.state[name]}
-        checkboxChanged.value = !checkboxChanged.value;
-        this.setState({ [name]:checkboxChanged})
+       
+      //  logger.log('onChangeHandler this.state',{...this.state});
+
+        const updatedcheckboxArray =  this.state.checkboxArray.map((v) => {
+            v.clicked=false;
+            if (v.name===name){
+                v.clicked=true; 
+                v.value = !v.value;
+            }
+
+            return v;
+        });
+       // logger.log('onChangeHandler updatedcheckboxArray',updatedcheckboxArray)
+
+        this.props.onCheckboxClick([...updatedcheckboxArray]);
+        this.setState({checkboxArray:updatedcheckboxArray})
+
+    /*    const clickedCheckbox= checkboxArrayFromState.filter((v)=>{
+            if (v.name=name){
+                return v
+            }
+
+        })
+        var checkboxChanged = {...this.state[name]}
+     
+        checkboxChanged.value= !checkboxChanged.value;
+        checkboxChanged.clicked=true;
+       
+      
+       var newUpdateCheckbox = {};
+     
+        newUpdateCheckbox[name]={...checkboxChanged}
+       // logger.log('onChangeHandler newUpdateCheckbox',newUpdateCheckbox);
+        const updatedCheckboxArray = {...this.state,...newUpdateCheckbox};
+        const checkboxArray = Object.entries(updatedCheckboxArray).map(([k, v]) => (v));
+        
+        this.props.onCheckboxClick([...checkboxArray]);
+
+        this.setState({...this.state,...newUpdateCheckbox}) */
+
     }
 
     renderCheckboxes = () => {
@@ -38,29 +81,34 @@ class CheckboxList extends Component {
              intimate :{name :intimate, label: intimate label,...}
             }
      */
-         // [ [{name :private, label: private label,...}] ,[ {name :intimate, label: intimate label,...}] ]
-        const stateToArray = Object.entries(this.state).map(([k, v]) => ([v]));
+         // [ {name :private, label: private label,...} , {name :intimate, label: intimate label,...} ]
+      //  const checkboxArray =  Object.entries(this.state).map(([k, v]) => (v));
         
-        const checkBoxArray = stateToArray.map((checkboxName, i) => {
-            // checkboxName = [{name :private, label: private label,...}]
-            //checkboxName.pop() = {name :private, label: private label,...}
-            const checkBoxItem = checkboxName.pop()
+        const checkBoxList = this.state.checkboxArray.map((checkboxItem, i) => {
+           // logger.log('renderCheckboxes checkboxItem',checkboxItem)
+            var disable=false;
+          if (!!checkboxItem.disable){
+            disable=checkboxItem.disable;
+          }
+           
 
-            var label = <label>{checkBoxItem.label}</label>
-            if (!!checkBoxItem.icon){
-                label = <label>{checkBoxItem.label} <Icon   name ='eye' color='red'></Icon> </label>
+            var label = <label>{checkboxItem.label}</label>
+            if (!!checkboxItem.icon){
+                label = <label>{checkboxItem.label} <Icon   name ='eye' color='red'></Icon> </label>
             }
            
             return (
-                <Checkbox key={checkBoxItem.name}
+                <Checkbox key={checkboxItem.name}
                     style={{ marginTop: '1em' }}
-                    name={checkBoxItem.name}
+                    name={checkboxItem.name}
                     label={label}
-                    checked={checkBoxItem.value}
-                    onChange={() => this.onChangeHandler(checkBoxItem.name)} />
+                    checked={checkboxItem.value}
+                    disabled={disable}
+                    onChange={() => this.onChangeHandler(checkboxItem.name)}
+                     />
             )
         });
-        return checkBoxArray;
+        return checkBoxList;
     }
     render() {
         const { vertical = true } = this.props;

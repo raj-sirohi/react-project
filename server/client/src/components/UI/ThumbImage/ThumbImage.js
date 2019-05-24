@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Popup, Icon } from 'semantic-ui-react'
 import './ThumbImage.css';
 
-export const ThumbImage = ({ file, clickImage, deleteImage, displayCloseIcon, ...props }) => {
+export const ThumbImage = ({ file, clickImage,icon, iconColor, deleteImage, displayCloseIcon, ...props }) => {
     return (
         <div className='thumb'>
             <img onClick={() => clickImage(file)}
