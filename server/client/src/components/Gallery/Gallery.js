@@ -82,20 +82,20 @@ class Gallery extends Component {
     getCheckboxArray = () => {
         return (
             [
-                { level: 3, name: 'private', label: 'private label', icon: 'user', iconColor: 'red', disable: false, value: false },
+                { level: 3, name: 'private', label: 'private label',labelColor:'#53c8ff', icon: 'user', iconColor: 'red', disable: false, value: false },
 
                 {
-                    level: 2, name: 'intimate', label: 'intimate label', icon: 'eye', iconColor: 'teal',
+                    level: 2, name: 'intimate', label: 'intimate label',labelColor:'#53c8ff', icon: 'eye', iconColor: 'teal',
                     disable: false, value: false
                 },
 
                 {
-                    level: 1, name: 'inner', label: 'inner label', icon: '',
+                    level: 1, name: 'inner', label: 'inner label',labelColor:'#53c8ff', icon: '',
                     disable: false, value: false
                 },
 
                 {
-                    level: 0, name: 'public', label: 'public label', icon: '',
+                    level: 0, name: 'public', label: 'public label', labelColor:'#53c8ff', icon: '',
                     disable: false, value: false
                 }
             ]
@@ -110,8 +110,9 @@ class Gallery extends Component {
                         <Card.Header>Manage My Collection</Card.Header>
                         <Card.Description>
                             {this.renderGallery()}
-                            <ImgSecurityPreference onImgSecCheckboxClick={this.checkboxClickHander}
-                                imgSecurityPrefArray={this.getCheckboxArray()} />
+                            <CheckboxList headerLabelColor='red'
+                             onCheckboxClick={this.checkboxClickHander}
+                                checkboxArray={this.getCheckboxArray()} />
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>

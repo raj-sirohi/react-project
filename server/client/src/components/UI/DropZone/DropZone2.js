@@ -56,10 +56,10 @@ class DropZone extends Component {
     getPrefCheckboxArray=()=>{
         return(
             [
-                { level:3,name: 'private', label: 'private label', icon:'user',iconColor:'red', value:false },
-                {level:2 , name: 'intimate', label: 'intimate label', icon:'eye',iconColor:'teal', value:false },
-                { level:1 ,name: 'inner', label: 'inner label', icon:'', value:true },
-                { level:0, name: 'public', label: 'public label', icon:'', value:false }
+                { level:3,name: 'private', label: 'private label',labelColor:'#53c8ff', icon:'user',iconColor:'red', value:false,disable:false },
+                {level:2 , name: 'intimate', label: 'intimate label',labelColor:'#53c8ff', icon:'eye',iconColor:'teal', value:false },
+                { level:1 ,name: 'inner', label: 'inner label',labelColor:'#53c8ff', icon:'', value:false },
+                { level:0, name: 'public', label: 'public label',labelColor:'#53c8ff', icon:'', value:false }
             ]
         )
     }
@@ -176,9 +176,9 @@ class DropZone extends Component {
 
     renderImagePreferences=(isVertical)=>{
         const {imagePreference}= this.state;
-        logger.log('renderImagePreferences imagePreference',imagePreference)
         return(
-            <ImgSecurityPreference vertical={isVertical} 
+            <ImgSecurityPreference headerLabelColor='red'
+            vertical={isVertical} 
             onImgSecCheckboxClick={this.imgSecCheckboxClickHandler}
             imgSecurityPrefArray={imagePreference} />
         )

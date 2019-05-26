@@ -72,6 +72,11 @@ check if it contains value we can use if `(!!value)`
      or
      const newObject = Object.assign({}, objectA)
 
+    add new property to object  with object assign:- 
+   Object.assign(currentFile, {
+            preview: URL.createObjectURL(currentFile)
+        })
+
 
   </pre>
 - string and numbers is not mutable.
@@ -107,3 +112,41 @@ check if it contains value we can use if `(!!value)`
  `const{firstName,lname,city,state,country}`  
   <strong>note:</strong>...address will not contain city and state, since we already pulled it from address. So if we print address, it will display only country.  
   Also note we cannot do this `address:{city,state}` because address also contains country and we are not creating variable for it.
+  - default values in object destructuring: 
+  <pre>
+  const user = {
+  name: 'Zaiste',
+}
+const { name = 'Basia', age = 21 } = user;
+
+console.log(name); -- Zaiste
+console.log(age); --21
+
+</pre>
+
+- <strong>Default values </strong> in destructuring assignement only work if the variables either don't exist or their value is set to undefined. Any other value, including null, false and 0, bypasses the default values in the destructuring statement.
+
+<pre>
+// for undefined
+const dummy = {
+  name: undefined
+}
+
+const { name = 'Basia' } = dummy;
+console.log(name) -- Basia
+
+//for null
+const dummy = {
+  name: null
+}
+
+const { name = 'Basia' } = dummy;
+console.log(name) -- null
+
+</pre>
+
+### Javascript General
+  - iterate over javascript:
+  const checkboxArray =  Object.entries(this.state).map(([k, v]) => (v)), this returns an array
+
+ 
