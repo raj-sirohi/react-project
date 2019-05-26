@@ -2,8 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import { Popup, Icon } from 'semantic-ui-react'
 import './ThumbImage.css';
+import Logger from 'logger';
 
-export const ThumbImage = ({ file, helpContent,clickImage,icon, iconColor, deleteImage, displayCloseIcon, ...props }) => {
+const logger = Logger('ThumbImage');
+
+export const ThumbImage = ({ file, clickImage, deleteImage, displayCloseIcon, ...props }) => {
+    logger.log('file',file)
     return (
         <div className='thumb'>
             <img onClick={() => clickImage(file)}
@@ -13,8 +17,8 @@ export const ThumbImage = ({ file, helpContent,clickImage,icon, iconColor, delet
             {displayCloseIcon && <Popup
                 trigger={<span
                     onClick={() => deleteImage(file)}
-                    className='thumb__closeIcon' ><Icon size='mini' inverted  name ={icon} color={iconColor}></Icon></span>}
-                content={helpContent} />
+                    className='thumb__closeIcon' ><Icon size='mini' inverted  name ={file.icon} color={file.iconColor}></Icon></span>}
+                content={file.helpContent} />
             }
         </div>
 

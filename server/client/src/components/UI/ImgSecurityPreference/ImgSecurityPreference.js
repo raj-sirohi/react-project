@@ -74,7 +74,9 @@ class ImgSecurityPreference extends Component {
     }
 
     render() {
-        const { imgSecurityPrefArray,headerLabelColor } = this.state;
+        const { imgSecurityPrefArray } = this.state;
+        const { headerLabelColor } = this.props;
+        logger.log('headerLabelColor',headerLabelColor)
         const { vertical } = this.props;
 
         return (

@@ -29,6 +29,14 @@ class Gallery extends Component {
 
     addFileHandler = (newFile, securityLevelCheckbox) => {
         logger.log('addFileHandler newFile', newFile);
+        Object.assign(newFile, {
+            icon: securityLevelCheckbox.icon,
+            iconColor:securityLevelCheckbox.iconColor,
+            helpContent:securityLevelCheckbox.helpContent
+
+        })
+
+        logger.log('addFileHandler AFTER newFile', newFile);
       /*   var highestLevel= undefined;
         var highestLevelCheckbox=3;
         var found=false;

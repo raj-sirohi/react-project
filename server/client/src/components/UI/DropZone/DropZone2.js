@@ -56,17 +56,20 @@ class DropZone extends Component {
     getPrefCheckboxArray=()=>{
         return(
             [
-                { level:3,name: 'private', label: 'private label',labelColor:'#53c8ff', 
-                icon:'user',iconColor:'red', value:false,disable:false },
+                { level:4,name: 'private', label: 'Private ',labelColor:'#53c8ff', 
+                helpContent:'only you', icon:'ban',iconColor:'red', value:false,disable:false },
+
+                { level:3,name: 'intimate', label: 'Intimate ',labelColor:'#53c8ff', 
+                icon:'heart',iconColor:'red', value:false,disable:false },
                 
-                {level:2 , name: 'intimate', label: 'intimate label',labelColor:'#53c8ff', 
-                icon:'eye',iconColor:'teal', value:false },
+                {level:2 , name: 'close', label: 'Close ',labelColor:'#53c8ff', 
+                icon:'gem',iconColor:'red', value:false },
                 
-                { level:1 ,name: 'inner', label: 'inner label',labelColor:'#53c8ff', 
-                icon:'user plus', value:false },
+                { level:1 ,name: 'known', label: 'Known ',labelColor:'#53c8ff', 
+                icon:'user plus',iconColor:'red', value:false },
                 
-                { level:0, name: 'public', label: 'public label',labelColor:'#53c8ff', 
-                icon:'', value:false }
+                { level:0, name: 'everyone', label: 'Everyone ',labelColor:'#53c8ff', 
+                icon:'eye',iconColor:'red', value:false }
             ]
         )
     }
@@ -106,7 +109,7 @@ class DropZone extends Component {
         const imagePreferenceArray = Object.entries(this.state.imagePreference).map(([k, v]) => (v));
        
         var securityLevelCheckbox= undefined;
-        var highestLevel=3;
+        var highestLevel=4;
         imagePreference.forEach(checkbox => {
             
             if (checkbox.value){
