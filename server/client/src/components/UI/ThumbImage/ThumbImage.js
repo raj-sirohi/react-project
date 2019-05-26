@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Popup, Icon } from 'semantic-ui-react'
 import './ThumbImage.css';
 
-export const ThumbImage = ({ file, clickImage,icon, iconColor, deleteImage, displayCloseIcon, ...props }) => {
+export const ThumbImage = ({ file, helpContent,clickImage,icon, iconColor, deleteImage, displayCloseIcon, ...props }) => {
     return (
         <div className='thumb'>
             <img onClick={() => clickImage(file)}
@@ -13,8 +13,8 @@ export const ThumbImage = ({ file, clickImage,icon, iconColor, deleteImage, disp
             {displayCloseIcon && <Popup
                 trigger={<span
                     onClick={() => deleteImage(file)}
-                    className='thumb__closeIcon' ><Icon size='mini'inverted  name ='eye' color='red'></Icon></span>}
-                content='Delete File' />
+                    className='thumb__closeIcon' ><Icon size='mini' inverted  name ={icon} color={iconColor}></Icon></span>}
+                content={helpContent} />
             }
         </div>
 

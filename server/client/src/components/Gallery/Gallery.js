@@ -27,7 +27,7 @@ class Gallery extends Component {
         logger.log('dimentions', this.getWindowDimensions())
     }
 
-    addFileHandler = (newFile, imagePreferernce) => {
+    addFileHandler = (newFile, securityLevelCheckbox) => {
         logger.log('addFileHandler newFile', newFile);
       /*   var highestLevel= undefined;
         var highestLevelCheckbox=3;
@@ -43,7 +43,7 @@ class Gallery extends Component {
                 }
             }
         }); */
-        logger.log('addFileHandler highestLevel', imagePreferernce);
+        logger.log('addFileHandler highestLevel', securityLevelCheckbox);
         this.setState({ files: [...this.state.files, newFile] })
     }
     renderGallery = () => {

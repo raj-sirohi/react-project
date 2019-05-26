@@ -27,10 +27,10 @@ class CheckboxList extends Component {
     componentWillMount() {
         /*
         state={ 
-             checkboxArray: [
-                 {name: 'private', label: 'private label', icon:'user',iconColor:'red', value:false,disable:false },
-                 {name: 'public', label: 'public label', icon:'eye',iconColor:'red', value:false,disable:false }
- ]               ]
+             checkboxArray=[
+                    {name: 'private', label: 'private label',labelColor:'red', icon:'user',iconColor:'red', value:false,disable:false },
+                    {name: 'public', label: 'public label',labelColor:'red' icon:'eye',iconColor:'red', value:false,disable:false }
+                ]
              }
           */
 
@@ -114,5 +114,3 @@ class CheckboxList extends Component {
     }
 }
 export default CheckboxList;
-
-//favourite color

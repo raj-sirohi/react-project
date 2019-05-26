@@ -74,12 +74,12 @@ class ImgSecurityPreference extends Component {
     }
 
     render() {
-        const { imgSecurityPrefArray } = this.state;
+        const { imgSecurityPrefArray,headerLabelColor } = this.state;
         const { vertical } = this.props;
 
         return (
             <div  >
-                <CheckboxList vertical={vertical} onCheckboxClick={this.checkboxClickHander}
+                <CheckboxList vertical={vertical} headerLabelColor={headerLabelColor} onCheckboxClick={this.checkboxClickHander}
                     checkboxArray={imgSecurityPrefArray} />
             </div>
         )

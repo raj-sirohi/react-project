@@ -7,7 +7,7 @@ import Logger from 'logger';
 class ThumbList extends Component {
 
     getThumbImages = () => {
-        const { files, clickImage, deleteImage } = this.props;
+        const { files,icon,iconColor,helpContent, clickImage, deleteImage } = this.props;
         if (Array.isArray(files) && files.length) {
             return files.map(file => {
                 const type = file.type
@@ -15,6 +15,9 @@ class ThumbList extends Component {
                     return (
                         <React.Fragment key={file.file.name}>
                             <ThumbImage file={file}
+                            icon={icon}
+                            iconColor={iconColor}
+                            helpContent={helpContent}
                                 deleteImage={() => deleteImage(file)}
                                 clickImage={() => clickImage(file)} />
                         </React.Fragment>
