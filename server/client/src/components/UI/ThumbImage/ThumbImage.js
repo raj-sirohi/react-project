@@ -6,47 +6,33 @@ import Logger from 'logger';
 
 const logger = Logger('ThumbImage');
 
-export const ThumbImage = ({ file, clickImage, deleteImage, displayCloseIcon, ...props }) => {
-    logger.log('file',file)
+export const ThumbImage = ({ file, clickImage,clickIcon, displayIcon, ...props }) => {
+    logger.log('file.preview',file)
     return (
         <div className='thumb'>
             <img onClick={() => clickImage(file)}
                 src={file.preview}
                 className='thumb__image'
             />
-            {displayCloseIcon && <Popup
+            {displayIcon && <Popup
                 trigger={<span
-                    onClick={() => deleteImage(file)}
-                    className='thumb__closeIcon' ><Icon size='mini' inverted  name ={file.icon} color={file.iconColor}></Icon></span>}
+                    onClick={() => clickIcon(file)}
+                    className='thumb__icon' ><Icon size='mini' inverted  name ={file.icon} color={file.iconColor}></Icon></span>}
                 content={file.helpContent} />
             }
         </div>
-
-
-      /*   <div className='thumb'>
-            <img onClick={() => clickImage(file)}
-                src={file.preview}
-                className='thumb__image'
-            />
-            {displayCloseIcon && <Popup
-                trigger={<span
-                    onClick={() => deleteImage(file)}
-                    className='thumb__closeIcon' >&times;</span>}
-                content='Delete File' />
-            }
-        </div> */
     )
 }
 
 ThumbImage.propTypes = {
     file: PropTypes.object.isRequired,
-    displayCloseIcon: PropTypes.bool,
+    displayIcon: PropTypes.bool,
     clickImage: PropTypes.func,
-    deleteImage: PropTypes.func
+    clickIcon: PropTypes.func
 };
 
 ThumbImage.defaultProps = {
-    displayCloseIcon: true,
+    displayIcon: true,
     clickImage: () => { },
-    deleteImage: () => { }
+    clickIcon: () => { }
 };

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from "react-redux";
 import Dropzone from 'react-dropzone'
 import PropTypes from 'prop-types';
 import { Button, GridColumn,Icon } from 'semantic-ui-react';
@@ -8,6 +9,8 @@ import { Grid, Segment, Dimmer, Loader, Input, Checkbox } from 'semantic-ui-reac
 import * as loadImage from 'blueimp-load-image';
 import  CheckboxList  from '../CheckboxList/CheckboxList'
 import ImgSecurityPreference from '../ImgSecurityPreference/ImgSecurityPreference'
+import {  uploadFile, getImage } from '../../../store/actions/mediaActions'
+import {base64StringtoFile} from '../../../utils/mediaUtil'
 
 import './DropZone2.css'
 import Logger from 'logger';
@@ -34,6 +37,27 @@ class DropZone extends Component {
         isMobile: false
     }
 
+    getPrefCheckboxArray=()=>{
+        return(
+            [
+                { level:4,name: 'private', label: 'Private ',labelColor:'#53c8ff', 
+                helpContent:'only for you', icon:'ban',iconColor:'red', value:false,disable:false },
+
+                { level:3,name: 'intimate', label: 'Intimate ',labelColor:'#53c8ff', 
+                helpContent:'only for you and intimate circle',icon:'heart',iconColor:'red', value:false,disable:false },
+                
+                {level:2 , name: 'close', label: 'Close ',labelColor:'#53c8ff', 
+                helpContent:'only for you,  intimate and close circle',icon:'gem',iconColor:'red', value:false },
+                
+                { level:1 ,name: 'known', label: 'Known ',labelColor:'#53c8ff', 
+                helpContent:'only for you,  intimate ,close  and known circle',icon:'user plus',iconColor:'red', value:false },
+                
+                { level:0, name: 'everyone', label: 'Everyone ',labelColor:'#53c8ff', 
+                helpContent:'for everyone',icon:'eye',iconColor:'red', value:false }
+            ]
+        )
+    }
+
     componentDidMount() {
         this._isMounted = true;
      
@@ -43,7 +67,6 @@ class DropZone extends Component {
                     isMobile: window.innerWidth < 648
                 });
             }
-            
         }, false);
     }
 
@@ -53,31 +76,13 @@ class DropZone extends Component {
         });
     }
 
-    getPrefCheckboxArray=()=>{
-        return(
-            [
-                { level:4,name: 'private', label: 'Private ',labelColor:'#53c8ff', 
-                helpContent:'only you', icon:'ban',iconColor:'red', value:false,disable:false },
-
-                { level:3,name: 'intimate', label: 'Intimate ',labelColor:'#53c8ff', 
-                icon:'heart',iconColor:'red', value:false,disable:false },
-                
-                {level:2 , name: 'close', label: 'Close ',labelColor:'#53c8ff', 
-                icon:'gem',iconColor:'red', value:false },
-                
-                { level:1 ,name: 'known', label: 'Known ',labelColor:'#53c8ff', 
-                icon:'user plus',iconColor:'red', value:false },
-                
-                { level:0, name: 'everyone', label: 'Everyone ',labelColor:'#53c8ff', 
-                icon:'eye',iconColor:'red', value:false }
-            ]
-        )
-    }
-
     componentWillUnmount() {
         this._isMounted = false;
       }
 
+    /*========================================   
+      dropzone handlers     
+    ==========================================*/  
     onDropHandler = (files) => {
         this.setState({fileDropStarted:true});
         //image/jpeg
@@ -85,7 +90,10 @@ class DropZone extends Component {
         const droppedFile = files[0];
         const fileName = droppedFile.name;
         const type = droppedFile.type.split('/')[0]
+        logger.log('fileName',fileName);
+        logger.log('type',type)
 
+       // this.dropVideoHelper(droppedFile)
         loadImage(droppedFile, (img) => {
             // img.className = 'test'; // css class: { max-width: 100%; max-height: 100%; }
             this.setState({ base64: img.toDataURL() })
@@ -98,15 +106,26 @@ class DropZone extends Component {
             });
     }
 
-    dropZoneClearHandler = (e) => {
+    dropVideoHelper= async(file)=>{
+        const imageData64 = await this.props.uploadFile(file);
+        logger.log('dropVideoHelper imageData64 ',imageData64);
+        const savedFileName = imageData64.data.fileName;
+        const savedFile = base64StringtoFile(imageData64.data.imageBase64Data, savedFileName)
+        Object.assign(savedFile, {
+            preview: URL.createObjectURL(savedFile)
+        })
+        this.setState({ droppedFile: file,fileDropStarted:false })
+
+    }
+
+    dropZoneCancelHandler = (e) => {
         e.stopPropagation();
         this.setState({ droppedFile: '' });
     }
 
-    dropZoneAddHandler = (e) => {
+    dropZoneAddHandler = async(e) => {
         e.stopPropagation();
         const { droppedFile,imagePreference } = this.state;
-        const imagePreferenceArray = Object.entries(this.state.imagePreference).map(([k, v]) => (v));
        
         var securityLevelCheckbox= undefined;
         var highestLevel=4;
@@ -119,32 +138,38 @@ class DropZone extends Component {
                 }
             }
         });
+
+        const imageData64 = await this.props.uploadFile(droppedFile.file);
+
+        const savedFileName = imageData64.data.fileName;
+        const savedFile = base64StringtoFile(imageData64.data.imageBase64Data, savedFileName)
+        Object.assign(savedFile, {
+            preview: URL.createObjectURL(savedFile)
+        })
        
-        this.props.addFile(droppedFile,securityLevelCheckbox);
-        this.setState({ droppedFile: '' });
-       /*  const newStateFiles = this.state.files.slice();
-        newStateFiles.unshift(droppedFile);
-        this.setState({ droppedFile: '', files: newStateFiles }) */
-    
+        this.props.addFile(savedFile,securityLevelCheckbox);
+        if (!!securityLevelCheckbox){
+            this.setState({ droppedFile: '' });
+        }
     }
 
-    imgSecCheckboxClickHandler=(checkboxList)=>{
-        logger.log('checkboxClickHandler', checkboxList);
-        this.setState({imagePreference:checkboxList})
-        const {droppedFile}=  this.state;
-        // Object.assign(droppedFile, {
-        //     impagePreference: URL.createObjectURL(currentFile)
-        // })
+    dropZoneUpdateHandler = (e) => {
+       
     }
 
-    openModalHandler = (e) => {
-        e.preventDefault();
-        this.setState({ open: true })
-    }
-    onCloseModalHanlder = () => {
-        this.setState({ open: false })
+    dropZoneDeleteHandler = fileName => {
+        const { files } = this.state;
+        const newFileArray = files.filter((value) => {
+            if (value.file.name !== fileName.file.name) {
+                return true
+            }
+        })
+        this.setState({ files: newFileArray })
     }
 
+     /*========================================   
+        Image helper methods    
+    ==========================================*/  
     base64StringtoFile = (base64String, filename) => {
         var arr = base64String.split(','), mime = arr[0].match(/:(.*?);/)[1],
             bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n)
@@ -152,8 +177,35 @@ class DropZone extends Component {
             u8arr[n] = bstr.charCodeAt(n)
         }
         return new File([u8arr], filename, { type: mime })
+    } 
+
+     /*========================================   
+      security checkbox handlers     
+    ==========================================*/  
+    imgSecCheckboxClickHandler=(checkboxList)=>{
+        this.setState({imagePreference:checkboxList})
+    }
+     
+    handleCheckBoxClick = (e) => {
+        logger.log('handleCHeckBoxClick', e.target.value)
     }
 
+   /*  state = { checked: false }
+    toggle = () => {
+        this.setState(prevState => ({ checked: !prevState.checked }))
+    } */
+
+   /*  openModalHandler = (e) => {
+        e.preventDefault();
+        this.setState({ open: true })
+    }
+    onCloseModalHanlder = () => {
+        this.setState({ open: false })
+    } */
+
+    /*========================================   
+        Render helper methods    
+    ==========================================*/  
     renderDropImage = () => {
         const { height = '32em' } = this.props;
         var dropZoneHeight = height;
@@ -172,17 +224,6 @@ class DropZone extends Component {
             )
         }
     }
-    handleCheckBoxClick = (e) => {
-        logger.log('handleCHeckBoxClick', e.target.value)
-    }
-
-    state = { checked: false }
-    toggle = () => {
-        this.setState(prevState => ({ checked: !prevState.checked }))
-    }
-   
-
- 
 
     renderImagePreferences=(isVertical)=>{
         const {imagePreference}= this.state;
@@ -193,6 +234,7 @@ class DropZone extends Component {
             imgSecurityPrefArray={imagePreference} />
         )
     }
+   
     renderDropZone = () => {
       //  logger.log('renderDropZone this.state.droppedFile', this.state.droppedFile)
         const { height = '32em', displayImgPreferences = true } = this.props
@@ -241,11 +283,7 @@ class DropZone extends Component {
                             <Loader>Loading...</Loader>
                         </Dimmer>
                         <div className={imagePrefTopClass}>
-                        {
-                             this.renderImagePreferences(false)
-                             
-                        }
-                            
+                        { this.renderImagePreferences(false) }
                         </div>
                         <div style={{ height: dropZoneHeight }} className='dropzone2__image-outer' >
                             <div {...getRootProps()} className={imageInnerClass}>
@@ -261,15 +299,7 @@ class DropZone extends Component {
 
                             <div className={imagePrefSideClass} >
                                 <Segment inverted >
-                               
-                                    {
-                                         this.renderImagePreferences(true)
-                                    }
-                              
-                                    {/* <CheckboxList 
-                                    vertical={true} 
-                                    checkboxArray ={this.getPrefCheckboxArray()}
-                                    onCheckboxClick={this.checkboxClickHander} /> */}
+                                    { this.renderImagePreferences(true) }
                                 </Segment>
                             </div>
                         </div>
@@ -277,27 +307,20 @@ class DropZone extends Component {
                             <Button onClick={this.dropZoneAddHandler}
                              onMouseDown={e => e.preventDefault()}
                              inverted
-                                content='Add New Files' size='mini' color='blue' />
-                            <Button onClick={this.dropZoneAddHandler} inverted
-                                content='Add' size='mini' color='blue' />
-                            <Button onClick={this.dropZoneClearHandler}
-                                inverted color='red' content='Cancel'
+                                content='Add File' size='mini' color='blue' />
+                            <Button onClick={this.dropZoneUpdateHandler} inverted
+                                content='Update File' size='mini' color='blue' />
+                            <Button onClick={this.dropZoneCancelHandler}
+                                inverted color='blue' content='Cancel'
+                                size='mini' />
+                                 <Button onClick={this.dropZoneDeleteHandler}
+                                inverted color='red' content='Delete'
                                 size='mini' />
                         </div>
                     </Segment>
                 )}
             </Dropzone>
         )
-    }
-
-    deleteImageHandler = fileName => {
-        const { files } = this.state;
-        const newFileArray = files.filter((value) => {
-            if (value.file.name !== fileName.file.name) {
-                return true
-            }
-        })
-        this.setState({ files: newFileArray })
     }
 
     render() {
@@ -313,6 +336,14 @@ DropZone.propTypes = {
     height: PropTypes.string.isRequired
 };
 
-export default DropZone
-//favourite color//
-//blue
+const mapDispatchToProps = dispatch => {
+    return {
+
+        getImage: (imageUrl) => dispatch(getImage(imageUrl)),
+        uploadFile: (data) => dispatch(uploadFile(data))
+
+    }
+}
+
+export default connect(null, mapDispatchToProps)(DropZone);
+

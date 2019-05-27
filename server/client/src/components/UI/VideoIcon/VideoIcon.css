@@ -1,0 +1,11 @@
+
+
+.dropImage2{
+    text-align: center;
+}
+
+.dropImage__image2{
+    /* max-height: 32em; */
+    max-width: 100%;
+    padding: .5em ;
+}

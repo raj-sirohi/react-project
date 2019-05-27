@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
-import { Header, Button, Card, Container } from 'semantic-ui-react'
+import { Header, Button, Message, Card, Container } from 'semantic-ui-react'
 import DropZone2 from '../UI/DropZone/DropZone2';
 import ThumbList from '../UI/ThumbList/ThumbList'
 import checkboxList from '../UI/CheckboxList/CheckboxList'
 import Logger from 'logger';
 import CheckboxList from '../UI/CheckboxList/CheckboxList';
 import ImgSecurityPreference from '../UI/ImgSecurityPreference/ImgSecurityPreference'
+import playIcon from './button_play_blue.png';
+import {VideoIcon} from '../UI/VideoIcon/VideoIcon'
 
 const logger = Logger('Gallery');
 
 class Gallery extends Component {
 
     state = {
-        files: []
+        files: [],
+        error: false
     }
 
     getWindowDimensions = () => {
@@ -29,85 +32,48 @@ class Gallery extends Component {
 
     addFileHandler = (newFile, securityLevelCheckbox) => {
         logger.log('addFileHandler newFile', newFile);
-        Object.assign(newFile, {
-            icon: securityLevelCheckbox.icon,
-            iconColor:securityLevelCheckbox.iconColor,
-            helpContent:securityLevelCheckbox.helpContent
-
-        })
-
-        logger.log('addFileHandler AFTER newFile', newFile);
-      /*   var highestLevel= undefined;
-        var highestLevelCheckbox=3;
-        var found=false;
-        imagePreferernce.forEach(checkbox => {
-            
-            if (checkbox.value){
-                if (checkbox.level <= highestLevelCheckbox){
-                    highestLevelCheckbox=checkbox.level;
-                    highestLevel = checkbox;
-                    found=true;
-
-                }
-            }
-        }); */
-        logger.log('addFileHandler highestLevel', securityLevelCheckbox);
-        this.setState({ files: [...this.state.files, newFile] })
+        if (!!securityLevelCheckbox){
+            Object.assign(newFile, {
+                icon: securityLevelCheckbox.icon,
+                iconColor: securityLevelCheckbox.iconColor,
+                helpContent: securityLevelCheckbox.helpContent
+    
+            });
+            this.setState({ files: [...this.state.files, newFile],error:false })
+        }else{
+            this.setState({error:true })
+        }
     }
+
     renderGallery = () => {
-        const { files } = this.state;
+        const { files,error } = this.state;
         return (
-
             <div >
-
                 <div style={{ display: 'flex' }}>
                     <div style={{ width: '100%' }}>
                         <DropZone2 height='32em' displayImgPreferences={true}
                             addFile={this.addFileHandler}
                         />
                     </div>
-
                 </div>
-
-
                 <div>
-
                     <div >
                         <ThumbList files={files} />
+                        <VideoIcon />
+                      {error &&  <Message
+                            error
+                            header='Error!'
+                            content='Please select image display preference.'
+                        />
+                      }
                     </div>
-
-
                 </div>
-
             </div>
         )
     }
 
     checkboxClickHander = (checkboxList) => {
         logger.log('checkboxClickHandler', checkboxList);
-    }
-
-    getCheckboxArray = () => {
-        return (
-            [
-                { level: 3, name: 'private', label: 'private label',labelColor:'#53c8ff', icon: 'user', iconColor: 'red', disable: false, value: false },
-
-                {
-                    level: 2, name: 'intimate', label: 'intimate label',labelColor:'#53c8ff', icon: 'eye', iconColor: 'teal',
-                    disable: false, value: false
-                },
-
-                {
-                    level: 1, name: 'inner', label: 'inner label',labelColor:'#53c8ff', icon: '',
-                    disable: false, value: false
-                },
-
-                {
-                    level: 0, name: 'public', label: 'public label', labelColor:'#53c8ff', icon: '',
-                    disable: false, value: false
-                }
-            ]
-        )
     }
 
     render() {
@@ -118,9 +84,7 @@ class Gallery extends Component {
                         <Card.Header>Manage My Collection</Card.Header>
                         <Card.Description>
                             {this.renderGallery()}
-                            <CheckboxList headerLabelColor='red'
-                             onCheckboxClick={this.checkboxClickHander}
-                                checkboxArray={this.getCheckboxArray()} />
+
                         </Card.Description>
                     </Card.Content>
                     <Card.Content extra>

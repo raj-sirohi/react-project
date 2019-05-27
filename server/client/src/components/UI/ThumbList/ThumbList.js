@@ -4,25 +4,29 @@ import { ThumbImage } from '../ThumbImage/ThumbImage'
 import './ThumbList.css'
 import Logger from 'logger';
 
+const logger =Logger('ThumbList');
+
 class ThumbList extends Component {
 
     getThumbImages = () => {
-        const { files, clickImage, deleteImage } = this.props;
+        const { files, clickImage, clickIcon } = this.props;
         if (Array.isArray(files) && files.length) {
             return files.map(file => {
-                const type = file.type
-                if (type === 'image') {
+                logger.log('file',file)
+                //const type = file.type
+                //const type = currentFile.type.split('/')[0]
+                //if (type === 'image') {
                     return (
-                        <React.Fragment key={file.file.name}>
+                        <React.Fragment key={file.name}>
                             <ThumbImage file={file}
                             icon={file.icon}
                             iconColor={file.iconColor}
                             helpContent={file.helpContent}
-                                deleteImage={() => deleteImage(file)}
-                                clickImage={() => clickImage(file)} />
+                            clickIcon={() => clickIcon(file)}
+                            clickImage={() => clickImage(file)} />
                         </React.Fragment>
                     )
-                }
+              //  }
             });
         }
         return false;

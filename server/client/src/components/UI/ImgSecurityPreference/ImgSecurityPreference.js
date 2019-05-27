@@ -8,7 +8,7 @@ const logger = Logger('ImgSecurityPreference');
 
 class ImgSecurityPreference extends Component {
 
-    state = { }
+    state = {}
 
     componentWillMount() {
         const { imgSecurityPrefArray } = this.props;
@@ -76,11 +76,10 @@ class ImgSecurityPreference extends Component {
     render() {
         const { imgSecurityPrefArray } = this.state;
         const { headerLabelColor } = this.props;
-        logger.log('headerLabelColor',headerLabelColor)
         const { vertical } = this.props;
 
         return (
-            <div  >
+            <div>
                 <CheckboxList vertical={vertical} headerLabelColor={headerLabelColor} onCheckboxClick={this.checkboxClickHander}
                     checkboxArray={imgSecurityPrefArray} />
             </div>

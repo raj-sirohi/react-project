@@ -12,7 +12,7 @@
  max-height: 4em;
 }
 
-.thumb__closeIcon {
+.thumb__icon {
     position: absolute;
     /* Initial values
     top: 2px;
@@ -33,6 +33,6 @@
     border-radius: 50%;
 }
 
-  .thumb__closeIcon:hover {
+  .thumb__icon:hover {
     opacity: 1;
 }
