@@ -93,17 +93,20 @@ class DropZone extends Component {
         logger.log('fileName',fileName);
         logger.log('type',type)
 
-       // this.dropVideoHelper(droppedFile)
-        loadImage(droppedFile, (img) => {
+        this.dropVideoHelper(droppedFile)
+       /*  loadImage(droppedFile, (img) => {
             // img.className = 'test'; // css class: { max-width: 100%; max-height: 100%; }
             this.setState({ base64: img.toDataURL() })
             const newFile = this.base64StringtoFile(img.toDataURL(), fileName);
-            const preview = URL.createObjectURL(newFile)
-            const file = { file: newFile, type: type, preview: preview }
-            this.setState({ droppedFile: file,fileDropStarted:false })
+           // const preview = URL.createObjectURL(newFile)
+           // const file = { file: newFile, type: type, preview: preview }
+           Object.assign(newFile, {
+            preview: URL.createObjectURL(newFile)
+        })
+            this.setState({ droppedFile: newFile,fileDropStarted:false })
         }, {
                 orientation: true
-            });
+            }); */
     }
 
     dropVideoHelper= async(file)=>{
@@ -114,7 +117,8 @@ class DropZone extends Component {
         Object.assign(savedFile, {
             preview: URL.createObjectURL(savedFile)
         })
-        this.setState({ droppedFile: file,fileDropStarted:false })
+        logger.log('dropVideoHelper savedFile ',savedFile);
+        this.setState({ droppedFile: savedFile,fileDropStarted:false })
 
     }
 
@@ -139,7 +143,7 @@ class DropZone extends Component {
             }
         });
 
-        const imageData64 = await this.props.uploadFile(droppedFile.file);
+        const imageData64 = await this.props.uploadFile(droppedFile);
 
         const savedFileName = imageData64.data.fileName;
         const savedFile = base64StringtoFile(imageData64.data.imageBase64Data, savedFileName)
@@ -190,19 +194,6 @@ class DropZone extends Component {
         logger.log('handleCHeckBoxClick', e.target.value)
     }
 
-   /*  state = { checked: false }
-    toggle = () => {
-        this.setState(prevState => ({ checked: !prevState.checked }))
-    } */
-
-   /*  openModalHandler = (e) => {
-        e.preventDefault();
-        this.setState({ open: true })
-    }
-    onCloseModalHanlder = () => {
-        this.setState({ open: false })
-    } */
-
     /*========================================   
         Render helper methods    
     ==========================================*/  
@@ -215,7 +206,7 @@ class DropZone extends Component {
         const { droppedFile } = this.state;
         if (!!droppedFile) {
             return (
-                <div key={droppedFile.file.name} className='dropImage2'>
+                <div key={droppedFile.name} className='dropImage2'>
                     <img style={{ maxHeight: dropZoneHeight }}
                         src={droppedFile.preview}
                         className='dropImage__image2'
